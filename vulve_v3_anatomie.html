@@ -1,0 +1,225 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,200;0,300;0,400;0,600;1,300&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#FFFAFD;display:flex;flex-direction:column;align-items:center;padding:32px 20px 20px;font-family:'Raleway',sans-serif}
+.tw{display:flex;align-items:center;gap:18px;margin-bottom:28px}
+.lb{font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#D9B8C0;width:92px;transition:color 0.5s}
+.lb.right{text-align:left}.lb.left{text-align:right}.lb.on{color:#8A1B1A}
+.trk{position:relative;width:52px;height:28px;border-radius:100px;background:#D9B8C0;cursor:pointer;border:none;outline:none;transition:background 0.5s}
+.trk.on{background:#8A1B1A}
+.thu{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#FFFAFD;box-shadow:0 1px 4px rgba(86,25,48,0.25);transition:transform 0.4s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.trk.on .thu{transform:translateX(24px)}
+canvas{display:block}
+.sl{margin-top:14px;font-size:11px;font-weight:300;letter-spacing:0.22em;text-transform:uppercase;font-style:italic;color:#8A1B1A;height:18px;transition:opacity 0.4s}
+</style>
+
+<div class="tw">
+  <span class="lb left on" id="l0">Au repos</span>
+  <button class="trk" id="trk" onclick="tog()"><span class="thu"></span></button>
+  <span class="lb right" id="l1">En excitation</span>
+</div>
+<canvas id="cv" width="300" height="460"></canvas>
+<div class="sl" id="sl">État de repos</div>
+
+<script>
+const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+let p=0, exc=false, raf=null;
+
+function tog(){
+  exc=!exc;
+  document.getElementById('trk').classList.toggle('on',exc);
+  document.getElementById('sl').textContent=exc?'En excitation':'État de repos';
+  document.getElementById('l0').classList.toggle('on',!exc);
+  document.getElementById('l1').classList.toggle('on',exc);
+  if(raf)cancelAnimationFrame(raf);step();
+}
+function step(){
+  const tgt=exc?1:0;
+  p+=(tgt-p)*0.055;
+  if(Math.abs(p-tgt)<0.002)p=tgt;
+  draw(p);
+  if(Math.abs(p-tgt)>0.002)raf=requestAnimationFrame(step);
+}
+function lerp(a,b,t){return a+(b-a)*t}
+function ease(x){return x<0.5?2*x*x:-1+(4-2*x)*x}
+function ci(a,b,e){return`rgb(${Math.round(lerp(a[0],b[0],e))},${Math.round(lerp(a[1],b[1],e))},${Math.round(lerp(a[2],b[2],e))})`}
+
+function draw(raw){
+  const e=ease(Math.max(0,Math.min(1,raw)));
+  ctx.clearRect(0,0,300,460);
+
+  // Clip everything to canvas — no overflow ever
+  ctx.save();
+  ctx.beginPath();ctx.roundRect(0,0,300,460,0);ctx.clip();
+
+  const cx=150;
+
+  // Background warm tint
+  const bg=ctx.createRadialGradient(cx,230,20,cx,230,180);
+  bg.addColorStop(0,`rgba(248,228,220,${0.12+e*0.08})`);
+  bg.addColorStop(1,'rgba(255,250,253,0)');
+  ctx.fillStyle='#FFFAFD';ctx.fillRect(0,0,300,460);
+  ctx.fillStyle=bg;ctx.fillRect(0,0,300,460);
+
+  // ── COULEURS (seul le teint change légèrement en excitation) ──
+  const M_hi=[240,185,162], M_hiE=[245,170,165];
+  const M_dk=[180,108,88],  M_dkE=[194,90,108];
+  const I_hi=[212,130,108], I_hiE=[226,118,120];
+  const I_dk=[158,66,58],   I_dkE=[178,64,84];
+
+  // ── LABIAS MAJEURES ──
+  // Seule la largeur (engorgement) change en excitation
+  const lW=lerp(72,92,e);  // gauche
+  const rW=lerp(67,86,e);  // droite (légèrement asymétrique)
+  const topY=64, botY=lerp(355,368,e);
+
+  // Gauche — courbe irrégulière avec 3 inflexions naturelles
+  ctx.beginPath();
+  ctx.moveTo(cx,topY);
+  ctx.bezierCurveTo(cx-20,topY+18, cx-lW*0.78,topY+46, cx-lW*0.96,topY+84);
+  ctx.bezierCurveTo(cx-lW*1.10,topY+114, cx-lW*1.04,topY+150, cx-lW*1.00,topY+182);
+  ctx.bezierCurveTo(cx-lW*0.94,topY+216, cx-lW*1.06,topY+248, cx-lW*0.98,topY+278);
+  ctx.bezierCurveTo(cx-lW*0.84,topY+308, cx-lW*0.56,topY+325, cx-lW*0.22,botY-14);
+  ctx.bezierCurveTo(cx-8,botY-4,cx-2,botY,cx,botY);
+  ctx.lineTo(cx,topY);ctx.closePath();
+  const gL=ctx.createRadialGradient(cx-lW*0.38,topY+100,6,cx-lW*0.42,topY+130,lW*1.6);
+  gL.addColorStop(0,ci(M_hi,M_hiE,e));gL.addColorStop(1,ci(M_dk,M_dkE,e));
+  ctx.fillStyle=gL;ctx.fill();
+  ctx.strokeStyle=ci(M_dk,M_dkE,e);ctx.lineWidth=0.8;ctx.stroke();
+
+  // Pli naturel gauche
+  ctx.save();ctx.globalAlpha=0.15+e*0.05;
+  ctx.beginPath();
+  ctx.moveTo(cx-lW*0.48,topY+60);
+  ctx.bezierCurveTo(cx-lW*0.62,topY+100,cx-lW*0.66,topY+145,cx-lW*0.58,topY+188);
+  ctx.strokeStyle=ci(M_dk,M_dkE,e);ctx.lineWidth=1.1;ctx.stroke();
+  ctx.restore();
+
+  // Droite — légèrement moins haute, forme différente en bas
+  ctx.beginPath();
+  ctx.moveTo(cx,topY);
+  ctx.bezierCurveTo(cx+17,topY+16, cx+rW*0.72,topY+42, cx+rW*0.90,topY+78);
+  ctx.bezierCurveTo(cx+rW*1.06,topY+110, cx+rW*0.98,topY+146, cx+rW*1.04,topY+178);
+  ctx.bezierCurveTo(cx+rW*1.10,topY+210, cx+rW*0.92,topY+245, cx+rW*0.88,topY+272);
+  ctx.bezierCurveTo(cx+rW*0.76,topY+302, cx+rW*0.50,topY+322, cx+rW*0.20,botY-18);
+  ctx.bezierCurveTo(cx+7,botY-6,cx+2,botY,cx,botY);
+  ctx.lineTo(cx,topY);ctx.closePath();
+  const gR=ctx.createRadialGradient(cx+rW*0.36,topY+98,6,cx+rW*0.40,topY+128,rW*1.6);
+  gR.addColorStop(0,ci(M_hi,M_hiE,e));gR.addColorStop(1,ci(M_dk,M_dkE,e));
+  ctx.fillStyle=gR;ctx.fill();
+  ctx.strokeStyle=ci(M_dk,M_dkE,e);ctx.lineWidth=0.8;ctx.stroke();
+
+  // ── LABIAS MINEURES ──
+  // Seule la largeur + couleur change
+  const iW=lerp(20,28,e);
+  const iTop=92, iBot=lerp(285,298,e);
+
+  // Gauche — plus proéminente, légère irrégularité au milieu
+  ctx.beginPath();
+  ctx.moveTo(cx,iTop);
+  ctx.bezierCurveTo(cx-5,iTop+14,cx-iW*0.80,iTop+36,cx-iW*1.05,iTop+68);
+  ctx.bezierCurveTo(cx-iW*1.18,iTop+100,cx-iW*1.08,iTop+132,cx-iW*1.00,iTop+162);
+  ctx.bezierCurveTo(cx-iW*0.90,iTop+192,cx-iW*1.10,iTop+218,cx-iW*0.80,iTop+242);
+  ctx.bezierCurveTo(cx-iW*0.52,iTop+262,cx-iW*0.20,iTop+272,cx,iBot);
+  ctx.lineTo(cx,iTop);ctx.closePath();
+  const giL=ctx.createRadialGradient(cx-iW*0.55,iTop+90,2,cx-iW*0.55,iTop+110,iW*2.8);
+  giL.addColorStop(0,ci(I_hi,I_hiE,e));giL.addColorStop(1,ci(I_dk,I_dkE,e));
+  ctx.fillStyle=giL;ctx.fill();
+  ctx.strokeStyle=ci(I_dk,I_dkE,e);ctx.lineWidth=0.7;ctx.stroke();
+
+  // Droite — plus fine en haut
+  ctx.beginPath();
+  ctx.moveTo(cx,iTop);
+  ctx.bezierCurveTo(cx+4,iTop+12,cx+iW*0.68,iTop+32,cx+iW*0.92,iTop+62);
+  ctx.bezierCurveTo(cx+iW*1.06,iTop+92,cx+iW*0.95,iTop+124,cx+iW*1.02,iTop+156);
+  ctx.bezierCurveTo(cx+iW*1.12,iTop+188,cx+iW*0.90,iTop+214,cx+iW*0.72,iTop+238);
+  ctx.bezierCurveTo(cx+iW*0.48,iTop+258,cx+iW*0.18,iTop+270,cx,iBot);
+  ctx.lineTo(cx,iTop);ctx.closePath();
+  const giR=ctx.createRadialGradient(cx+iW*0.52,iTop+88,2,cx+iW*0.52,iTop+108,iW*2.8);
+  giR.addColorStop(0,ci(I_hi,I_hiE,e));giR.addColorStop(1,ci(I_dk,I_dkE,e));
+  ctx.fillStyle=giR;ctx.fill();
+  ctx.strokeStyle=ci(I_dk,I_dkE,e);ctx.lineWidth=0.7;ctx.stroke();
+
+  // Sillon central
+  ctx.beginPath();
+  ctx.moveTo(cx,iTop+2);
+  ctx.bezierCurveTo(cx-1.5,iTop+60,cx-1,iTop+128,cx+0.5,iTop+188);
+  ctx.bezierCurveTo(cx+1,iTop+222,cx+0.5,iBot-18,cx,iBot);
+  ctx.strokeStyle=`rgba(118,36,36,${0.28+e*0.14})`;ctx.lineWidth=1.2;ctx.stroke();
+
+  // ── CLITORIS ──
+  // Capuchon (hood) = fusion haut des lèvres mineures
+  // En excitation : hood remonte légèrement, gland plus visible et plus grand
+  const hoodY=lerp(72,68,e);      // le hood remonte un peu
+  const hoodW=lerp(16,19,e);      // s'élargit légèrement
+  const hoodH=lerp(30,35,e);
+  const glandY=lerp(70,64,e);     // gland remonte (se dresse)
+  const glandRx=lerp(10,13,e);    // gland grossit
+  const glandRy=lerp(8,11,e);
+  const glandVis=lerp(0.45,0.75,e); // portion visible du gland sous le hood
+
+  // Dessin du gland D'ABORD (partiellement caché par le hood)
+  // UN SEUL gland, gradient radial pour le volume
+  const gGland=ctx.createRadialGradient(cx-3,glandY-2,1,cx,glandY,glandRx*1.4);
+  gGland.addColorStop(0,ci([238,174,156],[244,160,158],e));
+  gGland.addColorStop(0.55,ci([210,130,112],[218,122,128],e));
+  gGland.addColorStop(1,ci([168,82,72],[172,80,96],e));
+
+  // Clip pour ne montrer que la partie inférieure visible du gland
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(cx-glandRx-2, glandY, (glandRx+2)*2, glandRy*2+4);
+  ctx.clip();
+  ctx.beginPath();
+  ctx.ellipse(cx,glandY,glandRx,glandRy*1.2,0,0,Math.PI*2);
+  ctx.fillStyle=gGland;ctx.fill();
+  ctx.strokeStyle=ci([158,88,78],[162,80,94],e);ctx.lineWidth=0.7;ctx.stroke();
+  ctx.restore();
+
+  // Capuchon par-dessus
+  ctx.beginPath();
+  ctx.moveTo(cx-hoodW,hoodY+hoodH);
+  ctx.bezierCurveTo(cx-hoodW-3,hoodY+hoodH*0.5,cx-hoodW*0.78,hoodY+8,cx,hoodY);
+  ctx.bezierCurveTo(cx+hoodW*0.78,hoodY+8,cx+hoodW+3,hoodY+hoodH*0.5,cx+hoodW,hoodY+hoodH);
+  ctx.bezierCurveTo(cx+hoodW*0.42,hoodY+hoodH+9,cx-hoodW*0.42,hoodY+hoodH+9,cx-hoodW,hoodY+hoodH);
+  ctx.closePath();
+  const gCap=ctx.createRadialGradient(cx-3,hoodY+8,2,cx,hoodY+18,hoodW*2.2);
+  gCap.addColorStop(0,ci([236,170,150],[244,176,168],e));
+  gCap.addColorStop(1,ci([190,106,90],[200,100,115],e));
+  ctx.fillStyle=gCap;ctx.fill();
+  ctx.strokeStyle=ci([172,104,88],[174,98,114],e);ctx.lineWidth=0.8;ctx.stroke();
+
+  // ── MÉAT URINAIRE — taille fixe ──
+  ctx.beginPath();ctx.ellipse(cx,148,5,3.5,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(118,45,45,0.78)';ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx,148,2.5,1.8,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(70,22,22,0.55)';ctx.fill();
+
+  // ── OUVERTURE VAGINALE — taille fixe ──
+  const vY=242;
+  ctx.beginPath();ctx.ellipse(cx,vY,15,23,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(136,46,46,0.62)';ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx,vY,8,13,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(88,22,22,0.48)';ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(cx-12,vY-8);ctx.quadraticCurveTo(cx,vY-14,cx+12,vY-8);
+  ctx.strokeStyle='rgba(140,54,54,0.45)';ctx.lineWidth=1;ctx.stroke();
+
+  // ── FOURCHETTE — fixe ──
+  ctx.save();ctx.globalAlpha=0.42;
+  ctx.beginPath();
+  ctx.moveTo(cx-lW*0.5,botY-28);
+  ctx.quadraticCurveTo(cx,botY-17,cx+rW*0.46,botY-32);
+  ctx.strokeStyle=ci(M_dk,M_dkE,e);ctx.lineWidth=1.6;ctx.stroke();
+  ctx.restore();
+
+  // ── ANUS — fixe ──
+  const anY=botY+46;
+  ctx.beginPath();ctx.ellipse(cx,anY,9,7,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(168,130,130,0.25)';ctx.fill();
+
+  ctx.restore(); // libère le clip global
+}
+
+draw(0);
+</script>
