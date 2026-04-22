@@ -6,13 +6,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Raleway:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Raleway', sans-serif; background: #FFFAFD; padding: 16px; }
+  body { font-family: 'Raleway', sans-serif; background: #fff; padding: 0; }
 </style>
 <script>
   function sendHeight() {
     window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, '*');
   }
-  window.addEventListener('load', sendHeight);
+  window.addEventListener("load", function() {
+    sendHeight();
+    new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true, attributes: true });
+  });
   var obs = new MutationObserver(sendHeight);
   document.addEventListener('DOMContentLoaded', function() {
     obs.observe(document.body, { childList: true, subtree: true, attributes: true });
