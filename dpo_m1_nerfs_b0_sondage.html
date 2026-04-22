@@ -12,8 +12,8 @@
   function sendHeight() {
     window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, '*');
   }
-  window.addEventListener('load', sendHeight);
-  document.addEventListener('DOMContentLoaded', function() {
+  window.addEventListener('load', function() {
+    sendHeight();
     new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true, attributes: true });
   });
 </script>
