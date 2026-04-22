@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Raleway:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Raleway', sans-serif; background: #FFFAFD; padding: 16px; }
+</style>
+<script>
+  function sendHeight() {
+    window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  document.addEventListener('DOMContentLoaded', function() {
+    new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true, attributes: true });
+  });
+</script>
+</head>
+<body>
+
+<script>
+var voted = false;
+var data = { A: 22, B: 41, C: 37 };
+
+function vote(choice, btn) {
+  if (voted) return;
+  voted = true;
+
+  /* Désactiver tous les boutons */
+  document.querySelectorAll('.opt-btn').forEach(function(b) {
+    b.style.cursor = 'default';
+    b.onclick = null;
+  });
+
+  /* Highlight du choix sélectionné */
+  btn.style.background = '#FFDE59';
+  btn.style.borderColor = '#FFDE59';
+  btn.style.fontWeight = '800';
+
+  /* Afficher les résultats */
+  var keys = ['A', 'B', 'C'];
+  keys.forEach(function(k) {
+    var bar = document.getElementById('bar-' + k);
+    var pct = document.getElementById('pct-' + k);
+    var row = document.getElementById('row-' + k);
+    pct.textContent = data[k] + '%';
+    pct.style.display = 'block';
+    bar.style.background = 'linear-gradient(to right, #DC143C ' + data[k] + '%, #F0E0E0 ' + data[k] + '%)';
+    row.style.display = 'block';
+    if (k === choice) {
+      bar.style.background = 'linear-gradient(to right, #8A1B1A ' + data[k] + '%, #F0E0E0 ' + data[k] + '%)';
+    }
+  });
+
+  document.getElementById('results-title').style.display = 'block';
+  sendHeight();
+}
+</script>
+
+<!-- Question -->
+<div style="background:#fff; border:1.5px solid #E8D5D5; border-radius:18px; padding:20px 22px; margin-bottom:14px;">
+  <p style="font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 10px;">Sondage</p>
+  <p style="font-size:16px; font-weight:700; color:#1a0505; line-height:1.45; margin:0 0 18px;">Quand tu penses à ta sexualité aujourd'hui, tu te sens plutôt :</p>
+
+  <div style="display:flex; flex-direction:column; gap:10px;">
+
+    <button class="opt-btn" onclick="vote('A',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:14px; padding:13px 18px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">
+      <span style="font-weight:800; color:#DC143C;">A /</span> Trop en mode 'frein' — peu d'envie, difficile de décoller
+    </button>
+
+    <button class="opt-btn" onclick="vote('B',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:14px; padding:13px 18px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">
+      <span style="font-weight:800; color:#DC143C;">B /</span> Trop en mode 'moteur' — sur-stimulation, pression, stress
+    </button>
+
+    <button class="opt-btn" onclick="vote('C',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:14px; padding:13px 18px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">
+      <span style="font-weight:800; color:#DC143C;">C /</span> Ça dépend complètement du contexte
+    </button>
+
+  </div>
+</div>
+
+<!-- Résultats (masqués avant vote) -->
+<div style="background:#FFFAFD; border:1.5px solid #E8D5D5; border-radius:18px; padding:20px 22px;">
+  <p id="results-title" style="display:none; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 14px;">Résultats de la communauté</p>
+
+  <!-- Barre A -->
+  <div id="row-A" style="display:none; margin-bottom:12px;">
+    <div style="display:flex; justify-content:space-between; font-size:13px; color:#444; margin-bottom:5px;">
+      <span><strong style="color:#DC143C;">A /</strong> Mode frein</span>
+      <span id="pct-A" style="display:none; font-weight:700; color:#8A1B1A;"></span>
+    </div>
+    <div id="bar-A" style="height:8px; border-radius:999px; background:#F0E0E0;"></div>
+  </div>
+
+  <!-- Barre B -->
+  <div id="row-B" style="display:none; margin-bottom:12px;">
+    <div style="display:flex; justify-content:space-between; font-size:13px; color:#444; margin-bottom:5px;">
+      <span><strong style="color:#DC143C;">B /</strong> Mode moteur</span>
+      <span id="pct-B" style="display:none; font-weight:700; color:#8A1B1A;"></span>
+    </div>
+    <div id="bar-B" style="height:8px; border-radius:999px; background:#F0E0E0;"></div>
+  </div>
+
+  <!-- Barre C -->
+  <div id="row-C" style="display:none;">
+    <div style="display:flex; justify-content:space-between; font-size:13px; color:#444; margin-bottom:5px;">
+      <span><strong style="color:#DC143C;">C /</strong> Ça dépend du contexte</span>
+      <span id="pct-C" style="display:none; font-weight:700; color:#8A1B1A;"></span>
+    </div>
+    <div id="bar-C" style="height:8px; border-radius:999px; background:#F0E0E0;"></div>
+  </div>
+
+  <!-- Placeholder avant vote -->
+  <p id="placeholder" style="font-size:13px; color:#C4A0A0; font-style:italic; text-align:center; padding:8px 0;">Réponds pour voir les résultats de la communauté</p>
+
+</div>
+
+<script>
+  /* Cache le placeholder dès qu'on vote */
+  document.querySelectorAll('.opt-btn').forEach(function(b) {
+    b.addEventListener('click', function() {
+      document.getElementById('placeholder').style.display = 'none';
+    });
+  });
+</script>
+
+</body>
+</html>
