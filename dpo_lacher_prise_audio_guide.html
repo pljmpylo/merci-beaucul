@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide audio — Ancrage 5 sens — Merci Beaucul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow-x: hidden; }
+  body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; }
+
+  /* ── Header ──────────────────────── */
+  .audio-header { margin: 0 0 16px; }
+  .audio-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin-bottom: 8px;
+  }
+  .audio-title-main {
+    font-size: 18px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .audio-subtitle {
+    font-size: 13.5px;
+    color: #6a4545;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* ── Player card ─────────────────── */
+  .player-card {
+    background: linear-gradient(135deg, #FFFAFD 0%, #FFF5F5 100%);
+    border: 1.5px solid #E8D5D5;
+    border-radius: 22px;
+    padding: 22px 22px;
+    margin-top: 18px;
+  }
+
+  .player-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .play-btn {
+    flex-shrink: 0;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #8A1B1A;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(138, 27, 26, 0.25);
+    color: #fff;
+  }
+  .play-btn:hover {
+    background: #450100;
+    transform: scale(1.05);
+    box-shadow: 0 6px 18px rgba(138, 27, 26, 0.35);
+  }
+  .play-btn:active { transform: scale(0.97); }
+  .play-btn svg { width: 22px; height: 22px; fill: #fff; }
+  .play-btn.playing .play-icon { display: none; }
+  .play-btn:not(.playing) .pause-icon { display: none; }
+
+  .track-info { flex: 1; min-width: 0; }
+  .track-name {
+    font-size: 15px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .track-meta {
+    font-size: 12px;
+    color: #8A1B1A;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .track-meta-dot {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    background: #C8A0A0;
+    border-radius: 50%;
+  }
+
+  /* ── Progress bar ────────────────── */
+  .progress-wrap { user-select: none; }
+  .progress-bar {
+    height: 8px;
+    background: #F0E0E0;
+    border-radius: 999px;
+    cursor: pointer;
+    position: relative;
+    overflow: visible;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8A1B1A, #DC143C);
+    border-radius: 999px;
+    width: 0%;
+    position: relative;
+    transition: width 0.1s linear;
+  }
+  .progress-thumb {
+    position: absolute;
+    right: -7px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    background: #8A1B1A;
+    border: 2.5px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(138, 27, 26, 0.3);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .progress-wrap:hover .progress-thumb,
+  .progress-wrap.playing .progress-thumb { opacity: 1; }
+
+  .time-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6a4545;
+    font-variant-numeric: tabular-nums;
+  }
+  .time-row .current { color: #8A1B1A; font-weight: 700; }
+
+  /* ── Speed control ───────────────── */
+  .controls-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #F0E0E0;
+  }
+  .speed-btn {
+    font-family: 'Raleway', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #8A1B1A;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .speed-btn:hover { border-color: #8A1B1A; background: #FFFAFD; }
+  .speed-btn.active {
+    background: #8A1B1A;
+    color: #fff;
+    border-color: #8A1B1A;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .player-card { padding: 18px 16px; border-radius: 18px; }
+    .play-btn { width: 52px; height: 52px; }
+    .track-name { font-size: 14px; }
+    .track-meta { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ─────────────────────── -->
+<div class="audio-header">
+  <div class="audio-tag">🎧 Guide audio · pour tous les profils</div>
+  <div class="audio-title-main">Ancrage des 5 sens</div>
+  <div class="audio-subtitle">À faire pendant le sexe quand tu sens que tu ne lâches pas prise.</div>
+</div>
+
+<!-- ── PLAYER ─────────────────────── -->
+<div class="player-card">
+  <div class="player-top">
+    <button class="play-btn" id="playBtn" aria-label="Lecture">
+      <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      <svg class="pause-icon" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+    </button>
+    <div class="track-info">
+      <div class="track-name">Ancrage des 5 sens — respiration &amp; scan corporel</div>
+      <div class="track-meta">
+        <span>Guide audio</span>
+        <span class="track-meta-dot"></span>
+        <span id="totalTime">12:15</span>
+        <span class="track-meta-dot"></span>
+        <span>Merci Beaucul</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-fill" id="progressFill">
+        <div class="progress-thumb"></div>
+      </div>
+    </div>
+    <div class="time-row">
+      <span class="current" id="currentTime">0:00</span>
+      <span id="remainingTime">-12:15</span>
+    </div>
+  </div>
+
+  <div class="controls-row">
+    <button class="speed-btn" data-speed="0.75">0.75×</button>
+    <button class="speed-btn active" data-speed="1">1×</button>
+    <button class="speed-btn" data-speed="1.25">1.25×</button>
+    <button class="speed-btn" data-speed="1.5">1.5×</button>
+  </div>
+</div>
+
+<audio id="audioEl" preload="metadata">
+  <source src="dpo_lacher_prise_audio_ancrage.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+(function () {
+  const audio = document.getElementById('audioEl');
+  const playBtn = document.getElementById('playBtn');
+  const progressWrap = document.getElementById('progressWrap');
+  const progressBar = document.getElementById('progressBar');
+  const progressFill = document.getElementById('progressFill');
+  const currentTimeEl = document.getElementById('currentTime');
+  const remainingTimeEl = document.getElementById('remainingTime');
+  const totalTimeEl = document.getElementById('totalTime');
+  const speedBtns = document.querySelectorAll('.speed-btn');
+
+  function fmt(sec) {
+    if (!isFinite(sec) || sec < 0) sec = 0;
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  audio.addEventListener('loadedmetadata', () => {
+    totalTimeEl.textContent = fmt(audio.duration);
+    remainingTimeEl.textContent = '-' + fmt(audio.duration);
+  });
+
+  playBtn.addEventListener('click', () => {
+    if (audio.paused) audio.play();
+    else audio.pause();
+  });
+
+  audio.addEventListener('play', () => {
+    playBtn.classList.add('playing');
+    playBtn.setAttribute('aria-label', 'Pause');
+    progressWrap.classList.add('playing');
+  });
+  audio.addEventListener('pause', () => {
+    playBtn.classList.remove('playing');
+    playBtn.setAttribute('aria-label', 'Lecture');
+    progressWrap.classList.remove('playing');
+  });
+  audio.addEventListener('ended', () => {
+    playBtn.classList.remove('playing');
+    progressWrap.classList.remove('playing');
+  });
+
+  audio.addEventListener('timeupdate', () => {
+    const pct = (audio.currentTime / audio.duration) * 100;
+    progressFill.style.width = (isFinite(pct) ? pct : 0) + '%';
+    currentTimeEl.textContent = fmt(audio.currentTime);
+    remainingTimeEl.textContent = '-' + fmt(audio.duration - audio.currentTime);
+  });
+
+  function seekFromEvent(e) {
+    const rect = progressBar.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const pct = Math.max(0, Math.min(1, x / rect.width));
+    if (isFinite(audio.duration)) audio.currentTime = pct * audio.duration;
+  }
+  progressBar.addEventListener('click', seekFromEvent);
+
+  let dragging = false;
+  progressBar.addEventListener('mousedown', (e) => { dragging = true; seekFromEvent(e); });
+  document.addEventListener('mousemove', (e) => { if (dragging) seekFromEvent(e); });
+  document.addEventListener('mouseup', () => { dragging = false; });
+
+  speedBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      speedBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      audio.playbackRate = parseFloat(btn.dataset.speed);
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
