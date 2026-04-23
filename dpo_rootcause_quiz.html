@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Identifier ta rootcause — Merci Beaucul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Raleway', sans-serif;
+    background: transparent;
+    color: #1a0505;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  body { padding: 8px 4px; }
+
+  .quiz-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 22px;
+    padding: 28px 24px;
+    box-shadow: 0 2px 14px rgba(69, 1, 0, 0.04);
+  }
+
+  /* ── Header ───────────────────────── */
+  .quiz-header { text-align: center; margin-bottom: 22px; }
+  .quiz-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    background: #FFFAFD;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #E8D5D5;
+    margin-bottom: 12px;
+  }
+  .quiz-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .quiz-sub {
+    font-size: 13px;
+    color: #6a4545;
+    font-style: italic;
+  }
+
+  /* ── Progress ─────────────────────── */
+  .progress-wrap {
+    margin: 22px 0 26px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #8A1B1A;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .progress-bar {
+    height: 6px;
+    background: #F5E6E6;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8A1B1A, #DC143C);
+    border-radius: 999px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* ── Question ─────────────────────── */
+  .question { display: none; animation: slideIn 0.35s ease; }
+  .question.active { display: block; }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a0505;
+    line-height: 1.5;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1.5px solid #F0E0E0;
+  }
+  .q-text .q-intro {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #DC143C;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  /* ── Options ──────────────────────── */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #2b1212;
+  }
+  .opt:hover {
+    border-color: #DC143C;
+    background: #FFFAFD;
+    transform: translateY(-1px);
+  }
+  .opt.selected {
+    border-color: #8A1B1A;
+    background: #FFF5F5;
+    box-shadow: 0 2px 8px rgba(138, 27, 26, 0.1);
+  }
+  .opt-letter {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #FFFAFD;
+    border: 1.5px solid #E8D5D5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    color: #8A1B1A;
+    transition: all 0.2s ease;
+  }
+  .opt.selected .opt-letter {
+    background: #8A1B1A;
+    border-color: #8A1B1A;
+    color: #fff;
+  }
+  .opt-text { flex: 1; padding-top: 1px; }
+
+  /* ── Navigation ───────────────────── */
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 22px;
+    gap: 12px;
+  }
+  .btn {
+    font-family: 'Raleway', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-back {
+    background: transparent;
+    color: #8A1B1A;
+    border: 1.5px solid #E8D5D5;
+  }
+  .btn-back:hover:not(:disabled) {
+    background: #FFFAFD;
+    border-color: #8A1B1A;
+  }
+  .btn-back:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .btn-next {
+    background: #8A1B1A;
+    color: #fff;
+    margin-left: auto;
+  }
+  .btn-next:hover:not(:disabled) {
+    background: #450100;
+    transform: translateY(-1px);
+  }
+  .btn-next:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* ── Results ──────────────────────── */
+  .results { display: none; animation: slideIn 0.45s ease; }
+  .results.active { display: block; }
+
+  .result-intro {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .result-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    background: #FFFAFD;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #E8D5D5;
+    margin-bottom: 12px;
+  }
+  .result-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+  }
+
+  .score-bars {
+    background: #FFFAFD;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 22px;
+  }
+  .score-bars-title {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+  .score-row:last-child { margin-bottom: 0; }
+  .score-letter {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 11px;
+    flex-shrink: 0;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    color: #8A1B1A;
+  }
+  .score-row.dominant .score-letter {
+    background: #8A1B1A;
+    color: #fff;
+    border-color: #8A1B1A;
+  }
+  .score-bar-bg {
+    flex: 1;
+    height: 8px;
+    background: #F5E6E6;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .score-bar-fill {
+    height: 100%;
+    background: #C8A0A0;
+    border-radius: 999px;
+    transition: width 0.8s ease;
+  }
+  .score-row.dominant .score-bar-fill {
+    background: linear-gradient(90deg, #8A1B1A, #DC143C);
+  }
+  .score-num {
+    width: 32px;
+    text-align: right;
+    font-weight: 700;
+    color: #450100;
+    flex-shrink: 0;
+  }
+
+  /* Profile card */
+  .profile-card {
+    background: #FFF5F5;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 18px;
+    padding: 22px 20px;
+    margin-bottom: 20px;
+  }
+  .profile-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin-bottom: 8px;
+  }
+  .profile-name {
+    font-size: 18px;
+    font-weight: 800;
+    color: #450100;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+  .profile-desc {
+    font-size: 14px;
+    color: #2b1212;
+    line-height: 1.65;
+    margin-bottom: 14px;
+  }
+  .community-stat {
+    background: #FFFBEA;
+    border: 1px solid #F5E6B8;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-style: italic;
+    color: #7a5a00;
+    margin-bottom: 14px;
+  }
+  .profile-cta {
+    display: inline-block;
+    background: #8A1B1A;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 12px 22px;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .profile-cta:hover {
+    background: #450100;
+    transform: translateY(-1px);
+  }
+
+  .restart {
+    display: block;
+    margin: 18px auto 0;
+    background: transparent;
+    color: #8A1B1A;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    transition: all 0.2s ease;
+  }
+  .restart:hover {
+    background: #FFFAFD;
+    border-color: #8A1B1A;
+  }
+
+  @media (max-width: 520px) {
+    .quiz-wrap { padding: 22px 16px; border-radius: 18px; }
+    .quiz-title { font-size: 19px; }
+    .q-text { font-size: 15px; }
+    .opt { font-size: 13.5px; padding: 12px 14px; }
+    .btn { font-size: 12px; padding: 11px 18px; }
+    .profile-name { font-size: 16px; }
+    .profile-desc { font-size: 13.5px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="quiz-wrap">
+
+  <!-- ── Header ─────────────────────── -->
+  <div class="quiz-header">
+    <div class="quiz-tag">✨ Quiz</div>
+    <div class="quiz-title">Identifier ta rootcause</div>
+    <div class="quiz-sub">13 questions pour comprendre ce qui te freine vraiment</div>
+  </div>
+
+  <!-- ── Progress ───────────────────── -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label">
+      <span id="progressText">Question 1 / 13</span>
+      <span id="progressPct">8%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <!-- ── Questions container ────────── -->
+  <div id="questions"></div>
+
+  <!-- ── Navigation ─────────────────── -->
+  <div class="nav" id="nav">
+    <button class="btn btn-back" id="btnBack" disabled>← Précédent</button>
+    <button class="btn btn-next" id="btnNext" disabled>Suivant →</button>
+  </div>
+
+  <!-- ── Results ────────────────────── -->
+  <div class="results" id="results">
+    <div class="result-intro">
+      <div class="result-tag">🎯 Ton résultat</div>
+      <div class="result-title">Voici ton frein principal</div>
+    </div>
+
+    <div class="score-bars">
+      <div class="score-bars-title">Répartition de tes réponses</div>
+      <div id="scoreBars"></div>
+    </div>
+
+    <div id="profileCards"></div>
+
+    <button class="restart" id="btnRestart">↻ Refaire le quiz</button>
+  </div>
+
+</div>
+
+<script>
+// ── Data ─────────────────────────────────────────────
+const QUESTIONS = [
+  {
+    intro: "Q1 — Quand l'idée d'avoir un rapport arrive :",
+    options: [
+      { l: "A", t: "J'hésite en me demandant si je suis vraiment \"assez\" (excitant·e, orgasmique, libéré·e) pour donner envie." },
+      { l: "B", t: "Je commence tout de suite à calculer le temps, la fatigue, ou si ça va décaler des trucs dans ma journée. J'ai une orga quand même !" },
+      { l: "C", t: "Je me demande si je vais être à la hauteur de ce qu'un·e bon·ne partenaire est censé·e faire." },
+      { l: "D", t: "Je sens une petite alerte dans mon corps (tension, nœud au ventre, appréhension floue), même si en théorie j'ai envie." },
+      { l: "E", t: "Je suis excité·e à l'idée et je pense au plaisir que je vais recevoir et donner." }
+    ]
+  },
+  {
+    intro: "Q2 — Quand ça devient physique (baisers, rapprochement, premiers touchers) :",
+    options: [
+      { l: "A", t: "Je deviens archi conscient·e de mon corps (odeur, peau, poils, ventre…) et j'ai du mal à penser à autre chose que ce que j'aime pas chez moi." },
+      { l: "B", t: "Une partie de ma tête reste sur ma journée, ce que j'ai fait / ce que j'ai à faire, comme si j'avais du mal à couper." },
+      { l: "C", t: "J'ai l'impression de jouer un rôle : je fais ce que je crois qu'il faut faire plutôt que ce dont j'ai vraiment envie." },
+      { l: "D", t: "Par moments, j'ai l'impression de ne plus être tout à fait là, comme si je regardais la scène de loin." },
+      { l: "E", t: "Ça chauffe, ça crée de la tension, je suis à l'aise ! J'aime beaucoup ce moment-là." }
+    ]
+  },
+  {
+    intro: "Q3 — Quand les sensations de plaisir montent et que je suis au bord de l'orgasme :",
+    options: [
+      { l: "A", t: "Les sensations atteignent une sorte de \"plafond\" que je flippe de dépasser parce que je ne sais pas ce qu'il va se passer si je me laisse aller complètement (bruits, tête d'orgasme, perte de contrôle)." },
+      { l: "B", t: "Je peine déjà à arriver jusque-là parce qu'il y a mille autres éléments à prendre en compte : la durée, mon orteil qui me gratte, le rythme chelou dans la chanson en fond." },
+      { l: "C", t: "Je suis tellement focus dessus, je me dis que ça y est, ça vient, faut que j'y arrive, faut que je jouisse, j'y suis presque, et puis rien." },
+      { l: "D", t: "Les sensations montent d'un coup, ça devient trop intense, et mon corps \"coupe\" tout seul comme si quelqu'un appuyait sur stop — ou bien ça ne dépasse jamais un cap." },
+      { l: "E", t: "Je kiffe, je suis au max, continuons des heures." }
+    ]
+  },
+  {
+    intro: "Q4 — Si un geste, un rythme ou une situation ne me convient pas tout à fait :",
+    options: [
+      { l: "A", t: "Je me retiens souvent d'en parler, j'ai un peu peur de \"casser\" le moment ou de ne plus être désirable." },
+      { l: "B", t: "Je me dis que \"ça va passer\", et je me déconnecte un peu en attendant que ça se termine." },
+      { l: "C", t: "Je me convaincs que j'exagère, que \"normalement\" je devrais aimer ça si j'étais un·e bon·ne partenaire." },
+      { l: "D", t: "Je me retrouve parfois comme paralysé·e, sans réussir à bouger ou à dire quoi que ce soit." },
+      { l: "E", t: "Je demande à changer, sans attendre que ça devienne vraiment dérangeant." }
+    ]
+  },
+  {
+    intro: "Q5 — Par rapport au cadre autour du rapport (lieu, moment, organisation) :",
+    options: [
+      { l: "A", t: "Je suis très sensible à des choses comme : porte pas fermée, peur qu'on nous entende, qu'on soit surpris. Ça peut me bloquer fort." },
+      { l: "B", t: "Si j'ai un réveil tôt, un dossier en retard ou mille choses en attente, j'ai beaucoup de mal à me laisser vraiment aller." },
+      { l: "C", t: "Je me sens presque obligé·e de suivre une sorte de \"scénario\" du bon rapport (préliminaires, pénétration, orgasme, etc.)." },
+      { l: "D", t: "Certains lieux, horaires ou ambiances peuvent me rappeler des choses difficiles, et mon corps se met tout de suite en vigilance." },
+      { l: "E", t: "J'arrive à kiffer dans à peu près tous les contextes, ou bien je sais les créer pour être le plus à l'aise possible." }
+    ]
+  },
+  {
+    intro: "Q6 — Quand j'aurais besoin de dire non, de ralentir ou de changer quelque chose :",
+    options: [
+      { l: "A", t: "Je pense d'abord à ce que l'autre va ressentir de moi (relou, compliqué·e, moins attirant·e) et j'ai du mal à m'affirmer." },
+      { l: "B", t: "Je calcule les conséquences : ambiance, conflit potentiel, ce que ça va créer dans la relation, et parfois je laisse glisser." },
+      { l: "C", t: "Une partie de moi pense qu'un·e partenaire \"idéal·e\" ne met pas trop de limites, donc je me tais." },
+      { l: "D", t: "J'ai parfois l'impression que ce n'est pas vraiment une option sûre pour moi de dire non ou de stopper." },
+      { l: "E", t: "Je le dis. Aussi simple que ça." }
+    ]
+  },
+  {
+    intro: "Q7 — En plein rapport, ce qui prend le plus de place dans ma tête, c'est :",
+    options: [
+      { l: "A", t: "Comment je suis perçu·e (sexy ou pas, \"trop\" ou \"pas assez\", à la hauteur ou non)." },
+      { l: "B", t: "Des pensées qui n'ont rien à voir avec le sexe (organisation, soucis, choses à ne pas oublier)." },
+      { l: "C", t: "Des questions sur la \"normalité\" de ce qu'on fait et de ma façon de réagir." },
+      { l: "D", t: "Des envies que ça se termine, ou un flou / vide difficile à décrire." },
+      { l: "E", t: "Mon plaisir, mes sensations, son plaisir, ses sensations." }
+    ]
+  },
+  {
+    intro: "Q8 — De façon globale, quand je pense à ma sexualité :",
+    options: [
+      { l: "A", t: "Je crains souvent le regard des autres si on voyait vraiment comment je suis au lit." },
+      { l: "B", t: "Je me dis que je n'ai pas vraiment pris le temps de m'en occuper, que c'est toujours en bas de ma liste de priorités." },
+      { l: "C", t: "Je vois beaucoup de \"il faut / je dois\" qui viennent de ce que j'ai entendu, vu, appris sur le sexe." },
+      { l: "D", t: "Je sens que certaines choses vécues auparavant continuent d'influencer mon corps et mon rapport au sexe." },
+      { l: "E", t: "Je suis en vrai plutôt satisfait·e et j'adore ces moments avec moi-même ou ma·on partenaire !" }
+    ]
+  },
+  {
+    intro: "Q9 — Dans ma vie de tous les jours, hors sexualité :",
+    options: [
+      { l: "A", t: "J'ai du mal à vraiment recevoir le plaisir (compliments, bons moments, confort) sans le minimiser." },
+      { l: "B", t: "Je suis souvent dans le faire / produire / gérer, et le plaisir passe après tout le reste." },
+      { l: "C", t: "J'ai tendance à croire que le plaisir doit se mériter, être utile ou productif d'une certaine façon." },
+      { l: "D", t: "Il m'arrive de sentir mon corps un peu \"éteint\", avec peu de sensations agréables accessibles." },
+      { l: "E", t: "Je fais attention à prendre du plaisir régulièrement, c'est important pour moi." }
+    ]
+  },
+  {
+    intro: "Q10 — Quand quelqu'un pose vraiment son regard sur moi dans un contexte intime (nu·e, en lingerie…) :",
+    options: [
+      { l: "A", t: "Je me focalise sur ce qui ne va pas chez moi et ça me stresssssse." },
+      { l: "B", t: "Je pense à ce que cela veut dire pour la suite (engagement, attentes, organisation de la relation)." },
+      { l: "C", t: "Je me demande si je \"mérite\" ce regard, si je suis \"à la hauteur\" de cette attention." },
+      { l: "D", t: "Ce regard peut réveiller en moi un inconfort profond, lié à d'autres moments où je ne me sentais pas en sécurité." },
+      { l: "E", t: "J'aime qu'on me donne cette attention-là et je la reçois." }
+    ]
+  },
+  {
+    intro: "Q11 — Si je me laissais aller à 100%, ce qui me ferait le plus peur :",
+    options: [
+      { l: "A", t: "Que l'autre voie tout (mon corps, mes sons, mes émotions) et perde du désir ou du respect pour moi." },
+      { l: "B", t: "De perdre tellement le contrôle que je ne gère plus rien autour (contraception, horaires, conséquences)." },
+      { l: "C", t: "De voir apparaître une version de moi qui ne rentre plus du tout dans l'image \"propre / maîtrisée\" que j'essaie de tenir." },
+      { l: "D", t: "Que quelque chose se déclenche dans mon corps ou mes émotions qui me dépasse complètement." },
+      { l: "E", t: "Rien ! Je suis là pour ça !" }
+    ]
+  },
+  {
+    intro: "Q12 — Quand quelqu'un me dit \"lâche prise\" pendant le sexe :",
+    options: [
+      { l: "A", t: "Je le vis comme une critique déguisée (\"tu n'es pas assez détendu·e / spontané·e\") et je me sens nul·le." },
+      { l: "B", t: "Mon cerveau se met à analyser encore plus : \"Mais concrètement, je suis censé·e faire quoi là ?\"." },
+      { l: "C", t: "Je le range dans la liste des choses à réussir : \"il faut que j'apprenne à bien lâcher prise\"." },
+      { l: "D", t: "Ça peut réveiller des souvenirs de moments où on est allé trop loin sans que je me sente vraiment d'accord." },
+      { l: "E", t: "Ok, je sais que je peux me détendre et que l'autre gère." }
+    ]
+  },
+  {
+    intro: "Q13 — Même avec quelqu'un en qui j'ai confiance, dans un cadre safe, ce qui pourrait encore m'empêcher de me laisser aller :",
+    options: [
+      { l: "A", t: "La peur d'être jugé·e une fois que l'autre m'aura vu·e dans toutes mes vulnérabilités." },
+      { l: "B", t: "La difficulté à éteindre le mode \"contrôle / organisation\" même quand tout est ok." },
+      { l: "C", t: "La force de mes croyances (\"on ne fait pas ça\", \"ça ne se fait pas\", \"ce n'est pas moi\") qui continue de freiner." },
+      { l: "D", t: "Des réactions de mon corps qui restent imprévisibles (freeze, coupure, émotions fortes), même dans un contexte bienveillant." },
+      { l: "E", t: "Bah je sais pas justement ?" }
+    ]
+  }
+];
+
+// ── Profils (TODO : remplacer X par les vraies stats communauté MBCL) ──
+const PROFILES = {
+  A: {
+    name: "Peur & insécurité",
+    desc: "Ton frein principal tourne autour de la <strong>peur / insécurité</strong> : peur d'être jugé·e, pas assez, pas safe, pas désirable. Ton corps se met en retrait parce qu'il cherche à te protéger du regard de l'autre.",
+    stat: "X personnes interrogées chez MBCL ont ce frein.",
+    cta: "Voir les exercices solo & à deux",
+    link: "#"
+  },
+  B: {
+    name: "Charge mentale & mental en surchauffe",
+    desc: "Ton frein vient surtout de la <strong>charge mentale</strong> : ta tête tourne à plein régime et tu as du mal à en sortir, même pendant le sexe. Ton corps attend, mais ton cerveau ne lâche pas.",
+    stat: "X personnes interrogées chez MBCL ont ce frein.",
+    cta: "Voir les exercices solo & à deux",
+    link: "#"
+  },
+  C: {
+    name: "Conditionnements & injonctions",
+    desc: "Ton frein est lié aux <strong>conditionnements et injonctions</strong> : les \"il faut\", la performance, le modèle de sexualité \"comme il faut\". Tu joues un rôle plus que tu ne ressens.",
+    stat: "X personnes interrogées chez MBCL ont ce frein.",
+    cta: "Voir les exercices solo & à deux",
+    link: "#"
+  },
+  D: {
+    name: "Traumas & système nerveux en protection",
+    desc: "Ton frein est du côté des <strong>traumas / système nerveux en mode protection</strong> : freeze, coupure, alerte, malaise fort. Ton corps a appris à se protéger et continue de le faire, même quand le contexte est safe.",
+    stat: "X personnes interrogées chez MBCL ont ce frein.",
+    cta: "Voir les exercices solo & à deux",
+    link: "#"
+  },
+  E: {
+    name: "Pas de frein particulier",
+    desc: "Tu n'as pas de frein particulier pour lâcher prise ! 🎉 C'est peut-être plutôt une histoire de gestes ou d'excitation. Tu peux aller piocher des exercices qui te plaisent dans les tableaux suivants ou passer directement au prochain module.",
+    stat: "",
+    cta: "Passer au prochain module",
+    link: "#"
+  }
+};
+
+// ── State ────────────────────────────────────────────
+let currentQ = 0;
+const answers = new Array(QUESTIONS.length).fill(null);
+
+// ── DOM refs ────────────────────────────────────────
+const questionsEl = document.getElementById('questions');
+const progressText = document.getElementById('progressText');
+const progressPct = document.getElementById('progressPct');
+const progressFill = document.getElementById('progressFill');
+const btnBack = document.getElementById('btnBack');
+const btnNext = document.getElementById('btnNext');
+const resultsEl = document.getElementById('results');
+const navEl = document.getElementById('nav');
+const progressWrap = document.getElementById('progressWrap');
+
+// ── Build questions ──────────────────────────────────
+QUESTIONS.forEach((q, qi) => {
+  const div = document.createElement('div');
+  div.className = 'question' + (qi === 0 ? ' active' : '');
+  div.dataset.q = qi;
+
+  const qText = document.createElement('div');
+  qText.className = 'q-text';
+  qText.innerHTML = q.intro;
+  div.appendChild(qText);
+
+  const optsWrap = document.createElement('div');
+  optsWrap.className = 'options';
+  q.options.forEach((opt) => {
+    const o = document.createElement('div');
+    o.className = 'opt';
+    o.dataset.letter = opt.l;
+    o.innerHTML = '<div class="opt-letter">' + opt.l + '</div><div class="opt-text">' + opt.t + '</div>';
+    o.addEventListener('click', () => selectOption(qi, opt.l, o));
+    optsWrap.appendChild(o);
+  });
+  div.appendChild(optsWrap);
+
+  questionsEl.appendChild(div);
+});
+
+function selectOption(qi, letter, el) {
+  answers[qi] = letter;
+  el.parentElement.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  btnNext.disabled = false;
+}
+
+function showQuestion(index) {
+  document.querySelectorAll('.question').forEach((q, i) => {
+    q.classList.toggle('active', i === index);
+  });
+  currentQ = index;
+  updateProgress();
+  btnBack.disabled = index === 0;
+  btnNext.disabled = answers[index] === null;
+  btnNext.textContent = index === QUESTIONS.length - 1 ? 'Voir mon résultat →' : 'Suivant →';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress() {
+  const pct = Math.round(((currentQ + 1) / QUESTIONS.length) * 100);
+  progressText.textContent = 'Question ' + (currentQ + 1) + ' / ' + QUESTIONS.length;
+  progressPct.textContent = pct + '%';
+  progressFill.style.width = pct + '%';
+}
+
+btnNext.addEventListener('click', () => {
+  if (currentQ < QUESTIONS.length - 1) {
+    showQuestion(currentQ + 1);
+  } else {
+    showResults();
+  }
+});
+
+btnBack.addEventListener('click', () => {
+  if (currentQ > 0) showQuestion(currentQ - 1);
+});
+
+// ── Results ─────────────────────────────────────────
+function showResults() {
+  // Score
+  const scores = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+  answers.forEach(a => { if (a) scores[a]++; });
+
+  // Find dominant letter(s)
+  let max = 0, dominant = [];
+  Object.keys(scores).forEach(l => {
+    if (scores[l] > max) { max = scores[l]; dominant = [l]; }
+    else if (scores[l] === max) { dominant.push(l); }
+  });
+
+  // Build score bars
+  const scoreBars = document.getElementById('scoreBars');
+  scoreBars.innerHTML = '';
+  ['A', 'B', 'C', 'D', 'E'].forEach(l => {
+    const isDom = dominant.includes(l);
+    const pct = Math.round((scores[l] / QUESTIONS.length) * 100);
+    const row = document.createElement('div');
+    row.className = 'score-row' + (isDom ? ' dominant' : '');
+    row.innerHTML =
+      '<div class="score-letter">' + l + '</div>' +
+      '<div class="score-bar-bg"><div class="score-bar-fill" style="width:0%"></div></div>' +
+      '<div class="score-num">' + scores[l] + '</div>';
+    scoreBars.appendChild(row);
+    setTimeout(() => {
+      row.querySelector('.score-bar-fill').style.width = pct + '%';
+    }, 100);
+  });
+
+  // Build profile cards (show all dominant profiles in case of tie)
+  const profileCards = document.getElementById('profileCards');
+  profileCards.innerHTML = '';
+  dominant.forEach(l => {
+    const p = PROFILES[l];
+    const card = document.createElement('div');
+    card.className = 'profile-card';
+    let html =
+      '<div class="profile-label">Profil ' + l + (dominant.length > 1 ? ' · ex æquo' : '') + '</div>' +
+      '<div class="profile-name">' + p.name + '</div>' +
+      '<div class="profile-desc">' + p.desc + '</div>';
+    if (p.stat) html += '<div class="community-stat">' + p.stat + '</div>';
+    html += '<a href="' + p.link + '" class="profile-cta" target="_blank" rel="noopener">' + p.cta + '</a>';
+    card.innerHTML = html;
+    profileCards.appendChild(card);
+  });
+
+  // Hide quiz, show results
+  questionsEl.style.display = 'none';
+  navEl.style.display = 'none';
+  progressWrap.style.display = 'none';
+  resultsEl.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('btnRestart').addEventListener('click', () => {
+  answers.fill(null);
+  currentQ = 0;
+  document.querySelectorAll('.opt.selected').forEach(o => o.classList.remove('selected'));
+  questionsEl.style.display = '';
+  navEl.style.display = '';
+  progressWrap.style.display = '';
+  resultsEl.classList.remove('active');
+  showQuestion(0);
+});
+
+// Init
+updateProgress();
+</script>
+
+</body>
+</html>
