@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercices — Profil B — Merci Beaucul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow-x: hidden; }
+  body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
+  .profile-header { background: linear-gradient(135deg, #FFF5F5 0%, #FFFAFD 100%); border: 1.5px solid #E8D5D5; border-left: 5px solid #8A1B1A; border-radius: 22px; padding: 22px 24px; margin-bottom: 20px; }
+  .profile-header .tag { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: #8A1B1A; margin-bottom: 8px; }
+  .profile-header h1 { font-size: 22px; font-weight: 800; color: #450100; line-height: 1.3; margin-bottom: 14px; }
+  .profile-stat { display: inline-block; background: #fff; border: 1px solid #F5E6B8; color: #7a5a00; font-size: 12.5px; font-style: italic; padding: 6px 14px; border-radius: 999px; margin-bottom: 12px; }
+  .profile-hint { font-size: 14px; color: #2b1212; margin-top: 6px; }
+  .profile-hint strong { color: #8A1B1A; }
+  .section-title { font-size: 11px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: #DC143C; margin: 28px 0 12px; display: flex; align-items: center; gap: 8px; }
+  .audio-player { background: linear-gradient(135deg, #FFFAFD 0%, #FFF5F5 100%); border: 1.5px solid #E8D5D5; border-radius: 16px; padding: 14px 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; }
+  .audio-player .play-btn { flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; background: #8A1B1A; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; transition: all 0.2s; box-shadow: 0 3px 10px rgba(138, 27, 26, 0.2); }
+  .audio-player .play-btn:hover { background: #450100; transform: scale(1.05); }
+  .audio-player .play-btn svg { width: 16px; height: 16px; fill: #fff; }
+  .audio-player .play-btn.playing .play-icon, .audio-player .play-btn:not(.playing) .pause-icon { display: none; }
+  .audio-player .info { flex: 1; min-width: 0; }
+  .audio-player .name { font-size: 13.5px; font-weight: 800; color: #450100; margin-bottom: 4px; }
+  .audio-player .bar { height: 5px; background: #F0E0E0; border-radius: 999px; cursor: pointer; overflow: hidden; margin-bottom: 4px; }
+  .audio-player .bar-fill { height: 100%; background: linear-gradient(90deg, #8A1B1A, #DC143C); width: 0%; border-radius: 999px; transition: width 0.1s linear; }
+  .audio-player .time { font-size: 11px; color: #8A1B1A; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .intro-para { background: #fff; border: 1.5px solid #F0E0E0; border-radius: 16px; padding: 16px 18px; font-size: 13.5px; line-height: 1.7; color: #2b1212; margin-bottom: 22px; }
+  .intro-para strong { color: #450100; }
+  .anxiety-note { background: #FFFBEA; border: 1px solid #F5E6B8; border-left: 3px solid #DC143C; border-radius: 14px; padding: 14px 16px; font-size: 13px; color: #2b1212; line-height: 1.65; margin-bottom: 22px; }
+  .anxiety-note strong { color: #8A1B1A; }
+  .level-card { background: #fff; border: 1.5px solid #E8D5D5; border-radius: 18px; padding: 18px 20px; margin-bottom: 14px; position: relative; overflow: hidden; }
+  .level-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; }
+  .level-card.lv1::before { background: #8BC34A; }
+  .level-card.lv2::before { background: #F5C842; }
+  .level-card.lv3::before { background: #FF9800; }
+  .level-card.lv4::before { background: #E91E63; }
+  .level-card.lv5::before { background: #8A1B1A; }
+  .level-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #F0E0E0; }
+  .level-badge { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; }
+  .level-card.lv1 .level-badge { background: #E8F5D8; color: #4A7C1E; }
+  .level-card.lv2 .level-badge { background: #FFF5D8; color: #8A6D1A; }
+  .level-card.lv3 .level-badge { background: #FFE8D0; color: #A8501E; }
+  .level-card.lv4 .level-badge { background: #FCE4EC; color: #A83050; }
+  .level-card.lv5 .level-badge { background: #FFD8D8; color: #8A1B1A; }
+  .exo-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  .exo-col { background: #FFFAFD; border-radius: 12px; padding: 12px 14px; }
+  .exo-col .exo-label { font-size: 10.5px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #8A1B1A; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .exo-col p { font-size: 13px; line-height: 1.6; color: #2b1212; margin: 0; }
+  .exo-col p + p { margin-top: 8px; }
+  .exo-col strong { color: #450100; }
+  .exo-col em { color: #DC143C; font-style: italic; }
+  .exo-col .empty { color: #C8A0A0; font-style: italic; font-size: 12px; }
+  .exo-col.partner { background: #FFF5F5; }
+  @media (min-width: 720px) { .exo-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  @media (max-width: 480px) { .profile-header { padding: 18px 18px; border-radius: 18px; } .profile-header h1 { font-size: 19px; } .level-card { padding: 16px 16px; } }
+</style>
+</head>
+<body>
+
+<div class="profile-header">
+  <div class="tag">🤯 Profil B</div>
+  <h1>Charge mentale · trop dans la tête</h1>
+  <div class="profile-stat">X personnes interrogées chez MBCL ont ce frein</div>
+</div>
+
+<div class="section-title">🎧 Guides audio</div>
+
+<div class="audio-player">
+  <button class="play-btn"><svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="pause-icon" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg></button>
+  <div class="info">
+    <div class="name">Pleine conscience · Ancrage 5 sens + Respi</div>
+    <div class="bar"><div class="bar-fill"></div></div>
+    <div class="time"><span class="current">0:00</span> / <span class="total">--:--</span></div>
+  </div>
+  <audio preload="metadata" src="https://pljmpylo.github.io/merci-beaucul/dpo_lacher_prise_audio_ancrage.mp3"></audio>
+</div>
+
+<div class="section-title">✏️ Les exercices</div>
+
+<div class="intro-para">
+  Ces exercices sont <strong>triés par niveau de difficulté</strong>. Selon comment tu le sens, tu peux commencer par le premier et suivre l'ordre croissant, ou aller vers celui qui t'appelle instinctivement. Certains se font <strong>pendant un rapport</strong> quand ton esprit part, d'autres en <strong>dehors du sexe</strong> pour entraîner ton système nerveux. C'est la répétition et l'intégration au quotidien qui feront une vraie différence.
+</div>
+
+<div class="anxiety-note">
+  💡 <strong>Si tu te retrouves ici et que tu fais de l'anxiété</strong>, ça peut aussi être dû à ça. N'hésite pas à appliquer ce qui t'aide à gérer ça au quotidien dans ta sexualité, et à explorer en thérapie comment revenir à ta sensorialité.
+</div>
+
+<div class="level-card lv1">
+  <div class="level-header"><span class="level-badge">Niveau 1 / 5</span></div>
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-label">🫶 En solo</div>
+      <p><strong>Planifier un créneau érotique sans multitâche</strong> : bloquer un moment pour toi où tu n'as rien à faire juste avant ou après (même 20 minutes) et t'interdire de checker ton tel pendant ce temps. Ton cerveau sait que ce temps est dédié.</p>
+    </div>
+    <div class="exo-col">
+      <div class="exo-label">👥 À deux</div>
+      <p><strong>Moments érotiques sans but (mais planifiés)</strong> : vous choisissez un créneau où vous n'êtes pas "entre deux trains", pas 10 minutes avant de partir.</p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-label">💞 Pour le·la partenaire</div>
+      <p><strong>Décharger dans la vie de tous les jours</strong> : prendre en charge une partie de la charge mentale (logistique, organisation…) pour libérer de l'espace mental à l'autre, ce qui diminue le stress qui tue le désir.</p>
+    </div>
+  </div>
+</div>
+
+<div class="level-card lv2">
+  <div class="level-header"><span class="level-badge">Niveau 2 / 5</span></div>
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-label">🫶 En solo</div>
+      <p><strong>Vidange mentale</strong> : écrire tout ce qui tourne dans ta tête (to-do, soucis) avant ton moment solo, puis conclure par <em>"Je peux ne PAS m'en occuper pendant 20 minutes."</em></p>
+    </div>
+    <div class="exo-col">
+      <div class="exo-label">👥 À deux</div>
+      <p><strong>Pauses de recentrage</strong> : convenir qu'à tout moment tu peux dire <em>"pause"</em>, et vous prenez 3 respirations ensemble, en contact (main sur le cœur, le ventre, la joue). Ça casse les boucles mentales sans casser le moment.</p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-label">💞 Pour le·la partenaire</div>
+      <p><strong>Guider la respiration</strong> : si le souffle est bloqué ou l'esprit commence à spiraler, proposer d'inspirer / expirer ensemble, lentement et profondément.</p>
+    </div>
+  </div>
+</div>
+
+<div class="level-card lv3">
+  <div class="level-header"><span class="level-badge">Niveau 3 / 5</span></div>
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-label">🫶 En solo</div>
+      <p><strong>Lâcher prise sur la qualité du moment</strong> : avant de commencer, te dire <em>"Ce moment peut être moyen, c'est ok. Le but, c'est juste de me donner de la place, pas de cocher une case."</em></p>
+    </div>
+    <div class="exo-col">
+      <div class="exo-label">👥 À deux</div>
+      <p><strong>But annoncé du moment érotique sans but</strong> : <em>"On profite, peu importe jusqu'où on va"</em>, pas d'obligation d'orgasme ou de performance.</p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-label">💞 Pour le·la partenaire</div>
+      <p><strong>Noyer le cerveau d'excitation et d'infos sensorielles</strong> : multiplier les petites attentions sensorielles (toucher, odeurs, ambiance) pour aider l'autre à basculer du mode "gestion" au mode plaisir.</p>
+    </div>
+  </div>
+</div>
+
+<div class="level-card lv4">
+  <div class="level-header"><span class="level-badge">Niveau 4 / 5</span></div>
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-label">🫶 En solo</div>
+      <p><strong>Pleine conscience simple · 5 sens / respiration</strong> (guide audio ci-dessus) : 2–3 minutes de scan corporel, sentir les points d'appui, observer la respiration, nommer mentalement 3 sensations (chaud, froid, pression, tensions…), sans corriger.</p>
+      <p><em>À faire pendant un rapport pour te ramener au moment présent.</em></p>
+    </div>
+    <div class="exo-col">
+      <div class="exo-label">👥 À deux</div>
+      <p><strong>Respiration synchronisée</strong> : se mettre face à face ou collé·es, respirer au même rythme pendant quelques cycles. Ton cerveau est occupé à "matcher" l'autre, ce qui l'aide à se calmer.</p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-label">💞 Pour le·la partenaire</div>
+      <p><strong>Edging</strong> : jouer avec l'excitation en montant / descendant sans aller tout de suite à l'orgasme, pour entraîner le cerveau à rester dans les sensations plutôt que dans le but.</p>
+    </div>
+  </div>
+</div>
+
+<div class="level-card lv5">
+  <div class="level-header"><span class="level-badge">Niveau 5 / 5</span></div>
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-label">🫶 En solo</div>
+      <p><strong>Mouvement micro</strong> : allongé·e ou assis·e, faire de mini mouvements (bassin, épaules, nuque) pour sortir du mode statue et redonner un peu de fluidité au corps.</p>
+      <p><em>À faire pendant un rapport pour te ramener au moment présent.</em></p>
+    </div>
+    <div class="exo-col">
+      <div class="exo-label">👥 À deux</div>
+      <p class="empty">—</p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-label">💞 Pour le·la partenaire</div>
+      <p><strong>Domination, soumission, Shibari</strong> : jouer avec un cadre clair de D/S ou de contention (cordes, immobilisation consentie) pour externaliser le contrôle et alléger la charge mentale, dans un cadre très sécurisé et explicite.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.audio-player').forEach(player => {
+  const audio = player.querySelector('audio');
+  const btn = player.querySelector('.play-btn');
+  const bar = player.querySelector('.bar');
+  const barFill = player.querySelector('.bar-fill');
+  const current = player.querySelector('.current');
+  const total = player.querySelector('.total');
+  function fmt(s) { if (!isFinite(s) || s < 0) s = 0; const m = Math.floor(s / 60), sec = Math.floor(s % 60); return m + ':' + (sec < 10 ? '0' : '') + sec; }
+  audio.addEventListener('loadedmetadata', () => total.textContent = fmt(audio.duration));
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.audio-player audio').forEach(a => { if (a !== audio) a.pause(); });
+    document.querySelectorAll('.audio-player .play-btn').forEach(b => { if (b !== btn) b.classList.remove('playing'); });
+    if (audio.paused) audio.play(); else audio.pause();
+  });
+  audio.addEventListener('play', () => btn.classList.add('playing'));
+  audio.addEventListener('pause', () => btn.classList.remove('playing'));
+  audio.addEventListener('ended', () => btn.classList.remove('playing'));
+  audio.addEventListener('timeupdate', () => { const pct = (audio.currentTime / audio.duration) * 100; barFill.style.width = (isFinite(pct) ? pct : 0) + '%'; current.textContent = fmt(audio.currentTime); });
+  bar.addEventListener('click', (e) => { const r = bar.getBoundingClientRect(); const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)); if (isFinite(audio.duration)) audio.currentTime = pct * audio.duration; });
+});
+</script>
+
+</body>
+</html>

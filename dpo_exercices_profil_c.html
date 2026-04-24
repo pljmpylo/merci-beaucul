@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercices — Profil C — Merci Beaucul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow-x: hidden; }
+  body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
+  .profile-header { background: linear-gradient(135deg, #FFF5F5 0%, #FFFAFD 100%); border: 1.5px solid #E8D5D5; border-left: 5px solid #8A1B1A; border-radius: 22px; padding: 22px 24px; margin-bottom: 20px; }
+  .profile-header .tag { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: #8A1B1A; margin-bottom: 8px; }
+  .profile-header h1 { font-size: 22px; font-weight: 800; color: #450100; line-height: 1.3; margin-bottom: 14px; }
+  .profile-stat { display: inline-block; background: #fff; border: 1px solid #F5E6B8; color: #7a5a00; font-size: 12.5px; font-style: italic; padding: 6px 14px; border-radius: 999px; margin-bottom: 12px; }
+  .profile-hint { font-size: 14px; color: #2b1212; margin-top: 6px; }
+  .profile-hint strong { color: #8A1B1A; }
+  .section-title { font-size: 11px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: #DC143C; margin: 28px 0 12px; display: flex; align-items: center; gap: 8px; }
+  .audio-player { background: linear-gradient(135deg, #FFFAFD 0%, #FFF5F5 100%); border: 1.5px solid #E8D5D5; border-radius: 16px; padding: 14px 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; }
+  .audio-player .play-btn { flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; background: #8A1B1A; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; transition: all 0.2s; box-shadow: 0 3px 10px rgba(138, 27, 26, 0.2); }
+  .audio-player .play-btn:hover { background: #450100; transform: scale(1.05); }
+  .audio-player .play-btn svg { width: 16px; height: 16px; fill: #fff; }
+  .audio-player .play-btn.playing .play-icon, .audio-player .play-btn:not(.playing) .pause-icon { display: none; }
+  .audio-player .info { flex: 1; min-width: 0; }
+  .audio-player .name { font-size: 13.5px; font-weight: 800; color: #450100; margin-bottom: 4px; }
+  .audio-player .bar { height: 5px; background: #F0E0E0; border-radius: 999px; cursor: pointer; overflow: hidden; margin-bottom: 4px; }
+  .audio-player .bar-fill { height: 100%; background: linear-gradient(90deg, #8A1B1A, #DC143C); width: 0%; border-radius: 999px; transition: width 0.1s linear; }
+  .audio-player .time { font-size: 11px; color: #8A1B1A; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .intro-para { background: #fff; border: 1.5px solid #F0E0E0; border-radius: 16px; padding: 16px 18px; font-size: 13.5px; line-height: 1.7; color: #2b1212; margin-bottom: 22px; }
+  .intro-para strong { color: #450100; }
+  .level-card { background: #fff; border: 1.5px solid #E8D5D5; border-radius: 18px; padding: 18px 20px; margin-bottom: 14px; position: relative; overflow: hidden; }
+  .level-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; }
+  .level-card.lv1::before { background: #8BC34A; }
+  .level-card.lv2::before { background: #F5C842; }
+  .level-card.lv3::before { background: #FF9800; }
+  .level-card.lv4::before { background: #E91E63; }
+  .level-card.lv5::before { background: #8A1B1A; }
+  .level-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #F0E0E0; }
+  .level-badge { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; }
+  .level-card.lv1 .level-badge { background: #E8F5D8; color: #4A7C1E; }
+  .level-card.lv2 .level-badge { background: #FFF5D8; color: #8A6D1A; }
+  .level-card.lv3 .level-badge { background: #FFE8D0; color: #A8501E; }
+  .level-card.lv4 .level-badge { background: #FCE4EC; color: #A83050; }
+  .level-card.lv5 .level-badge { background: #FFD8D8; color: #8A1B1A; }
+  .exo-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  .exo-col { background: #FFFAFD; border-radius: 12px; padding: 12px 14px; }
+  .exo-col .exo-label { font-size: 10.5px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #8A1B1A; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .exo-col p { font-size: 13px; line-height: 1.6; color: #2b1212; margin: 0; }
+  .exo-col p + p { margin-top: 8px; }
+  .exo-col strong { color: #450100; }
+  .exo-col em { color: #DC143C; font-style: italic; }
+  .exo-col .empty { color: #C8A0A0; font-style: italic; font-size: 12px; }
+  .exo-col.partner { background: #FFF5F5; }
+  .warning-text { background: #FFF0F0; border-left: 3px solid #DC143C; padding: 10px 12px; border-radius: 8px; margin-top: 10px; font-size: 12.5px; color: #8A1B1A; font-weight: 600; }
+  @media (min-width: 720px) { .exo-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  @media (max-width: 480px) { .profile-header { padding: 18px 18px; border-radius: 18px; } .profile-header h1 { font-size: 19px; } .level-card { padding: 16px 16px; } }
+</style>
+</head>
+<body>
+
+<div class="profile-header">
+  <div class="tag">🏆 Profil C</div>
+  <h1>Conditionnements · injonctions · performance</h1>
+  <div class="profile-stat">X personnes interrogées chez MBCL ont ce frein</div>
+  <div class="profile-hint">→ Ce profil si tu penses que tu dois <strong>absolument jouir sans sextoy</strong>, ou que ton·ta partenaire doit te faire jouir <strong>sans que tu interviennes</strong>.</div>
+</div>
+
+<div class="section-title">🎧 Guides audio</div>
+
+<div class="audio-player">
+  <button class="play-btn"><svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="pause-icon" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg></button>
+  <div class="info"><div class="name">Pussy Massage Solo</div><div class="bar"><div class="bar-fill"></div></div><div class="time"><span class="current">0:00</span> / <span class="total">--:--</span></div></div>
+  <audio preload="metadata" src="https://pljmpylo.github.io/merci-beaucul/edging.mp3"></audio>
+</div>
+
+<div class="audio-player">
+  <button class="play-btn"><svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="pause-icon" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg></button>
+  <div class="info"><div class="name">Pussy Massage Duo</div><div class="bar"><div class="bar-fill"></div></div><div class="time"><span class="current">0:00</span> / <span class="total">--:--</span></div></div>
+  <audio preload="metadata" src="https://pljmpylo.github.io/merci-beaucul/pussy_massage_duo.mp3"></audio>
+</div>
+
+<div class="section-title">✏️ Les exercices</div>
+
+<div class="intro-para">
+  Ces exercices sont <strong>triés par niveau de difficulté</strong>. Selon comment tu le sens, tu peux commencer par le premier et suivre l'ordre croissant, ou aller vers celui qui t'appelle instinctivement. Certains se font <strong>pendant un rapport</strong> quand ton esprit part, d'autres en <strong>dehors du sexe</strong> pour entraîner ton système nerveux. C'est la répétition et l'intégration au quotidien qui feront une vraie différence.
+</div>
+
+<div class="level-card lv1">
+  <div class="level-header"><span class="level-badge">Niveau 1 / 5</span></div>
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-label">🫶 En solo</div>
+      <p><strong>Son pour casser la honte</strong> : en solo, faire volontairement des petits sons exagérés (soupirs, <em>"mmm"</em>, rires, petits gémissements), même si ça te semble ridicule, pour apprendre <em>"je peux produire un son et il ne se passe rien de grave."</em></p>
+    </div>
+    <div class="exo-col">
+      <div class="exo-label">👥 À deux</div>
+      <p><strong>Mouvement + son pour déjouer la peur du ridicule</strong> : créer un mini rituel de dédramatisation de 10 minutes (danse, bruits chelous volontaires), pour envoyer à ton corps <em>"le ridicule n'est pas dangereux ici."</em></p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-label">💞 Pour le·la partenaire</div>
+      <p><strong>Observer sans juger</strong> : accueillir les sons et mouvements de l'autre sans se moquer, sans les corriger, juste en restant présent·e.</p>
+    </div>
+  </div>
+</div>
+
+<div class="level-card lv1">
+  <div class="level-header"><span class="level-badge">Niveau 1 / 5 · bis</span></div>
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-label">🫶 En solo</div>
+      <p><strong>Déconstruire la performance</strong> : choisir une activité où tu es objectivement éclaté·e (dessin, karaoké, danse…) et la faire sans chercher à progresser ou à produire un résultat visuel, seulement pour le plaisir que ça te procure.</p>
+    </div>
+    <div class="exo-col">
+      <div class="exo-label">👥 À deux</div>
+      <p class="empty">—</p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-label">💞 Pour le·la partenaire</div>
+      <p><strong>Reformuler les injonctions que tu portes aussi</strong> et les questionner à voix haute pour alléger la pression des deux côtés.</p>
+      <div class="warning-text">⚠️ Ne surtout PAS mettre la pression de l'orgasme sous prétexte de remise en cause de tes qualités d'amant·e. Ce n'est pas de toi dont il s'agit ici.</div>
+    </div>
+  </div>
+</div>
+
+<div class="level-card lv2">
+  <div class="level-header"><span class="level-badge">Niveau 2 / 5</span></div>
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-label">🫶 En solo</div>
+      <p><strong>Explorer ce qui t'excite vraiment</strong> : lister ce qui t'intrigue ou t'excite, même si tu ne veux pas le vivre en vrai.</p>
+    </div>
+    <div class="exo-col">
+      <div class="exo-label">👥 À deux</div>
+      <p><strong>Redéfinir ensemble "un bon rapport"</strong> : conversation hors du lit sur ce qui compte pour vous (connexion, curiosité, rire, sécurité…).</p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-label">💞 Pour le·la partenaire</div>
+      <p class="empty">—</p>
+    </div>
+  </div>
+</div>
+
+<div class="level-card lv2">
+  <div class="level-header"><span class="level-badge">Niveau 2 / 5 · bis</span></div>
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-label">🫶 En solo</div>
+      <p><strong>Lâcher prise sur le lâcher prise</strong> : ne pas chercher à lâcher prise du tout pour le prochain rapport. Observe comment tu ne lâches pas prise <em>hyper bien</em>.</p>
+    </div>
+    <div class="exo-col">
+      <div class="exo-label">👥 À deux</div>
+      <p><strong>Planifier des moments purement anatomiques</strong> : séances "test" où l'on commente ce que fait chaque toucher, sans objectif de plaisir ni d'orgasme.</p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-label">💞 Pour le·la partenaire</div>
+      <p><strong>Faire des compliments +++ pendant le cul</strong> : compliments précis et non pornifiés (visage, corps, gestes), sans rester bloqué·e sur une zone qui pourrait être un complexe.</p>
+    </div>
+  </div>
+</div>
+
+<div class="level-card lv3">
+  <div class="level-header"><span class="level-badge">Niveau 3 / 5</span></div>
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-label">🫶 En solo</div>
+      <p><strong>Explorer sans but (et sans jugement)</strong> : en solo, poser l'intention <em>"j'explore des sensations"</em> avec une micro-quête (trouver un nouveau point sensible, tester pression vs friction, périnée qui se contracte/relâche…).</p>
+    </div>
+    <div class="exo-col">
+      <div class="exo-label">👥 À deux</div>
+      <p><strong>Interdit de rendre les caresses</strong>. Pendant 20 minutes : une personne donne, l'autre reçoit. Ne pas inverser les rôles pour cette séance (une prochaine fois éventuellement), simplement se remercier d'avoir donné ou reçu.</p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-label">💞 Pour le·la partenaire</div>
+      <p><strong>Adopter une posture d'explorateur·rice</strong> : poser des questions (<em>"là c'est comment ?"</em>), noter ce que l'autre aime sans chercher à "performer".</p>
+    </div>
+  </div>
+</div>
+
+<div class="level-card lv4">
+  <div class="level-header"><span class="level-badge">Niveau 4 / 5</span></div>
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-label">🫶 En solo</div>
+      <p class="empty">—</p>
+    </div>
+    <div class="exo-col">
+      <div class="exo-label">👥 À deux</div>
+      <p><strong>Regarder un porno amateur &amp; éthique ensemble</strong> et voir ce qui est de l'ordre de la performance pour vous vs de la réalité.</p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-label">💞 Pour le·la partenaire</div>
+      <p><strong>Soutenir après coup</strong> : proposer d'écouter ce que l'exercice a réveillé (plaisir, gêne, émotions) sans chercher à rassurer à tout prix ni minimiser.</p>
+    </div>
+  </div>
+</div>
+
+<div class="level-card lv4">
+  <div class="level-header"><span class="level-badge">Niveau 4 / 5 · bis</span></div>
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-label">🫶 En solo</div>
+      <p><strong>Edging</strong> : ne plus viser l'orgasme mais les sensations. Tester contractions, connexion aux sens, différer volontairement l'orgasme.</p>
+    </div>
+    <div class="exo-col">
+      <div class="exo-label">👥 À deux</div>
+      <p><strong>Accueillir le regard de l'autre</strong> : te laisser regarder (habillé·e, en lingerie, partiellement nu·e) pendant qu'iel dit ce qu'iel apprécie. Mets une lumière tamisée pour être plus à l'aise si besoin.</p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-label">💞 Pour le·la partenaire</div>
+      <p class="empty">—</p>
+    </div>
+  </div>
+</div>
+
+<div class="level-card lv5">
+  <div class="level-header"><span class="level-badge">Niveau 5 / 5</span></div>
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-label">🫶 En solo</div>
+      <p><strong>Pussy massage</strong> (audio guidé ci-dessus) : en solo, suivre l'audio pour masser ta vulve ou ton sexe, explorer les sensations sans pression d'orgasme ni de performance.</p>
+    </div>
+    <div class="exo-col">
+      <div class="exo-label">👥 À deux</div>
+      <p><strong>Pussy massage</strong> (audio guidé ci-dessus) : séance où tu touches la vulve ou la zone génitale de l'autre en suivant l'audio, sans chercher l'orgasme.</p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-label">💞 Pour le·la partenaire</div>
+      <p class="empty">—</p>
+    </div>
+  </div>
+</div>
+
+<div class="level-card lv5">
+  <div class="level-header"><span class="level-badge">Niveau 5 / 5 · bis</span></div>
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-label">🫶 En solo</div>
+      <p class="empty">—</p>
+    </div>
+    <div class="exo-col">
+      <div class="exo-label">👥 À deux</div>
+      <p><strong>Edging à deux</strong> (audio guidé) : interdire de jouir, faire monter et redescendre le plaisir, jouer avec la frustration de façon consentie.</p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-label">💞 Pour le·la partenaire</div>
+      <p><strong>Tenir l'espace de la frustration</strong> : vérifier régulièrement le consentement, accepter de s'arrêter si c'est trop, et ne pas "récompenser" forcément par un orgasme.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.audio-player').forEach(player => {
+  const audio = player.querySelector('audio');
+  const btn = player.querySelector('.play-btn');
+  const bar = player.querySelector('.bar');
+  const barFill = player.querySelector('.bar-fill');
+  const current = player.querySelector('.current');
+  const total = player.querySelector('.total');
+  function fmt(s) { if (!isFinite(s) || s < 0) s = 0; const m = Math.floor(s / 60), sec = Math.floor(s % 60); return m + ':' + (sec < 10 ? '0' : '') + sec; }
+  audio.addEventListener('loadedmetadata', () => total.textContent = fmt(audio.duration));
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.audio-player audio').forEach(a => { if (a !== audio) a.pause(); });
+    document.querySelectorAll('.audio-player .play-btn').forEach(b => { if (b !== btn) b.classList.remove('playing'); });
+    if (audio.paused) audio.play(); else audio.pause();
+  });
+  audio.addEventListener('play', () => btn.classList.add('playing'));
+  audio.addEventListener('pause', () => btn.classList.remove('playing'));
+  audio.addEventListener('ended', () => btn.classList.remove('playing'));
+  audio.addEventListener('timeupdate', () => { const pct = (audio.currentTime / audio.duration) * 100; barFill.style.width = (isFinite(pct) ? pct : 0) + '%'; current.textContent = fmt(audio.currentTime); });
+  bar.addEventListener('click', (e) => { const r = bar.getBoundingClientRect(); const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)); if (isFinite(audio.duration)) audio.currentTime = pct * audio.duration; });
+});
+</script>
+
+</body>
+</html>
