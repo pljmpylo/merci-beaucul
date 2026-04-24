@@ -405,8 +405,8 @@
 
   <div class="progress-wrap" id="progressWrap">
     <div class="progress-label">
-      <span id="progressText">Question 1 / 4</span>
-      <span id="progressPct">25 %</span>
+      <span id="progressText">0 / 4 questions répondues</span>
+      <span id="progressPct">0 %</span>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   </div>
@@ -518,6 +518,7 @@ function selectOption(qi, score, el) {
   answers[qi] = score;
   el.parentElement.querySelectorAll('.likert-opt').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
+  updateProgress();
 
   advancing = true;
   setTimeout(() => {
@@ -532,7 +533,6 @@ function showQuestion(index) {
     q.classList.toggle('active', i === index);
   });
   currentQ = index;
-  updateProgress();
   btnBack.disabled = index === 0;
   const activeQ = document.querySelectorAll('.question')[index];
   if (activeQ && answers[index] !== null) {
@@ -544,8 +544,9 @@ function showQuestion(index) {
 }
 
 function updateProgress() {
-  const pct = Math.round(((currentQ + 1) / QUESTIONS.length) * 100);
-  progressText.textContent = 'Question ' + (currentQ + 1) + ' / ' + QUESTIONS.length;
+  const answered = answers.filter(a => a !== null).length;
+  const pct = Math.round((answered / QUESTIONS.length) * 100);
+  progressText.textContent = answered + ' / ' + QUESTIONS.length + ' question' + (answered > 1 ? 's' : '') + ' répondue' + (answered > 1 ? 's' : '');
   progressPct.textContent = pct + ' %';
   progressFill.style.width = pct + '%';
 }
