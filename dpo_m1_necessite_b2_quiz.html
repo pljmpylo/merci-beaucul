@@ -3,140 +3,623 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Raleway:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>Module 1 · Bloc 2 · Quiz — Merci Beaucul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Raleway', sans-serif; background: #fff; padding: 0; overflow: hidden; }
-</style>
-<script>
-  function sendHeight() {
-    var h = document.body.scrollHeight;
-    window.parent.postMessage({ iframeHeight: h }, '*');
+  html, body { background: transparent; overflow-x: hidden; }
+  body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
+
+  /* ── HEADER ─────────────────────── */
+  .section-title { margin-bottom: 20px; }
+  .section-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    background: #FFFAFD;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #E8D5D5;
+    margin-bottom: 10px;
   }
-  window.addEventListener("load", function() {
-    sendHeight();
-    new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true, attributes: true });
-  });
-  window.addEventListener('resize', sendHeight);
-  var obs = new MutationObserver(sendHeight);
-  obs.observe(document.body, { childList: true, subtree: true, attributes: true });
-</script>
+  .section-heading {
+    font-size: 22px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+  }
+
+  /* ── Citation hero ──── */
+  .hero-quote {
+    background: linear-gradient(135deg, #FFF5F5 0%, #FFFAFD 100%);
+    border: 1.5px solid #E8D5D5;
+    border-left: 5px solid #DC143C;
+    border-radius: 18px;
+    padding: 24px 26px;
+    margin: 22px 0 28px;
+  }
+  .hero-quote-text {
+    font-family: 'Lora', serif;
+    font-size: 18px;
+    font-style: italic;
+    line-height: 1.65;
+    color: #450100;
+    margin-bottom: 10px;
+  }
+  .hero-quote-author {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+  }
+
+  .subhead {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin: 28px 0 14px;
+  }
+
+  /* ── Quiz container ──── */
+  .quiz-wrap {
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 22px;
+    padding: 24px 22px;
+    margin-bottom: 22px;
+  }
+
+  .quiz-intro {
+    text-align: center;
+    font-size: 13.5px;
+    color: #6a4545;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    font-style: italic;
+  }
+
+  /* ── Progress ──── */
+  .progress-wrap { margin-bottom: 22px; }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #8A1B1A;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .progress-bar {
+    height: 6px;
+    background: #F5E6E6;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8A1B1A, #DC143C);
+    border-radius: 999px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* ── Question ──── */
+  .question { display: none; animation: slideIn 0.35s ease; }
+  .question.active { display: block; }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .q-label {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #DC143C;
+    background: #FFFAFD;
+    border: 1px solid #E8D5D5;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  .q-text {
+    font-family: 'Lora', serif;
+    font-size: 17px;
+    font-style: italic;
+    font-weight: 600;
+    color: #450100;
+    line-height: 1.45;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1.5px solid #F0E0E0;
+  }
+
+  .likert-options {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .likert-opt {
+    font-family: 'Raleway', sans-serif;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 14px;
+    padding: 13px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2b1212;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+  }
+  .likert-opt:hover:not(.selected) {
+    border-color: #DC143C;
+    background: #FFFAFD;
+    transform: translateY(-1px);
+  }
+  .likert-opt.selected {
+    border-color: #8A1B1A;
+    background: #FFF5F5;
+    box-shadow: 0 2px 8px rgba(138, 27, 26, 0.1);
+  }
+  .likert-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+  .likert-opt.selected .likert-dot {
+    border-color: #8A1B1A;
+    background: #8A1B1A;
+  }
+  .likert-opt.selected .likert-dot::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+  }
+  .likert-label { flex: 1; }
+
+  /* ── Navigation ──── */
+  .nav {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 18px;
+  }
+  .btn-back {
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: transparent;
+    color: #8A1B1A;
+    border: 1.5px solid #E8D5D5;
+    padding: 10px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-back:hover:not(:disabled) {
+    background: #FFFAFD;
+    border-color: #8A1B1A;
+  }
+  .btn-back:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  /* ── Result ──── */
+  .result { display: none; animation: slideIn 0.45s ease; }
+  .result.active { display: block; }
+
+  .result-icon-wrap {
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .result-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    font-size: 36px;
+  }
+  .result-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 8px;
+    margin-top: 10px;
+  }
+  .result-title {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #450100;
+    line-height: 1.3;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .result-desc {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: #2b1212;
+    background: #FFFAFD;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 16px;
+    padding: 18px 20px;
+  }
+
+  .result.red .result-icon { background: #FFE1E1; }
+  .result.red .result-label { color: #8A1B1A; }
+  .result.yellow .result-icon { background: #FFF1DB; }
+  .result.yellow .result-label { color: #8a5a1a; }
+  .result.green .result-icon { background: #F0F8E8; }
+  .result.green .result-label { color: #4A7C1E; }
+
+  .result-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 18px;
+  }
+  .btn-restart {
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: transparent;
+    color: #8A1B1A;
+    border: 1.5px solid #E8D5D5;
+    padding: 10px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-restart:hover {
+    background: #FFFAFD;
+    border-color: #8A1B1A;
+  }
+
+  /* ── Exercice ──── */
+  .exo-card {
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 18px;
+    padding: 20px 22px;
+    border-top: 4px solid #8A1B1A;
+    margin-top: 14px;
+  }
+  .exo-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #F0E0E0;
+  }
+  .exo-emoji { font-size: 22px; flex-shrink: 0; }
+  .exo-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.35;
+  }
+  .intention-badge {
+    display: inline-block;
+    font-family: 'Lora', serif;
+    font-size: 14.5px;
+    font-style: italic;
+    font-weight: 600;
+    color: #450100;
+    background: #FFF5F5;
+    border: 1px solid #E8D5D5;
+    border-radius: 999px;
+    padding: 8px 16px;
+    margin-bottom: 14px;
+  }
+  .exo-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 6px;
+  }
+  @media (min-width: 720px) {
+    .exo-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .exo-col {
+    background: #FFFAFD;
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .exo-col.partner { background: #FFF5F5; }
+  .exo-col-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    margin-bottom: 8px;
+  }
+  .exo-col p {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #2b1212;
+    margin: 0;
+  }
+  .exo-col strong { color: #450100; }
+  .exo-col em { color: #DC143C; font-style: italic; }
+
+  @media (max-width: 520px) {
+    .quiz-wrap { padding: 22px 16px; border-radius: 18px; }
+    .q-text { font-size: 16px; }
+    .likert-opt { font-size: 13.5px; padding: 12px 15px; }
+    .result-title { font-size: 18px; }
+  }
+</style>
 </head>
 <body>
 
-<script>
-function mbVote(qNum, score, btn) {
-  var g = document.getElementById('mb-q' + qNum);
-  if (g.getAttribute('data-voted')) return;
-  g.setAttribute('data-voted', '1');
-  g.setAttribute('data-score', score);
-  g.querySelectorAll('button').forEach(function(b) {
-    b.style.background = '#fff';
-    b.style.borderColor = '#E8D5D5';
-    b.style.fontWeight = '600';
-    b.style.cursor = 'default';
-    b.onclick = null;
-  });
-  btn.style.background = '#FFDE59';
-  btn.style.borderColor = '#FFDE59';
-  btn.style.fontWeight = '700';
-  var s1 = document.getElementById('mb-q1').getAttribute('data-score');
-  var s2 = document.getElementById('mb-q2').getAttribute('data-score');
-  var s3 = document.getElementById('mb-q3').getAttribute('data-score');
-  var s4 = document.getElementById('mb-q4').getAttribute('data-score');
-  if (s1 !== null && s2 !== null && s3 !== null && s4 !== null) {
-    var t = parseInt(s1) + parseInt(s2) + parseInt(s3) + parseInt(s4);
-    var bx = document.getElementById('mb-res-box');
-    var ic = document.getElementById('mb-res-icon');
-    var ti = document.getElementById('mb-res-title');
-    var de = document.getElementById('mb-res-desc');
-    if (t >= 4) {
-      ic.textContent = '🔴';
-      ti.textContent = 'Le conditionnement est bien présent';
-      de.textContent = "Tu as grandi dans un environnement où le plaisir se méritait, se justifiait, se cachait. Ce programme est fait pour toi — pas pour te changer, mais pour te redonner ce qui t'appartient déjà.";
-      bx.style.borderColor = '#DC143C';
-      bx.style.background = '#FFF5F5';
-    } else if (t >= 0) {
-      ic.textContent = '🟡';
-      ti.textContent = 'Tu es en transition';
-      de.textContent = "Tu as commencé à questionner certaines croyances, mais d'autres tiennent encore. C'est exactement le bon moment pour aller plus loin — tu as déjà les fondations.";
-      bx.style.borderColor = '#FFDE59';
-      bx.style.background = '#FFFBEA';
-    } else {
-      ic.textContent = '🟢';
-      ti.textContent = 'Tu as largement déconstruit';
-      de.textContent = "Tu sembles avoir une relation assez libre avec ton plaisir et ton désir. Ce module va te permettre de solidifier ça — et peut-être de mettre des mots sur ce qui t'a aidé à en arriver là.";
-      bx.style.borderColor = '#8A1B1A';
-      bx.style.background = '#F5EDE3';
-    }
-    bx.style.display = 'block';
-  }
-}
-</script>
-
-<!-- Q1 -->
-<div style="background:#fff; border:1.5px solid #E8D5D5; border-radius:18px; padding:20px 22px; margin-bottom:14px;">
-  <p style="font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 8px;">Question 1 sur 4</p>
-  <p style="font-size:16px; font-weight:700; color:#1a0505; line-height:1.4; margin:0 0 14px;">"On m'a appris : il faut mériter le plaisir."</p>
-  <div id="mb-q1" style="display:flex; flex-direction:column; gap:9px;">
-    <button onclick="mbVote(1,'2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Très vrai</button>
-    <button onclick="mbVote(1,'1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Plutôt vrai</button>
-    <button onclick="mbVote(1,'0',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Ça dépend</button>
-    <button onclick="mbVote(1,'-1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Plutôt faux</button>
-    <button onclick="mbVote(1,'-2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Très faux</button>
-  </div>
+<!-- ── HEADER ─────────────────── -->
+<div class="section-title">
+  <div class="section-tag">🌍 Bloc 2 · Quiz</div>
+  <div class="section-heading">Culture &amp; tabous : ce qu'on t'a (pas) appris sur le plaisir</div>
 </div>
 
-<!-- Q2 -->
-<div style="background:#fff; border:1.5px solid #E8D5D5; border-radius:18px; padding:20px 22px; margin-bottom:14px;">
-  <p style="font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 8px;">Question 2 sur 4</p>
-  <p style="font-size:16px; font-weight:700; color:#1a0505; line-height:1.4; margin:0 0 14px;">"On parle plus de ce qui va mal que de ce qui fait du bien."</p>
-  <div id="mb-q2" style="display:flex; flex-direction:column; gap:9px;">
-    <button onclick="mbVote(2,'2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Très vrai</button>
-    <button onclick="mbVote(2,'1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Plutôt vrai</button>
-    <button onclick="mbVote(2,'0',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Ça dépend</button>
-    <button onclick="mbVote(2,'-1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Plutôt faux</button>
-    <button onclick="mbVote(2,'-2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Très faux</button>
-  </div>
+<!-- ── CITATION HERO ─────────── -->
+<div class="hero-quote">
+  <div class="hero-quote-text">"La douleur est première, comme une langue maternelle. Mais le plaisir, c'est une langue apprise."</div>
 </div>
 
-<!-- Q3 -->
-<div style="background:#fff; border:1.5px solid #E8D5D5; border-radius:18px; padding:20px 22px; margin-bottom:14px;">
-  <p style="font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 8px;">Question 3 sur 4</p>
-  <p style="font-size:16px; font-weight:700; color:#1a0505; line-height:1.4; margin:0 0 14px;">"On m'a appris à donner du plaisir, pas à en recevoir."</p>
-  <div id="mb-q3" style="display:flex; flex-direction:column; gap:9px;">
-    <button onclick="mbVote(3,'2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Très vrai</button>
-    <button onclick="mbVote(3,'1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Plutôt vrai</button>
-    <button onclick="mbVote(3,'0',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Ça dépend</button>
-    <button onclick="mbVote(3,'-1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Plutôt faux</button>
-    <button onclick="mbVote(3,'-2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Très faux</button>
-  </div>
-</div>
+<!-- ── AUTO-EVAL ─────────────── -->
+<div class="subhead">🪞 Auto-évaluation</div>
 
-<!-- Q4 -->
-<div style="background:#fff; border:1.5px solid #E8D5D5; border-radius:18px; padding:20px 22px; margin-bottom:14px;">
-  <p style="font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 8px;">Question 4 sur 4</p>
-  <p style="font-size:16px; font-weight:700; color:#1a0505; line-height:1.4; margin:0 0 14px;">"Je me demande si j'ai vraiment le droit de vouloir du plaisir."</p>
-  <div id="mb-q4" style="display:flex; flex-direction:column; gap:9px;">
-    <button onclick="mbVote(4,'2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Très vrai</button>
-    <button onclick="mbVote(4,'1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Plutôt vrai</button>
-    <button onclick="mbVote(4,'0',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Ça dépend</button>
-    <button onclick="mbVote(4,'-1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Plutôt faux</button>
-    <button onclick="mbVote(4,'-2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Très faux</button>
-  </div>
-</div>
+<div class="quiz-wrap">
+  <div class="quiz-intro" id="quizIntro">4 affirmations pour repérer où tu en es avec le conditionnement autour du plaisir.<br>Clique sur ta réponse — ça avance tout seul.</div>
 
-<!-- Profil -->
-<div id="mb-res-box" style="display:none; border:2px solid #DC143C; border-radius:18px; padding:24px 26px; margin-top:6px; font-family:'Raleway',sans-serif;">
-  <p style="font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 12px;">Ton profil</p>
-  <div style="display:flex; align-items:flex-start; gap:14px;">
-    <span id="mb-res-icon" style="font-size:28px; flex-shrink:0; margin-top:2px;"></span>
-    <div>
-      <p id="mb-res-title" style="font-family:'Lora',serif; font-size:18px; font-weight:600; color:#450100; margin:0 0 10px; line-height:1.3;"></p>
-      <p id="mb-res-desc" style="font-size:14px; line-height:1.75; color:#444; margin:0;"></p>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label">
+      <span id="progressText">Question 1 / 4</span>
+      <span id="progressPct">25 %</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div id="questions"></div>
+
+  <div class="nav" id="nav">
+    <button class="btn-back" id="btnBack" disabled>← Précédent</button>
+  </div>
+
+  <div class="result" id="result">
+    <div class="result-icon-wrap">
+      <div class="result-icon" id="resIcon"></div>
+    </div>
+    <div class="result-label">🎯 Ton profil</div>
+    <div class="result-title" id="resTitle"></div>
+    <div class="result-desc" id="resDesc"></div>
+    <div class="result-actions">
+      <button class="btn-restart" id="btnRestart">↻ Refaire le quiz</button>
     </div>
   </div>
 </div>
+
+<!-- ── EXERCICE ──────────────── -->
+<div class="subhead">✏️ Exercice</div>
+
+<div class="exo-card">
+  <div class="exo-header">
+    <span class="exo-emoji">🎁</span>
+    <div class="exo-title">Accepter que tu mérites du plaisir et de l'attention</div>
+  </div>
+
+  <div class="intention-badge">Intention · recevoir sans justifier</div>
+
+  <div class="exo-grid">
+    <div class="exo-col">
+      <div class="exo-col-label">🫶 En solo · pour toi</div>
+      <p>Quand on te fait un compliment, tu réponds juste <strong>« merci »</strong>, sans te justifier, sans minimiser. Quand on t'offre quelque chose, tu l'acceptes <em>sans immédiatement penser à ce que tu dois faire en retour</em>.</p>
+    </div>
+    <div class="exo-col partner">
+      <div class="exo-col-label">💞 À deux · avec le·la partenaire</div>
+      <p>Proposer une <strong>« douche de compliments »</strong> : tu le·la regardes vraiment et tu lui fais des compliments très précis sur son corps, son énergie, sa personnalité. Iel doit simplement dire <em>« merci »</em> avant que tu passes au suivant.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  '« On m\'a appris : il faut mériter le plaisir. »',
+  '« On parle plus de ce qui va mal que de ce qui fait du bien. »',
+  '« On m\'a appris à donner du plaisir, pas à en recevoir. »',
+  '« Je me demande si j\'ai vraiment le droit de vouloir du plaisir. »'
+];
+const OPTIONS = [
+  { label: 'Très vrai',   score:  2 },
+  { label: 'Plutôt vrai', score:  1 },
+  { label: 'Ça dépend',   score:  0 },
+  { label: 'Plutôt faux', score: -1 },
+  { label: 'Très faux',   score: -2 }
+];
+
+let currentQ = 0;
+const answers = new Array(QUESTIONS.length).fill(null);
+let advancing = false;
+
+const questionsEl = document.getElementById('questions');
+const progressText = document.getElementById('progressText');
+const progressPct = document.getElementById('progressPct');
+const progressFill = document.getElementById('progressFill');
+const btnBack = document.getElementById('btnBack');
+const navEl = document.getElementById('nav');
+const progressWrap = document.getElementById('progressWrap');
+const quizIntro = document.getElementById('quizIntro');
+const resultEl = document.getElementById('result');
+
+// Build questions
+QUESTIONS.forEach((qText, qi) => {
+  const div = document.createElement('div');
+  div.className = 'question' + (qi === 0 ? ' active' : '');
+  div.dataset.q = qi;
+
+  const label = document.createElement('div');
+  label.className = 'q-label';
+  label.textContent = 'Question ' + (qi + 1) + ' sur ' + QUESTIONS.length;
+  div.appendChild(label);
+
+  const text = document.createElement('div');
+  text.className = 'q-text';
+  text.textContent = qText;
+  div.appendChild(text);
+
+  const opts = document.createElement('div');
+  opts.className = 'likert-options';
+  OPTIONS.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'likert-opt';
+    btn.dataset.score = opt.score;
+    btn.innerHTML = '<span class="likert-dot"></span><span class="likert-label">' + opt.label + '</span>';
+    btn.addEventListener('click', () => selectOption(qi, opt.score, btn));
+    opts.appendChild(btn);
+  });
+  div.appendChild(opts);
+
+  questionsEl.appendChild(div);
+});
+
+function selectOption(qi, score, el) {
+  if (advancing) return;
+  answers[qi] = score;
+  el.parentElement.querySelectorAll('.likert-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+
+  advancing = true;
+  setTimeout(() => {
+    advancing = false;
+    if (currentQ < QUESTIONS.length - 1) showQuestion(currentQ + 1);
+    else showResults();
+  }, 350);
+}
+
+function showQuestion(index) {
+  document.querySelectorAll('.question').forEach((q, i) => {
+    q.classList.toggle('active', i === index);
+  });
+  currentQ = index;
+  updateProgress();
+  btnBack.disabled = index === 0;
+  const activeQ = document.querySelectorAll('.question')[index];
+  if (activeQ && answers[index] !== null) {
+    activeQ.querySelectorAll('.likert-opt').forEach(o => {
+      o.classList.toggle('selected', parseInt(o.dataset.score) === answers[index]);
+    });
+  }
+  setTimeout(post, 100);
+}
+
+function updateProgress() {
+  const pct = Math.round(((currentQ + 1) / QUESTIONS.length) * 100);
+  progressText.textContent = 'Question ' + (currentQ + 1) + ' / ' + QUESTIONS.length;
+  progressPct.textContent = pct + ' %';
+  progressFill.style.width = pct + '%';
+}
+
+btnBack.addEventListener('click', () => {
+  if (currentQ > 0) showQuestion(currentQ - 1);
+});
+
+function showResults() {
+  const total = answers.reduce((a, b) => a + b, 0);
+  let profile;
+  if (total >= 4) {
+    profile = { cls: 'red', icon: '🔴', title: 'Le conditionnement est bien présent',
+      desc: "Tu as grandi dans un environnement où le plaisir se méritait, se justifiait, se cachait. Ce programme est fait pour toi — pas pour te changer, mais pour te redonner ce qui t'appartient déjà." };
+  } else if (total >= 0) {
+    profile = { cls: 'yellow', icon: '🟡', title: 'Tu es en transition',
+      desc: "Tu as commencé à questionner certaines croyances, mais d'autres tiennent encore. C'est exactement le bon moment pour aller plus loin — tu as déjà les fondations." };
+  } else {
+    profile = { cls: 'green', icon: '🟢', title: 'Tu es largement déconstruit',
+      desc: "Tu sembles avoir une relation assez libre avec ton plaisir et ton désir. Ce module va te permettre de solidifier ça — et peut-être de mettre des mots sur ce qui t'a aidé à en arriver là." };
+  }
+
+  resultEl.classList.remove('red', 'yellow', 'green');
+  resultEl.classList.add(profile.cls);
+  document.getElementById('resIcon').textContent = profile.icon;
+  document.getElementById('resTitle').textContent = profile.title;
+  document.getElementById('resDesc').textContent = profile.desc;
+
+  questionsEl.style.display = 'none';
+  navEl.style.display = 'none';
+  progressWrap.style.display = 'none';
+  quizIntro.style.display = 'none';
+  resultEl.classList.add('active');
+  setTimeout(post, 150);
+}
+
+document.getElementById('btnRestart').addEventListener('click', () => {
+  answers.fill(null);
+  currentQ = 0;
+  document.querySelectorAll('.likert-opt.selected').forEach(o => o.classList.remove('selected'));
+  questionsEl.style.display = '';
+  navEl.style.display = '';
+  progressWrap.style.display = '';
+  quizIntro.style.display = '';
+  resultEl.classList.remove('active');
+  showQuestion(0);
+});
+
+updateProgress();
+
+/* ── Auto-resize iframe ── */
+(function() {
+  window.post = function() {
+    try {
+      var h = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        document.documentElement.offsetHeight
+      );
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'dpo-resize', height: h }, '*');
+      }
+    } catch(e) {}
+  };
+  if (typeof ResizeObserver !== 'undefined') {
+    try { new ResizeObserver(window.post).observe(document.body); } catch(e) {}
+  }
+  window.addEventListener('load', window.post);
+  window.addEventListener('resize', window.post);
+  setTimeout(window.post, 100);
+  setTimeout(window.post, 500);
+  setTimeout(window.post, 1500);
+})();
+</script>
 
 </body>
 </html>
