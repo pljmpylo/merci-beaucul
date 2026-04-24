@@ -182,68 +182,12 @@
     border-color: #8A1B1A;
   }
 
-  /* ── Profile CTAs ────────────────── */
-  .profiles-section {
-    margin-top: 22px;
-  }
-  .profiles-label {
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #8A1B1A;
-    text-align: center;
-    margin-bottom: 12px;
-  }
-  .profiles-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  .profile-link {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 14px 14px;
-    background: #fff;
-    border: 1.5px solid #E8D5D5;
-    border-radius: 14px;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    min-height: 72px;
-  }
-  .profile-link:hover {
-    border-color: #8A1B1A;
-    background: #FFFAFD;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(138, 27, 26, 0.1);
-  }
-  .profile-link-label {
-    font-size: 10.5px;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #8A1B1A;
-    margin-bottom: 4px;
-  }
-  .profile-link-name {
-    font-size: 13px;
-    font-weight: 700;
-    color: #450100;
-    line-height: 1.3;
-  }
-  .profile-link.full {
-    grid-column: 1 / -1;
-  }
-
   /* Responsive */
   @media (max-width: 480px) {
     .player-card { padding: 18px 16px; border-radius: 18px; }
     .play-btn { width: 52px; height: 52px; }
     .track-name { font-size: 14px; }
     .track-meta { font-size: 11.5px; }
-    .profiles-grid { grid-template-columns: 1fr; }
-    .profile-link { min-height: 0; }
   }
 </style>
 </head>
@@ -296,35 +240,8 @@
 </div>
 
 <audio id="audioEl" preload="metadata">
-  <source src="https://pljmpylo.github.io/merci-beaucul/dpo_lacher_prise_audio_ancrage.mp3" type="audio/mpeg">
+  <source src="https://pljmpylo.github.io/merci-beaucul/dpo_audio_ancrage_solo.mp3" type="audio/mpeg">
 </audio>
-
-<!-- ── 4 CTAs PROFILS ─────────────── -->
-<div class="profiles-section">
-  <div class="profiles-label">Accède aux exercices de ton profil</div>
-  <div class="profiles-grid">
-    <a href="https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755849" class="profile-link" target="_top">
-      <div class="profile-link-label">Profil A</div>
-      <div class="profile-link-name">Peur &amp; insécurité</div>
-    </a>
-    <a href="https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755851" class="profile-link" target="_top">
-      <div class="profile-link-label">Profil B</div>
-      <div class="profile-link-name">Charge mentale</div>
-    </a>
-    <a href="https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755855" class="profile-link" target="_top">
-      <div class="profile-link-label">Profil C</div>
-      <div class="profile-link-name">Conditionnements &amp; injonctions</div>
-    </a>
-    <a href="https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755860" class="profile-link" target="_top">
-      <div class="profile-link-label">Profil D</div>
-      <div class="profile-link-name">Traumas</div>
-    </a>
-    <a href="https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755862" class="profile-link full" target="_top">
-      <div class="profile-link-label">Profil Neuroatypique</div>
-      <div class="profile-link-name">Neurodivergence &amp; hypersensibilité</div>
-    </a>
-  </div>
-</div>
 
 <script>
 (function () {
