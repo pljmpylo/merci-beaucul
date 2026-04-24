@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Communication · Avant — Merci Beaucul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow-x: hidden; }
+  body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
+
+  .section-title {
+    margin-bottom: 20px;
+  }
+  .section-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    background: #FFFAFD;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #E8D5D5;
+    margin-bottom: 10px;
+  }
+  .section-heading {
+    font-size: 22px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+  }
+
+  .subhead {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin: 28px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── Phrases prêtes à l'emploi ──── */
+  .phrase-card {
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .phrase-num {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #FFFAFD;
+    border: 1.5px solid #E8D5D5;
+    color: #8A1B1A;
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .phrase-text {
+    flex: 1;
+    font-family: 'Lora', serif;
+    font-size: 14.5px;
+    font-style: italic;
+    line-height: 1.65;
+    color: #2b1212;
+  }
+
+  /* ── Tableau feux tricolores ──── */
+  .traffic-table {
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 18px;
+    overflow: hidden;
+    margin: 14px 0 24px;
+  }
+  .traffic-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 1fr;
+    border-bottom: 1px solid #F0E0E0;
+  }
+  .traffic-row:last-child { border-bottom: none; }
+  .traffic-row.head {
+    background: #FFFAFD;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+  }
+  .traffic-cell {
+    padding: 14px 16px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: #2b1212;
+    border-right: 1px solid #F0E0E0;
+  }
+  .traffic-cell:last-child { border-right: none; }
+  .traffic-row:not(.head) .traffic-cell:first-child {
+    font-weight: 800;
+    color: #450100;
+  }
+  .traffic-row.green:not(.head) .traffic-cell:first-child { background: #F0F8E8; color: #3e6f16; }
+  .traffic-row.orange:not(.head) .traffic-cell:first-child { background: #FFF1DB; color: #8a5a1a; }
+  .traffic-row.red:not(.head) .traffic-cell:first-child { background: #FFE1E1; color: #8A1B1A; }
+  .traffic-row.neutral:not(.head) .traffic-cell:first-child { background: #FFFAFD; }
+
+  /* ── Toggle ──── */
+  .toggle {
+    border: 1.5px solid #E8D5D5;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    background: #fff;
+  }
+  .toggle-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 22px;
+    cursor: pointer;
+    background: #fff;
+    user-select: none;
+    gap: 12px;
+  }
+  .toggle-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #450100;
+    line-height: 1.35;
+  }
+  .toggle-arrow {
+    font-size: 22px;
+    color: #DC143C;
+    line-height: 1;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+  .toggle-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s ease, opacity 0.35s ease;
+    opacity: 0;
+  }
+  .toggle-body-inner {
+    padding: 6px 22px 22px;
+    border-top: 1px solid #F0E0E0;
+  }
+
+  /* ── Framework table (dans toggle) ──── */
+  .fw-table {
+    margin-top: 14px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1.5px solid #E8D5D5;
+  }
+  .fw-row {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    border-bottom: 1px solid #F0E0E0;
+  }
+  .fw-row:last-child { border-bottom: none; }
+  .fw-row.head {
+    background: #FFFAFD;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+  }
+  .fw-cell {
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.55;
+    border-right: 1px solid #F0E0E0;
+  }
+  .fw-cell:last-child { border-right: none; }
+  .fw-row:not(.head) .fw-cell:first-child {
+    font-weight: 700;
+    color: #450100;
+    background: #FFFAFD;
+  }
+  .fw-row:not(.head) .fw-cell:last-child {
+    color: #2b1212;
+    font-style: italic;
+  }
+
+  @media (max-width: 600px) {
+    .traffic-row { grid-template-columns: 1fr; }
+    .traffic-cell { border-right: none; border-bottom: 1px solid #F0E0E0; }
+    .traffic-cell:last-child { border-bottom: none; }
+    .traffic-row:not(.head) .traffic-cell:first-child {
+      border-radius: 0;
+      font-size: 13px;
+      padding: 10px 16px;
+    }
+    .traffic-row.head { display: none; }
+    .fw-row { grid-template-columns: 1fr; }
+    .fw-cell { border-right: none; }
+    .fw-row:not(.head) .fw-cell:first-child { padding-bottom: 4px; }
+    .fw-row:not(.head) .fw-cell:last-child { padding-top: 4px; border-top: none; }
+    .fw-row.head { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER SECTION ─────────────── -->
+<div class="section-title">
+  <div class="section-tag">💬 Bloc 1</div>
+  <div class="section-heading">Parler AVANT un rapport</div>
+</div>
+
+<!-- ── PHRASES PRÊTES ─────────────── -->
+<div class="subhead">✨ Phrases prêtes à l'emploi</div>
+
+<div class="phrase-card">
+  <div class="phrase-num">1</div>
+  <div class="phrase-text">« Est-ce qu'on peut se prendre un moment pour parler de ce qu'on fait dans la chambre ? J'ai trouvé des infos que j'aimerais te partager. »</div>
+</div>
+
+<div class="phrase-card">
+  <div class="phrase-num">2</div>
+  <div class="phrase-text">« Ce soir, j'ai envie de quelque chose de doux / de lent / sans pénétration / plus centré sur moi·toi. »</div>
+</div>
+
+<div class="phrase-card">
+  <div class="phrase-num">3</div>
+  <div class="phrase-text">« Voici ce qui est no-go pour moi, voici ce qui est "à tester si je suis en confiance". »</div>
+</div>
+
+<div class="phrase-card">
+  <div class="phrase-num">4</div>
+  <div class="phrase-text">« Si je fais ce geste, ça veut dire qu'il faut arrêter tout de suite / que tu peux aller plus fort /… »</div>
+</div>
+
+<div class="phrase-card">
+  <div class="phrase-num">5</div>
+  <div class="phrase-text">« Si je dis rouge, ça veut qu'on arrête immédiatement, sans négociation. »</div>
+</div>
+
+<!-- ── TABLEAU FEUX TRICOLORES ─────── -->
+<div class="subhead">🚦 Codes & signaux — le système feux tricolores</div>
+
+<div class="traffic-table">
+  <div class="traffic-row head">
+    <div class="traffic-cell">Code</div>
+    <div class="traffic-cell">Signification</div>
+    <div class="traffic-cell">Exemples concrets</div>
+  </div>
+  <div class="traffic-row green">
+    <div class="traffic-cell">🟢 Vert</div>
+    <div class="traffic-cell">Tout va bien, tu peux continuer / intensifier.</div>
+    <div class="traffic-cell">Respiration fluide, mouvements qui suivent, sons de plaisir.</div>
+  </div>
+  <div class="traffic-row orange">
+    <div class="traffic-cell">🟠 Orange</div>
+    <div class="traffic-cell">C'est limite, on ralentit, on reste là ou on baisse d'un cran.</div>
+    <div class="traffic-cell">Dire "doucement", "reste comme ça", ralentir le rythme, se figer un peu.</div>
+  </div>
+  <div class="traffic-row red">
+    <div class="traffic-cell">🔴 Rouge</div>
+    <div class="traffic-cell">On s'arrête tout de suite, on fait une vraie pause.</div>
+    <div class="traffic-cell">Dire "stop", se retirer, changer complètement d'activité.</div>
+  </div>
+  <div class="traffic-row neutral">
+    <div class="traffic-cell">🗝️ Mots codés</div>
+    <div class="traffic-cell">Mots hors contexte, utilisés exprès pour signaler.</div>
+    <div class="traffic-cell">« Ananas », « Popcorn », « Cirque »</div>
+  </div>
+  <div class="traffic-row neutral">
+    <div class="traffic-cell">✋ Gestes codés</div>
+    <div class="traffic-cell">Signaux non verbaux à repérer et respecter.</div>
+    <div class="traffic-cell">Tapoter 3 fois, claquer des doigts, lever la main paume ouverte.</div>
+  </div>
+</div>
+
+<!-- ── TOGGLE ESPACE SÉCURISÉ ──────── -->
+<div class="toggle">
+  <div class="toggle-head" onclick="var n=this.nextElementSibling; var o=n.style.maxHeight&&n.style.maxHeight!=='0px'; n.style.maxHeight=o?'0px':n.scrollHeight+'px'; n.style.opacity=o?'0':'1'; var a=this.querySelector('.toggle-arrow'); if(a) a.style.transform=o?'rotate(0deg)':'rotate(180deg)';">
+    <div class="toggle-title">
+      <span style="font-size:18px;">🏡</span>
+      <span>Créer un espace sécurisé et confortable pour discuter</span>
+    </div>
+    <span class="toggle-arrow">&#8964;</span>
+  </div>
+  <div class="toggle-body">
+    <div class="toggle-body-inner">
+      <p style="font-size:13.5px; line-height:1.65; color:#2b1212; margin-top:10px;">Fiche à remplir à deux pour construire votre cadre de discussion.</p>
+      <div class="fw-table">
+        <div class="fw-row head">
+          <div class="fw-cell">Thème</div>
+          <div class="fw-cell">Questions à se poser</div>
+        </div>
+        <div class="fw-row">
+          <div class="fw-cell">Lieu</div>
+          <div class="fw-cell">Où est-ce qu'on se sent le plus à l'aise pour en parler ?</div>
+        </div>
+        <div class="fw-row">
+          <div class="fw-cell">Fréquence</div>
+          <div class="fw-cell">À quel rythme on a envie de faire ces discussions ?</div>
+        </div>
+        <div class="fw-row">
+          <div class="fw-cell">Agenda / rappel</div>
+          <div class="fw-cell">Est-ce qu'on a envie de le noter dans un agenda / un rappel ? Lequel, sous quel nom ?</div>
+        </div>
+        <div class="fw-row">
+          <div class="fw-cell">Questions récurrentes · 1</div>
+          <div class="fw-cell">Première question qu'on pose presque à chaque fois.</div>
+        </div>
+        <div class="fw-row">
+          <div class="fw-cell">Questions récurrentes · 2</div>
+          <div class="fw-cell">Deuxième question qu'on pose presque à chaque fois.</div>
+        </div>
+        <div class="fw-row">
+          <div class="fw-cell">Questions récurrentes · 3</div>
+          <div class="fw-cell">Troisième question qu'on pose presque à chaque fois.</div>
+        </div>
+        <div class="fw-row">
+          <div class="fw-cell">Durée</div>
+          <div class="fw-cell">Combien de temps on se donne en général pour ces discussions ?</div>
+        </div>
+        <div class="fw-row">
+          <div class="fw-cell">Distractions à couper</div>
+          <div class="fw-cell">Qu'est-ce qu'on coupe / enlève comme distractions pendant ce temps-là ?</div>
+        </div>
+        <div class="fw-row">
+          <div class="fw-cell">Ambiance</div>
+          <div class="fw-cell">C'est quoi l'ambiance qu'on a envie de créer ?</div>
+        </div>
+        <div class="fw-row">
+          <div class="fw-cell">Ton / attitude</div>
+          <div class="fw-cell">Quel ton on se promet d'avoir pendant ces discussions ?</div>
+        </div>
+        <div class="fw-row">
+          <div class="fw-cell">Filet de sécurité</div>
+          <div class="fw-cell">C'est quoi notre "filet de sécurité" si ça devient trop intense ?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Auto-resize iframe ── */
+(function() {
+  function post() {
+    try {
+      var h = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        document.documentElement.offsetHeight
+      );
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'dpo-resize', height: h }, '*');
+      }
+    } catch(e) {}
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    try { new ResizeObserver(post).observe(document.body); } catch(e) {}
+  }
+  window.addEventListener('load', post);
+  window.addEventListener('resize', post);
+  document.addEventListener('click', function(){ setTimeout(post, 100); setTimeout(post, 600); }, true);
+  setTimeout(post, 100);
+  setTimeout(post, 500);
+  setTimeout(post, 1500);
+})();
+</script>
+
+</body>
+</html>

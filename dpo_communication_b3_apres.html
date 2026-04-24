@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Communication · Après — Merci Beaucul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow-x: hidden; }
+  body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
+
+  .section-title { margin-bottom: 20px; }
+  .section-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    background: #FFFAFD;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #E8D5D5;
+    margin-bottom: 10px;
+  }
+  .section-heading {
+    font-size: 22px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+  }
+
+  .subhead {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin: 28px 0 14px;
+  }
+
+  /* ── Questions clés ──── */
+  .question-card {
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    border-left: 4px solid #8A1B1A;
+  }
+  .question-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    margin-bottom: 6px;
+  }
+  .question-text {
+    font-family: 'Lora', serif;
+    font-size: 15px;
+    font-style: italic;
+    line-height: 1.6;
+    color: #450100;
+  }
+  .question-text + .question-sub {
+    margin-top: 6px;
+    font-size: 12.5px;
+    font-style: normal;
+    color: #6a4545;
+    font-family: 'Raleway', sans-serif;
+    line-height: 1.5;
+  }
+
+  /* ── Stat ──── */
+  .stat-callout {
+    background: #FFFBEA;
+    border: 1px solid #F5E6B8;
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin: 24px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .stat-icon { font-size: 22px; flex-shrink: 0; }
+  .stat-content { flex: 1; }
+  .stat-tag {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #8a6d1a;
+    margin-bottom: 4px;
+  }
+  .stat-text {
+    font-size: 14px;
+    font-style: italic;
+    color: #450100;
+    line-height: 1.55;
+  }
+  .stat-text strong { font-weight: 800; color: #8A1B1A; font-style: normal; }
+
+  /* ── Toggle ──── */
+  .toggle {
+    border: 1.5px solid #E8D5D5;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    background: #fff;
+  }
+  .toggle-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 22px;
+    cursor: pointer;
+    background: #fff;
+    user-select: none;
+    gap: 12px;
+  }
+  .toggle-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #450100;
+    line-height: 1.35;
+  }
+  .toggle-arrow {
+    font-size: 22px;
+    color: #DC143C;
+    line-height: 1;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+  .toggle-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.8s ease, opacity 0.35s ease;
+    opacity: 0;
+  }
+  .toggle-body-inner {
+    padding: 6px 22px 22px;
+    border-top: 1px solid #F0E0E0;
+  }
+
+  /* ── Filter pills (objectif) ──── */
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 14px 0 16px;
+  }
+  .filter-pill {
+    font-family: 'Raleway', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1.5px solid #E8D5D5;
+    background: #fff;
+    color: #8A1B1A;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .filter-pill:hover { border-color: #8A1B1A; background: #FFFAFD; }
+  .filter-pill.active { background: #8A1B1A; color: #fff; border-color: #8A1B1A; }
+
+  /* ── Conv cards (inside toggle 1) ──── */
+  .conv-card {
+    background: #FFFAFD;
+    border: 1px solid #F0E0E0;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    transition: opacity 0.25s, transform 0.25s;
+  }
+  .conv-card.hidden { display: none; }
+
+  .conv-meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .meta-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .meta-obj { background: #E8D5D5; color: #450100; }
+  .meta-format-text { background: #E4F0FF; color: #1e4e8a; }
+  .meta-format-vocal { background: #F5E8D8; color: #8a5a1a; }
+  .meta-tension-0 { background: #F0F8E8; color: #3e6f16; }
+  .meta-tension-1 { background: #FFF1DB; color: #8a5a1a; }
+  .meta-tension-2 { background: #FFE1E1; color: #8A1B1A; }
+
+  .conv-text {
+    font-family: 'Lora', serif;
+    font-size: 13.5px;
+    font-style: italic;
+    line-height: 1.65;
+    color: #2b1212;
+  }
+
+  /* ── Fiche envies ──── */
+  .envies-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 14px;
+  }
+  @media (min-width: 640px) {
+    .envies-grid { grid-template-columns: 1fr 1fr 1fr; }
+  }
+  .envie-col {
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+  .envie-col.envies { border-top: 3px solid #8BC34A; }
+  .envie-col.limites { border-top: 3px solid #E91E63; }
+  .envie-col.redecouvrir { border-top: 3px solid #F5A623; }
+
+  .envie-title {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: #450100;
+  }
+  .envie-line {
+    border-bottom: 1px dashed #E8D5D5;
+    padding: 10px 0;
+    min-height: 32px;
+    font-size: 13px;
+    color: #C8A0A0;
+    font-style: italic;
+  }
+  .envie-line:first-of-type { padding-top: 4px; }
+  .envie-line:last-of-type { border-bottom: none; }
+
+  /* ── Alternatives en cas de gêne ──── */
+  .alt-list { list-style: none; padding: 0; margin: 14px 0 0; }
+  .alt-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #F0E0E0;
+    font-size: 14px;
+    color: #2b1212;
+    line-height: 1.55;
+  }
+  .alt-list li:last-child { border-bottom: none; }
+  .alt-arrow {
+    color: #DC143C;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER SECTION ─────────────── -->
+<div class="section-title">
+  <div class="section-tag">🌙 Bloc 3</div>
+  <div class="section-heading">Parler APRÈS un rapport</div>
+</div>
+
+<!-- ── 3 QUESTIONS CLÉS ─────────────── -->
+<div class="subhead">💬 3 questions qui changent tout</div>
+
+<div class="question-card">
+  <div class="question-label">Question 1 · Valoriser le plaisir</div>
+  <div class="question-text">« Qu'est-ce que tu as préféré ? »</div>
+  <div class="question-sub">→ Mettre l'accent d'abord sur le plaisir, pas sur ce qui "n'allait pas".</div>
+</div>
+
+<div class="question-card">
+  <div class="question-label">Question 2 · Repérer les décrochages</div>
+  <div class="question-text">« Est-ce qu'il y a un moment où tu étais moins dedans ? »</div>
+  <div class="question-sub">→ Repérer ensemble où l'un·e a décroché, sans chercher un coupable.</div>
+</div>
+
+<div class="question-card">
+  <div class="question-label">Question 3 · Ouvrir vers la suite</div>
+  <div class="question-text">« Y a un truc que tu as envie d'essayer la prochaine fois, après ce qu'on vient de faire ? »</div>
+  <div class="question-sub">→ Transformer le rapport en point de départ, pas en jugement final.</div>
+</div>
+
+<!-- ── STAT ───────────────────────── -->
+<div class="stat-callout">
+  <div class="stat-icon">📊</div>
+  <div class="stat-content">
+    <div class="stat-tag">Stat communauté MBCL</div>
+    <div class="stat-text"><strong>X %</strong> des abonné·es sont plus à l'aise de parler <em>avant / pendant / après</em> un rapport.</div>
+  </div>
+</div>
+
+<!-- ── TOGGLE 1 · Comment poser la conversation ─────── -->
+<div class="toggle">
+  <div class="toggle-head" onclick="var n=this.nextElementSibling; var o=n.style.maxHeight&&n.style.maxHeight!=='0px'; n.style.maxHeight=o?'0px':n.scrollHeight+'px'; n.style.opacity=o?'0':'1'; var a=this.querySelector('.toggle-arrow'); if(a) a.style.transform=o?'rotate(0deg)':'rotate(180deg)';">
+    <div class="toggle-title">
+      <span style="font-size:18px;">🙈</span>
+      <span>Si tu sais pas comment poser la conversation</span>
+    </div>
+    <span class="toggle-arrow">&#8964;</span>
+  </div>
+  <div class="toggle-body">
+    <div class="toggle-body-inner">
+      <p style="font-size:13.5px; line-height:1.65; color:#2b1212; margin-top:10px;">Une banque de 19 phrases prêtes à adapter, triées par objectif et niveau de tension (0 = très doux, 2 = plus engageant).</p>
+
+      <div class="filter-row">
+        <button class="filter-pill active" data-filter="all">Tout voir</button>
+        <button class="filter-pill" data-filter="ouvrir">Ouvrir le sujet</button>
+        <button class="filter-pill" data-filter="envie">Exprimer une envie</button>
+        <button class="filter-pill" data-filter="limite">Poser une limite</button>
+        <button class="filter-pill" data-filter="jeu">Proposer un jeu</button>
+        <button class="filter-pill" data-filter="rassurer">Rassurer l'autre</button>
+      </div>
+
+      <!-- OUVRIR -->
+      <div class="conv-card" data-cat="ouvrir">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Ouvrir le sujet</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-0">🟢 Tension 0</span>
+        </div>
+        <div class="conv-text">« J'aimerais qu'on puisse parler un peu de notre sexualité tous les deux, mais je suis un peu timide. Est-ce qu'on pourrait en discuter tranquillement un de ces jours, sans pression, juste pour mieux se connaître ? »</div>
+      </div>
+
+      <div class="conv-card" data-cat="ouvrir">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Ouvrir le sujet</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-0">🟢 Tension 0</span>
+        </div>
+        <div class="conv-text">« Je tiens beaucoup à nous et j'ai envie qu'on soit encore plus complices aussi au niveau sexuel. Je ne sais pas trop comment en parler, alors je te le dis comme ça : est-ce que tu serais d'accord qu'on échange sur ce qu'on aime / ce qu'on aimerait tester ? »</div>
+      </div>
+
+      <div class="conv-card" data-cat="ouvrir">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Ouvrir le sujet</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-0">🟢 Tension 0</span>
+        </div>
+        <div class="conv-text">« J'ai parfois du mal à parler de sexe parce que je suis pudique, mais j'ai vraiment envie qu'on puisse se dire ce qu'on aime tous les deux. Tu serais ok qu'on en parle en mode "équipe", sans jugement ? »</div>
+      </div>
+
+      <div class="conv-card" data-cat="ouvrir">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Ouvrir le sujet</span>
+          <span class="meta-tag meta-format-vocal">🎤 Vocal</span>
+          <span class="meta-tag meta-tension-0">🟢 Tension 0</span>
+        </div>
+        <div class="conv-text">« Coucou, je te fais un vocal parce qu'en face j'ose encore moins le dire… J'aimerais bien qu'on parle un peu de ce qui nous fait plaisir au lit, ce qu'on aime, ce qu'on aime moins. Pas parce que ça va mal, au contraire, mais pour que ce soit encore mieux. Tu me diras si tu te sens ok pour ça. »</div>
+      </div>
+
+      <!-- ENVIE -->
+      <div class="conv-card" data-cat="envie">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Exprimer une envie</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-0">🟢 Tension 0</span>
+        </div>
+        <div class="conv-text">« J'ai une petite envie à te partager, mais je suis un peu gêné·e d'en parler… J'aimerais bien [ex : qu'on prenne plus de temps pour les préliminaires / tester un massage sensuel / essayer telle position]. Tu en penses quoi ? »</div>
+      </div>
+
+      <div class="conv-card" data-cat="envie">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Exprimer une envie</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-0">🟢 Tension 0</span>
+        </div>
+        <div class="conv-text">« Parfois j'imagine qu'on pourrait [ex : se toucher plus lentement / tester un jouet / faire plus de câlins nus sans forcément aller jusqu'au sexe]. Ça me ferait plaisir d'essayer avec toi, si toi aussi tu te sens à l'aise. »</div>
+      </div>
+
+      <div class="conv-card" data-cat="envie">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Exprimer une envie</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-0">🟢 Tension 0</span>
+        </div>
+        <div class="conv-text">« J'ai vu un truc l'autre jour qui m'a fait penser à nous (article, vidéo, etc.) et ça m'a donné envie de tester [expliquer brièvement]. Ça te parlerait ou pas trop ? On peut en discuter, même si ta réponse est non. »</div>
+      </div>
+
+      <div class="conv-card" data-cat="envie">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Exprimer une envie</span>
+          <span class="meta-tag meta-format-vocal">🎤 Vocal</span>
+          <span class="meta-tag meta-tension-1">🟠 Tension 0–1</span>
+        </div>
+        <div class="conv-text">« J'aimerais te dire un truc un peu intime… J'ai envie qu'on explore un peu plus ensemble, mais j'ai peur d'être maladroit·e. Donc je te le dis simplement : j'aimerais [ex : plus de douceur / plus d'intensité / tester X]. Si ça ne te parle pas, on peut ajuster ensemble. »</div>
+      </div>
+
+      <!-- LIMITE -->
+      <div class="conv-card" data-cat="limite">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Poser une limite</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-1">🟠 Tension 1</span>
+        </div>
+        <div class="conv-text">« Il y a un truc dont j'aimerais te parler pour qu'on soit bien tous les deux. Il y a certaines choses avec lesquelles je ne suis pas très à l'aise, comme [expliquer]. Ce n'est pas contre toi, c'est juste une limite pour moi, et j'aimerais qu'on trouve ensemble ce qui nous convient à tous les deux. »</div>
+      </div>
+
+      <div class="conv-card" data-cat="limite">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Poser une limite</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-1">🟠 Tension 1</span>
+        </div>
+        <div class="conv-text">« Je me sens un peu gêné·e de te dire ça, mais c'est important pour moi : quand on fait [X], je ne me sens pas super à l'aise. J'aimerais qu'on en parle et qu'on trouve une façon de faire où je me sens en sécurité et toi aussi. »</div>
+      </div>
+
+      <div class="conv-card" data-cat="limite">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Poser une limite</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-2">🔴 Tension 1–2</span>
+        </div>
+        <div class="conv-text">« Je t'aime beaucoup et je veux qu'on se sente bien tous les deux dans notre sexualité. Il y a certaines choses que je préfère éviter pour l'instant, comme [X]. On pourrait voir ce qu'on peut faire à la place qui nous excite tous les deux ? »</div>
+      </div>
+
+      <div class="conv-card" data-cat="limite">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Poser une limite</span>
+          <span class="meta-tag meta-format-vocal">🎤 Vocal</span>
+          <span class="meta-tag meta-tension-2">🔴 Tension 2</span>
+        </div>
+        <div class="conv-text">« Je voulais te parler d'un truc un peu sensible… Il y a certains gestes qui me mettent mal à l'aise et j'ose pas toujours le dire sur le moment. J'aimerais qu'on puisse en parler calmement, pas du tout pour te critiquer, mais pour que je me sente mieux et qu'on profite encore plus tous les deux. »</div>
+      </div>
+
+      <!-- JEU -->
+      <div class="conv-card" data-cat="jeu">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Proposer un jeu</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-0">🟢 Tension 0</span>
+        </div>
+        <div class="conv-text">« Ça te dirait qu'on se fasse un petit jeu un soir : chacun prépare une mini liste "j'adore / j'aimerais tester / pas pour moi" et on en parle ensemble avec une boisson, sans se juger ? »</div>
+      </div>
+
+      <div class="conv-card" data-cat="jeu">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Proposer un jeu</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-0">🟢 Tension 0</span>
+        </div>
+        <div class="conv-text">« On pourrait se faire un moment "menu du plaisir" : chacun écrit 3 choses qu'il aime, 3 qu'il aimerait essayer, 3 qu'il n'aime pas. On échange les papiers et on en discute. Ça te tente ? »</div>
+      </div>
+
+      <div class="conv-card" data-cat="jeu">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Proposer un jeu</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-1">🟠 Tension 0–1</span>
+        </div>
+        <div class="conv-text">« Comme c'est dur pour moi d'en parler à l'oral, ça te dirait qu'on se crée une note partagée où on écrit nos envies, nos limites, et on en discute ensuite quand on se sent prêt·e ? »</div>
+      </div>
+
+      <div class="conv-card" data-cat="jeu">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Proposer un jeu</span>
+          <span class="meta-tag meta-format-vocal">🎤 Vocal</span>
+          <span class="meta-tag meta-tension-0">🟢 Tension 0</span>
+        </div>
+        <div class="conv-text">« J'ai pensé à un truc pour nous aider à parler de tout ça sans pression : on pourrait faire une petite "checklist" ou un jeu de cartes avec ce qu'on aime / ce qu'on n'aime pas / ce qu'on a envie d'essayer, et on en parle à partir de ça au lieu de devoir tout sortir de nulle part. Ça te dirait ? »</div>
+      </div>
+
+      <!-- RASSURER -->
+      <div class="conv-card" data-cat="rassurer">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Rassurer l'autre</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-1">🟠 Tension 0–1</span>
+        </div>
+        <div class="conv-text">« Si je cherche mes mots ou que je rougis, ce n'est pas parce que tu fais mal les choses, c'est juste que je suis timide avec ces sujets. Mais j'ai vraiment envie qu'on puisse en parler ensemble. »</div>
+      </div>
+
+      <div class="conv-card" data-cat="rassurer">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Rassurer l'autre</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-1">🟠 Tension 1</span>
+        </div>
+        <div class="conv-text">« Je ne veux surtout pas que tu te sentes jugé·e ou critiqué·e. Si je te dis ce que j'aime et ce que j'aime moins, c'est vraiment pour qu'on se fasse encore plus plaisir, pas pour te reprocher quoi que ce soit. »</div>
+      </div>
+
+      <div class="conv-card" data-cat="rassurer">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Rassurer l'autre</span>
+          <span class="meta-tag meta-format-text">📝 Texte</span>
+          <span class="meta-tag meta-tension-1">🟠 Tension 1</span>
+        </div>
+        <div class="conv-text">« Tu peux aussi me dire si toi tu es mal à l'aise d'en parler. On peut y aller étape par étape, et on arrête dès que l'un de nous ne se sent plus en sécurité. »</div>
+      </div>
+
+      <div class="conv-card" data-cat="rassurer">
+        <div class="conv-meta">
+          <span class="meta-tag meta-obj">Rassurer l'autre</span>
+          <span class="meta-tag meta-format-vocal">🎤 Vocal</span>
+          <span class="meta-tag meta-tension-2">🔴 Tension 1–2</span>
+        </div>
+        <div class="conv-text">« Je sais que je ne suis pas très à l'aise pour parler de sexe, mais je veux que tu saches que tu peux me dire ce que tu ressens, ce que tu veux ou pas. On peut avancer doucement, à notre rythme, tant qu'on reste honnêtes et doux l'un·e avec l'autre. »</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── TOGGLE 2 · Fiche envies ─────── -->
+<div class="toggle">
+  <div class="toggle-head" onclick="var n=this.nextElementSibling; var o=n.style.maxHeight&&n.style.maxHeight!=='0px'; n.style.maxHeight=o?'0px':n.scrollHeight+'px'; n.style.opacity=o?'0':'1'; var a=this.querySelector('.toggle-arrow'); if(a) a.style.transform=o?'rotate(0deg)':'rotate(180deg)';">
+    <div class="toggle-title">
+      <span style="font-size:18px;">✍️</span>
+      <span>Fiche à remplir · « Mes envies du moment »</span>
+    </div>
+    <span class="toggle-arrow">&#8964;</span>
+  </div>
+  <div class="toggle-body">
+    <div class="toggle-body-inner">
+      <p style="font-size:13.5px; line-height:1.65; color:#2b1212; margin-top:10px;">À remplir chacun·e de son côté puis à partager ensemble.</p>
+      <div class="envies-grid">
+        <div class="envie-col envies">
+          <div class="envie-title">💚 3 choses que j'ai envie d'explorer</div>
+          <div class="envie-line">1.</div>
+          <div class="envie-line">2.</div>
+          <div class="envie-line">3.</div>
+        </div>
+        <div class="envie-col limites">
+          <div class="envie-title">🛑 3 limites hard</div>
+          <div class="envie-line">1.</div>
+          <div class="envie-line">2.</div>
+          <div class="envie-line">3.</div>
+        </div>
+        <div class="envie-col redecouvrir">
+          <div class="envie-title">🔍 3 zones à redécouvrir</div>
+          <div class="envie-line">1.</div>
+          <div class="envie-line">2.</div>
+          <div class="envie-line">3.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOGGLE 3 · Comment communiquer quand gênant ─── -->
+<div class="toggle">
+  <div class="toggle-head" onclick="var n=this.nextElementSibling; var o=n.style.maxHeight&&n.style.maxHeight!=='0px'; n.style.maxHeight=o?'0px':n.scrollHeight+'px'; n.style.opacity=o?'0':'1'; var a=this.querySelector('.toggle-arrow'); if(a) a.style.transform=o?'rotate(0deg)':'rotate(180deg)';">
+    <div class="toggle-title">
+      <span style="font-size:18px;">🤫</span>
+      <span>Comment communiquer quand c'est trop gênant de parler ?</span>
+    </div>
+    <span class="toggle-arrow">&#8964;</span>
+  </div>
+  <div class="toggle-body">
+    <div class="toggle-body-inner">
+      <ul class="alt-list">
+        <li><span class="alt-arrow">→</span> À l'écrit (SMS, note partagée, lettre, Notion à deux).</li>
+        <li><span class="alt-arrow">→</span> En lui envoyant des posts Instagram qui résonnent.</li>
+        <li><span class="alt-arrow">→</span> En lui envoyant des chapitres de ce programme.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Filtres ─────────────────────── */
+(function() {
+  var pills = document.querySelectorAll('.filter-pill');
+  var cards = document.querySelectorAll('.conv-card');
+  pills.forEach(function(p) {
+    p.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var f = p.dataset.filter;
+      pills.forEach(function(x) { x.classList.remove('active'); });
+      p.classList.add('active');
+      cards.forEach(function(c) {
+        if (f === 'all' || c.dataset.cat === f) c.classList.remove('hidden');
+        else c.classList.add('hidden');
+      });
+      setTimeout(post, 50);
+    });
+  });
+})();
+
+/* ── Auto-resize iframe ── */
+(function() {
+  window.post = function() {
+    try {
+      var h = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        document.documentElement.offsetHeight
+      );
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'dpo-resize', height: h }, '*');
+      }
+    } catch(e) {}
+  };
+  if (typeof ResizeObserver !== 'undefined') {
+    try { new ResizeObserver(window.post).observe(document.body); } catch(e) {}
+  }
+  window.addEventListener('load', window.post);
+  window.addEventListener('resize', window.post);
+  document.addEventListener('click', function(){ setTimeout(window.post, 100); setTimeout(window.post, 600); }, true);
+  setTimeout(window.post, 100);
+  setTimeout(window.post, 500);
+  setTimeout(window.post, 1500);
+})();
+</script>
+
+</body>
+</html>
