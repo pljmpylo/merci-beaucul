@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Raleway', sans-serif; background: #fff; padding: 0; }
+
+  .label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin-bottom: 14px;
+  }
+
+  .layout {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .gif-zone {
+    flex-shrink: 0;
+    width: 220px;
+    min-height: 358px;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1.5px solid #E8D5D5;
+    background: #FFFAFD;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gif-zone img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .options {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 999px;
+    padding: 13px 20px;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #450100;
+    text-align: left;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  .option-btn.active {
+    background: #DC143C;
+    border-color: #DC143C;
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .option-btn:hover:not(.active) {
+    border-color: #DC143C;
+    color: #DC143C;
+  }
+
+  .option-num {
+    font-size: 10px;
+    font-weight: 800;
+    opacity: 0.5;
+    margin-left: 10px;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 480px) {
+    .layout { flex-direction: column; }
+    .gif-zone { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+  <p class="label">4. Contraste vs Durée</p>
+
+  <div class="layout">
+
+    <div class="gif-zone">
+      <img id="gifDisplay" src="https://pljmpylo.github.io/merci-beaucul/eveiller-meme-rythme.gif" alt="Démonstration" />
+    </div>
+
+    <div class="options">
+      <button class="option-btn active" onclick="selectOption(this, 'eveiller-meme-rythme.gif')">
+        Rythme régulier
+        <span class="option-num">A</span>
+      </button>
+      <button class="option-btn" onclick="selectOption(this, 'eveiller-rythme-irregulier.gif')">
+        Rythme irrégulier
+        <span class="option-num">B</span>
+      </button>
+    </div>
+
+  </div>
+
+<script>
+  function selectOption(btn, gif) {
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('gifDisplay').src = 'https://pljmpylo.github.io/merci-beaucul/' + gif;
+    sendHeight();
+  }
+
+  function sendHeight() {
+    window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, '*');
+  }
+
+  window.addEventListener('load', function() {
+    sendHeight();
+    new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true, attributes: true });
+  });
+</script>
+</body>
+</html>
