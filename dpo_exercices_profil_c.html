@@ -52,7 +52,7 @@
   .exo-col .empty { color: #C8A0A0; font-style: italic; font-size: 12px; }
   .exo-col.partner { background: #FFF5F5; }
   .warning-text { background: #FFF0F0; border-left: 3px solid #DC143C; padding: 10px 12px; border-radius: 8px; margin-top: 10px; font-size: 12.5px; color: #8A1B1A; font-weight: 600; }
-  @media (min-width: 720px) { .exo-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  @media (min-width: 720px) { .exo-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
   @media (max-width: 480px) { .profile-header { padding: 18px 18px; border-radius: 18px; } .profile-header h1 { font-size: 19px; } .level-card { padding: 16px 16px; } }
 </style>
 </head>
@@ -110,11 +110,7 @@
       <div class="exo-label">🫶 En solo</div>
       <p><strong>Déconstruire la performance</strong> : choisir une activité où tu es objectivement éclaté·e (dessin, karaoké, danse…) et la faire sans chercher à progresser ou à produire un résultat visuel, seulement pour le plaisir que ça te procure.</p>
     </div>
-    <div class="exo-col">
-      <div class="exo-label">👥 À deux</div>
-      <p class="empty">—</p>
-    </div>
-    <div class="exo-col partner">
+<div class="exo-col partner">
       <div class="exo-label">💞 Pour le·la partenaire</div>
       <p><strong>Reformuler les injonctions que tu portes aussi</strong> et les questionner à voix haute pour alléger la pression des deux côtés.</p>
       <div class="warning-text">⚠️ Ne surtout PAS mettre la pression de l'orgasme sous prétexte de remise en cause de tes qualités d'amant·e. Ce n'est pas de toi dont il s'agit ici.</div>
@@ -133,11 +129,7 @@
       <div class="exo-label">👥 À deux</div>
       <p><strong>Redéfinir ensemble "un bon rapport"</strong> : conversation hors du lit sur ce qui compte pour vous (connexion, curiosité, rire, sécurité…).</p>
     </div>
-    <div class="exo-col partner">
-      <div class="exo-label">💞 Pour le·la partenaire</div>
-      <p class="empty">—</p>
-    </div>
-  </div>
+</div>
 </div>
 
 <div class="level-card lv2">
@@ -179,11 +171,7 @@
 <div class="level-card lv4">
   <div class="level-header"><span class="level-badge">Niveau 4 / 5</span></div>
   <div class="exo-grid">
-    <div class="exo-col">
-      <div class="exo-label">🫶 En solo</div>
-      <p class="empty">—</p>
-    </div>
-    <div class="exo-col">
+<div class="exo-col">
       <div class="exo-label">👥 À deux</div>
       <p><strong>Regarder un porno amateur &amp; éthique ensemble</strong> et voir ce qui est de l'ordre de la performance pour vous vs de la réalité.</p>
     </div>
@@ -205,11 +193,7 @@
       <div class="exo-label">👥 À deux</div>
       <p><strong>Accueillir le regard de l'autre</strong> : te laisser regarder (habillé·e, en lingerie, partiellement nu·e) pendant qu'iel dit ce qu'iel apprécie. Mets une lumière tamisée pour être plus à l'aise si besoin.</p>
     </div>
-    <div class="exo-col partner">
-      <div class="exo-label">💞 Pour le·la partenaire</div>
-      <p class="empty">—</p>
-    </div>
-  </div>
+</div>
 </div>
 
 <div class="level-card lv5">
@@ -223,21 +207,13 @@
       <div class="exo-label">👥 À deux</div>
       <p><strong>Pussy massage</strong> (audio guidé ci-dessus) : séance où tu touches la vulve ou la zone génitale de l'autre en suivant l'audio, sans chercher l'orgasme.</p>
     </div>
-    <div class="exo-col partner">
-      <div class="exo-label">💞 Pour le·la partenaire</div>
-      <p class="empty">—</p>
-    </div>
-  </div>
+</div>
 </div>
 
 <div class="level-card lv5">
   <div class="level-header"><span class="level-badge">Niveau 5 / 5 · bis</span></div>
   <div class="exo-grid">
-    <div class="exo-col">
-      <div class="exo-label">🫶 En solo</div>
-      <p class="empty">—</p>
-    </div>
-    <div class="exo-col">
+<div class="exo-col">
       <div class="exo-label">👥 À deux</div>
       <p><strong>Edging à deux</strong> (audio guidé) : interdire de jouir, faire monter et redescendre le plaisir, jouer avec la frustration de façon consentie.</p>
     </div>
@@ -269,6 +245,34 @@ document.querySelectorAll('.audio-player').forEach(player => {
   audio.addEventListener('timeupdate', () => { const pct = (audio.currentTime / audio.duration) * 100; barFill.style.width = (isFinite(pct) ? pct : 0) + '%'; current.textContent = fmt(audio.currentTime); });
   bar.addEventListener('click', (e) => { const r = bar.getBoundingClientRect(); const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)); if (isFinite(audio.duration)) audio.currentTime = pct * audio.duration; });
 });
+</script>
+
+
+<script>
+/* ── Auto-resize iframe: sends height to parent (Kajabi) ── */
+(function() {
+  function post() {
+    try {
+      var h = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        document.documentElement.offsetHeight
+      );
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'dpo-resize', height: h }, '*');
+      }
+    } catch(e) {}
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    try { new ResizeObserver(post).observe(document.body); } catch(e) {}
+  }
+  window.addEventListener('load', post);
+  window.addEventListener('resize', post);
+  document.addEventListener('click', function(){ setTimeout(post, 100); setTimeout(post, 600); }, true);
+  setTimeout(post, 100);
+  setTimeout(post, 500);
+  setTimeout(post, 1500);
+})();
 </script>
 
 </body>
