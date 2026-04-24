@@ -338,10 +338,14 @@
     color: #7a5a00;
     margin-bottom: 14px;
   }
-  .profile-cta {
+  .profile-ctas {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .profile-cta, .profile-cta-secondary {
     display: inline-block;
-    background: #8A1B1A;
-    color: #fff;
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 1px;
@@ -351,8 +355,22 @@
     text-decoration: none;
     transition: all 0.2s ease;
   }
+  .profile-cta {
+    background: #8A1B1A;
+    color: #fff;
+  }
   .profile-cta:hover {
     background: #450100;
+    transform: translateY(-1px);
+  }
+  .profile-cta-secondary {
+    background: #fff;
+    color: #8A1B1A;
+    border: 1.5px solid #E8D5D5;
+  }
+  .profile-cta-secondary:hover {
+    border-color: #8A1B1A;
+    background: #FFFAFD;
     transform: translateY(-1px);
   }
 
@@ -573,39 +591,39 @@ const QUESTIONS = [
 // ── Profils (TODO : remplacer X par les vraies stats communauté MBCL) ──
 const PROFILES = {
   A: {
-    name: "Peur & insécurité",
+    name: "Profil A",
     desc: "Ton frein principal tourne autour de la <strong>peur / insécurité</strong> : peur d'être jugé·e, pas assez, pas safe, pas désirable. Ton corps se met en retrait parce qu'il cherche à te protéger du regard de l'autre.",
     stat: "X personnes interrogées chez MBCL ont ce frein.",
-    cta: "Voir les exercices solo & à deux",
-    link: "#"
+    cta: "Voir les propositions d'exercices pour le Profil A",
+    link: "https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755849"
   },
   B: {
-    name: "Charge mentale & mental en surchauffe",
+    name: "Profil B",
     desc: "Ton frein vient surtout de la <strong>charge mentale</strong> : ta tête tourne à plein régime et tu as du mal à en sortir, même pendant le sexe. Ton corps attend, mais ton cerveau ne lâche pas.",
     stat: "X personnes interrogées chez MBCL ont ce frein.",
-    cta: "Voir les exercices solo & à deux",
-    link: "#"
+    cta: "Voir les propositions d'exercices pour le Profil B",
+    link: "https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755851"
   },
   C: {
-    name: "Conditionnements & injonctions",
+    name: "Profil C",
     desc: "Ton frein est lié aux <strong>conditionnements et injonctions</strong> : les \"il faut\", la performance, le modèle de sexualité \"comme il faut\". Tu joues un rôle plus que tu ne ressens.",
     stat: "X personnes interrogées chez MBCL ont ce frein.",
-    cta: "Voir les exercices solo & à deux",
-    link: "#"
+    cta: "Voir les propositions d'exercices pour le Profil C",
+    link: "https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755855"
   },
   D: {
-    name: "Traumas & système nerveux en protection",
+    name: "Profil D",
     desc: "Ton frein est du côté des <strong>traumas / système nerveux en mode protection</strong> : freeze, coupure, alerte, malaise fort. Ton corps a appris à se protéger et continue de le faire, même quand le contexte est safe.",
     stat: "X personnes interrogées chez MBCL ont ce frein.",
-    cta: "Voir les exercices solo & à deux",
-    link: "#"
+    cta: "Voir les propositions d'exercices pour le Profil D",
+    link: "https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755860"
   },
   E: {
-    name: "Pas de frein particulier",
-    desc: "Tu n'as pas de frein particulier pour lâcher prise ! 🎉 C'est peut-être plutôt une histoire de gestes ou d'excitation. Tu peux aller piocher des exercices qui te plaisent dans les tableaux suivants ou passer directement au prochain module.",
-    stat: "",
-    cta: "Passer au prochain module",
-    link: "#"
+    name: "Profil Neuroatypique",
+    desc: "Ton frein se situe du côté de la <strong>neuroatypie</strong> : ton système nerveux, ta gestion sensorielle ou ton traitement de l'info font que le lâcher prise \"taille unique\" ne marche pas pour toi. Tu as besoin d'un mode d'emploi plus précis et ajusté à ton fonctionnement.",
+    stat: "X personnes interrogées chez MBCL ont ce frein.",
+    cta: "Voir les propositions d'exercices pour le Profil Neuroatypique",
+    link: "https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755862"
   }
 };
 
@@ -736,12 +754,18 @@ function showResults() {
     const p = PROFILES[l];
     const card = document.createElement('div');
     card.className = 'profile-card';
+    const exAequoBadge = dominant.length > 1
+      ? '<div class="profile-label">✦ Ex æquo</div>'
+      : '<div class="profile-label">🎯 Ton frein principal</div>';
     let html =
-      '<div class="profile-label">Profil ' + l + (dominant.length > 1 ? ' · ex æquo' : '') + '</div>' +
+      exAequoBadge +
       '<div class="profile-name">' + p.name + '</div>' +
       '<div class="profile-desc">' + p.desc + '</div>';
     if (p.stat) html += '<div class="community-stat">' + p.stat + '</div>';
-    html += '<a href="' + p.link + '" class="profile-cta" target="_blank" rel="noopener">' + p.cta + '</a>';
+    html += '<div class="profile-ctas">' +
+              '<a href="' + p.link + '" class="profile-cta" target="_blank" rel="noopener">' + p.cta + '</a>' +
+              '<a href="https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196754830" class="profile-cta-secondary" target="_blank" rel="noopener">Voir les exercices pour lâcher prise</a>' +
+            '</div>';
     card.innerHTML = html;
     profileCards.appendChild(card);
   });
