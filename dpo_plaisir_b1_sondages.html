@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le plaisir · Bloc 1 — Merci Beaucul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow-x: hidden; }
+  body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
+
+  /* ── HEADER ─────────────────────── */
+  .section-title { margin-bottom: 20px; }
+  .section-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    background: #FFFAFD;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #E8D5D5;
+    margin-bottom: 10px;
+  }
+  .section-heading {
+    font-size: 22px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+  }
+  .section-sub {
+    font-size: 13.5px;
+    color: #6a4545;
+    font-style: italic;
+    margin-top: 6px;
+  }
+
+  .subhead {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin: 28px 0 14px;
+  }
+
+  /* ── SONDAGE CARD ───────────────── */
+  .poll {
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 18px;
+    padding: 20px 22px;
+    margin-bottom: 14px;
+  }
+  .poll-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin-bottom: 8px;
+  }
+  .poll-question {
+    font-size: 15.5px;
+    font-weight: 700;
+    color: #450100;
+    line-height: 1.4;
+    margin-bottom: 16px;
+  }
+  .poll-options {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .poll-opt {
+    font-family: 'Raleway', sans-serif;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 999px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #450100;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+  }
+  .poll-opt:hover:not(.locked):not(.chosen) {
+    border-color: #8A1B1A;
+    background: #FFFAFD;
+    transform: translateY(-1px);
+  }
+  .poll-opt.locked { cursor: default; opacity: 0.7; }
+  .poll-opt.chosen {
+    background: #8A1B1A;
+    border-color: #8A1B1A;
+    color: #fff;
+    font-weight: 700;
+  }
+
+  /* ── RESULTS ────────────────────── */
+  .results {
+    display: none;
+    background: #FFFAFD;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 18px;
+    padding: 20px 22px;
+    margin: -6px 0 14px;
+    animation: slideIn 0.35s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .results-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .results-count {
+    font-weight: 400;
+    color: #8a6a5a;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 11.5px;
+    font-style: italic;
+  }
+  .result-row { margin-bottom: 12px; }
+  .result-row:last-child { margin-bottom: 0; }
+  .result-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #2b1212;
+    margin-bottom: 6px;
+    gap: 10px;
+  }
+  .result-pct {
+    font-weight: 800;
+    color: #8A1B1A;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+  .result-bar {
+    height: 8px;
+    background: #F0E0E0;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .result-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8A1B1A, #DC143C);
+    border-radius: 999px;
+    width: 0%;
+    transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .revote-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #8A1B1A;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    padding: 7px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .revote-btn:hover {
+    border-color: #8A1B1A;
+    background: #FFFAFD;
+    transform: translateY(-1px);
+  }
+
+  /* ── TOGGLE ─────────────────────── */
+  .toggle {
+    border: 1.5px solid #E8D5D5;
+    border-radius: 18px;
+    overflow: hidden;
+    margin: 24px 0 20px;
+    background: #fff;
+  }
+  .toggle-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 17px 22px;
+    cursor: pointer;
+    background: #fff;
+    user-select: none;
+    gap: 12px;
+  }
+  .toggle-title-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex: 1;
+  }
+  .toggle-emoji {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .toggle-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #8A1B1A;
+    margin-bottom: 4px;
+    line-height: 1.35;
+  }
+  .toggle-sub {
+    font-size: 12.5px;
+    font-style: italic;
+    color: #6a4545;
+    line-height: 1.5;
+  }
+  .toggle-arrow {
+    font-size: 22px;
+    color: #DC143C;
+    line-height: 1;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .toggle-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.8s ease, opacity 0.35s ease;
+    opacity: 0;
+    background: #fff;
+  }
+  .toggle-body-inner {
+    padding: 4px 22px 24px;
+    border-top: 1px solid #F0E0E0;
+  }
+
+  .lea-quote {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 600;
+    line-height: 1.75;
+    color: #450100;
+    border-left: 3px solid #DC143C;
+    background: #FFF5F5;
+    padding: 14px 18px;
+    border-radius: 0 12px 12px 0;
+    margin: 16px 0 14px;
+  }
+  .lea-body {
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: #2b1212;
+    margin-top: 12px;
+  }
+
+  /* ── RESSOURCE ──────────────────── */
+  .resource-card {
+    background: linear-gradient(135deg, #FFFAFD 0%, #FFF5F5 100%);
+    border: 1.5px solid #E8D5D5;
+    border-radius: 18px;
+    padding: 20px 24px;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    margin-top: 20px;
+  }
+  .resource-content { flex: 1; min-width: 0; }
+  .resource-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin-bottom: 6px;
+  }
+  .resource-title {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #450100;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .resource-author {
+    font-size: 12.5px;
+    color: #8a6a5a;
+    line-height: 1.5;
+  }
+  .resource-cover {
+    flex-shrink: 0;
+    width: 110px;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(69, 1, 0, 0.15);
+  }
+
+  @media (max-width: 480px) {
+    .resource-card { flex-direction: column; text-align: center; gap: 14px; padding: 18px 20px; }
+    .resource-cover { width: 140px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ─────────────────────── -->
+<div class="section-title">
+  <div class="section-tag">🗳️ Bloc 1</div>
+  <div class="section-heading">Ton rapport au plaisir aujourd'hui</div>
+  <div class="section-sub">Deux questions rapides pour situer où tu en es, et voir comment la communauté MBCL se positionne.</div>
+</div>
+
+<!-- ── SONDAGES ───────────────────── -->
+<div class="subhead">📊 Sondages communauté</div>
+
+<!-- Sondage 1 -->
+<div class="poll">
+  <div class="poll-label">Sondage 1</div>
+  <div class="poll-question">Je mets plus systématiquement le plaisir de l'autre avant le mien.</div>
+  <div class="poll-options" id="q1">
+    <button class="poll-opt" onclick="pollVote('q1', this, 'r1')">Oui</button>
+    <button class="poll-opt" onclick="pollVote('q1', this, 'r1')">Non</button>
+    <button class="poll-opt" onclick="pollVote('q1', this, 'r1')">Ça dépend</button>
+  </div>
+  <button class="revote-btn" id="rev-q1" onclick="pollReset('q1', 'r1')" style="display:none;">↻ Revoter</button>
+</div>
+
+<!-- Résultats Q1 -->
+<div class="results" id="r1">
+  <div class="results-label">
+    <span>📣 Résultats de la communauté</span>
+    <span class="results-count">8 677 votes</span>
+  </div>
+  <div class="result-row">
+    <div class="result-head">
+      <span>Priorisent le plaisir de leur partenaire</span>
+      <span class="result-pct">32 %</span>
+    </div>
+    <div class="result-bar"><div class="result-fill" data-pct="32"></div></div>
+  </div>
+  <div class="result-row">
+    <div class="result-head">
+      <span>Valorisent les deux plaisirs équitablement</span>
+      <span class="result-pct">64 %</span>
+    </div>
+    <div class="result-bar"><div class="result-fill" data-pct="64"></div></div>
+  </div>
+  <div class="result-row">
+    <div class="result-head">
+      <span>Priorisent leur propre plaisir</span>
+      <span class="result-pct">5 %</span>
+    </div>
+    <div class="result-bar"><div class="result-fill" data-pct="5"></div></div>
+  </div>
+</div>
+
+<!-- Sondage 2 -->
+<div class="poll">
+  <div class="poll-label">Sondage 2</div>
+  <div class="poll-question">J'ose pas trop demander des choses qui concernent mon plaisir, dans le quotidien et dans la sexualité.</div>
+  <div class="poll-options" id="q2">
+    <button class="poll-opt" onclick="pollVote('q2', this, 'r2')">Oui</button>
+    <button class="poll-opt" onclick="pollVote('q2', this, 'r2')">Non</button>
+    <button class="poll-opt" onclick="pollVote('q2', this, 'r2')">Ça dépend</button>
+  </div>
+  <button class="revote-btn" id="rev-q2" onclick="pollReset('q2', 'r2')" style="display:none;">↻ Revoter</button>
+</div>
+
+<!-- Résultats Q2 -->
+<div class="results" id="r2">
+  <div class="results-label">
+    <span>📣 Résultats de la communauté</span>
+    <span class="results-count">stats indicatives à remplacer</span>
+  </div>
+  <div class="result-row">
+    <div class="result-head">
+      <span>Oui</span>
+      <span class="result-pct">58 %</span>
+    </div>
+    <div class="result-bar"><div class="result-fill" data-pct="58"></div></div>
+  </div>
+  <div class="result-row">
+    <div class="result-head">
+      <span>Non</span>
+      <span class="result-pct">12 %</span>
+    </div>
+    <div class="result-bar"><div class="result-fill" data-pct="12"></div></div>
+  </div>
+  <div class="result-row">
+    <div class="result-head">
+      <span>Ça dépend</span>
+      <span class="result-pct">30 %</span>
+    </div>
+    <div class="result-bar"><div class="result-fill" data-pct="30"></div></div>
+  </div>
+</div>
+
+<!-- ── TOGGLE TATA LÉA ────────────── -->
+<div class="toggle">
+  <div class="toggle-head" onclick="togglePanel(this)">
+    <div class="toggle-title-wrap">
+      <span class="toggle-emoji">💋</span>
+      <div>
+        <div class="toggle-title">La réflexion de tata Léa</div>
+        <div class="toggle-sub">Pourquoi le plaisir n'est pas un luxe — et comment on nous a appris à nous en méfier.</div>
+      </div>
+    </div>
+    <span class="toggle-arrow">&#8964;</span>
+  </div>
+  <div class="toggle-body">
+    <div class="toggle-body-inner">
+      <div class="lea-quote">"Le plaisir, c'est pas un luxe. C'est une donnée biologique. Ton corps est littéralement câblé pour ça — et si tu ne le ressens plus, c'est pas que t'as un problème, c'est que quelque chose l'a éteint."</div>
+      <p class="lea-body">Ce que j'ai compris en travaillant sur ce programme, c'est qu'on nous apprend très tôt à nous <strong>méfier du plaisir</strong>. À le mériter avant de le vivre. À le restreindre. Et à force, on finit par ne plus même le reconnaître quand il est là.</p>
+      <p class="lea-body">Ce bloc, c'est une invitation à <em>juste observer</em> — sans juger — où tu en es avec ça. Pas besoin de changer quoi que ce soit tout de suite. Juste sentir.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── RESSOURCE CITÉE ────────────── -->
+<div class="subhead">📖 Ressource citée</div>
+
+<div class="resource-card">
+  <div class="resource-content">
+    <div class="resource-label">À explorer</div>
+    <div class="resource-title">À quoi sert le sexe ?</div>
+    <div class="resource-author">Bonierbale, Bozon, Gouyon · <em>Éditions Belin</em></div>
+  </div>
+  <img
+    class="resource-cover"
+    src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/site/2148843478/products/b8a107a-f24e-45b1-7450-a537d25bef81_image_9_.png"
+    alt="Couverture du livre À quoi sert le sexe ?"
+  />
+</div>
+
+<script>
+/* ── Sondages ────────────────────── */
+function pollVote(groupId, button, resultsId) {
+  var group = document.getElementById(groupId);
+  if (group.dataset.voted) return;
+  group.dataset.voted = '1';
+
+  group.querySelectorAll('.poll-opt').forEach(function(b){
+    b.classList.add('locked');
+    b.onclick = null;
+  });
+  button.classList.add('chosen');
+
+  // Show revoter button inside the poll card
+  var revBtn = document.getElementById('rev-' + groupId);
+  if (revBtn) revBtn.style.display = 'inline-flex';
+
+  var results = document.getElementById(resultsId);
+  results.style.display = 'block';
+
+  // Animate bars after reveal
+  setTimeout(function() {
+    results.querySelectorAll('.result-fill').forEach(function(fill) {
+      fill.style.width = fill.dataset.pct + '%';
+    });
+    setTimeout(window.post, 150);
+  }, 50);
+}
+
+function pollReset(groupId, resultsId) {
+  var group = document.getElementById(groupId);
+  group.dataset.voted = '';
+
+  group.querySelectorAll('.poll-opt').forEach(function(b){
+    b.classList.remove('locked', 'chosen');
+    b.onclick = function() { pollVote(groupId, b, resultsId); };
+  });
+
+  // Hide revoter button
+  var revBtn = document.getElementById('rev-' + groupId);
+  if (revBtn) revBtn.style.display = 'none';
+
+  var results = document.getElementById(resultsId);
+  results.style.display = 'none';
+  // Reset bar widths for the next reveal animation
+  results.querySelectorAll('.result-fill').forEach(function(fill) {
+    fill.style.width = '0%';
+  });
+
+  setTimeout(window.post, 150);
+}
+
+/* ── Toggles ─────────────────────── */
+function togglePanel(head) {
+  var body = head.nextElementSibling;
+  var arrow = head.querySelector('.toggle-arrow');
+  var open = body.style.maxHeight && body.style.maxHeight !== '0px';
+  body.style.maxHeight = open ? '0px' : body.scrollHeight + 'px';
+  body.style.opacity = open ? '0' : '1';
+  arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+  setTimeout(window.post, 500);
+}
+
+/* ── Auto-resize iframe ──────────── */
+(function() {
+  window.post = function() {
+    try {
+      var h = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        document.documentElement.offsetHeight
+      );
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'dpo-resize', height: h }, '*');
+      }
+    } catch(e) {}
+  };
+  if (typeof ResizeObserver !== 'undefined') {
+    try { new ResizeObserver(window.post).observe(document.body); } catch(e) {}
+  }
+  window.addEventListener('load', window.post);
+  window.addEventListener('resize', window.post);
+  document.addEventListener('click', function(){ setTimeout(window.post, 100); setTimeout(window.post, 600); }, true);
+  setTimeout(window.post, 100);
+  setTimeout(window.post, 500);
+  setTimeout(window.post, 1500);
+})();
+</script>
+
+</body>
+</html>
