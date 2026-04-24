@@ -3,166 +3,513 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Raleway:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>Module 1 · Bloc 1 · Quiz — Merci Beaucul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Raleway', sans-serif; background: #fff; padding: 0; }
-</style>
-<script>
-  function sendHeight() {
-    window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, '*');
+  html, body { background: transparent; overflow-x: hidden; }
+  body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
+
+  /* ── HEADER ─────────────────────── */
+  .section-title { margin-bottom: 20px; }
+  .section-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    background: #FFFAFD;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #E8D5D5;
+    margin-bottom: 10px;
   }
-  window.addEventListener("load", function() {
-    sendHeight();
-    new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true, attributes: true });
-  });
-  var obs = new MutationObserver(sendHeight);
-  document.addEventListener('DOMContentLoaded', function() {
-    obs.observe(document.body, { childList: true, subtree: true, attributes: true });
-  });
-</script>
+  .section-heading {
+    font-size: 22px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+  }
+  .section-sub {
+    font-size: 13.5px;
+    color: #6a4545;
+    font-style: italic;
+    margin-top: 6px;
+    line-height: 1.55;
+  }
+
+  .subhead {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin: 28px 0 14px;
+  }
+
+  /* ── Quiz container ──── */
+  .quiz-wrap {
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 22px;
+    padding: 24px 22px;
+    margin-bottom: 22px;
+  }
+
+  .quiz-intro {
+    text-align: center;
+    font-size: 13.5px;
+    color: #6a4545;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    font-style: italic;
+  }
+
+  /* ── Progress ──── */
+  .progress-wrap { margin-bottom: 22px; }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #8A1B1A;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .progress-bar {
+    height: 6px;
+    background: #F5E6E6;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8A1B1A, #DC143C);
+    border-radius: 999px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* ── Question ──── */
+  .question { display: none; animation: slideIn 0.35s ease; }
+  .question.active { display: block; }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .q-label {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #DC143C;
+    background: #FFFAFD;
+    border: 1px solid #E8D5D5;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  .q-text {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 600;
+    color: #450100;
+    line-height: 1.55;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1.5px solid #F0E0E0;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .opt {
+    font-family: 'Raleway', sans-serif;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 14px;
+    padding: 13px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2b1212;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+  }
+  .opt:hover:not(.selected) {
+    border-color: #DC143C;
+    background: #FFFAFD;
+    transform: translateY(-1px);
+  }
+  .opt.selected {
+    border-color: #8A1B1A;
+    background: #FFF5F5;
+    box-shadow: 0 2px 8px rgba(138, 27, 26, 0.1);
+  }
+  .opt-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+  .opt.selected .opt-dot {
+    border-color: #8A1B1A;
+    background: #8A1B1A;
+  }
+  .opt.selected .opt-dot::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+  }
+  .opt-label { flex: 1; }
+
+  /* ── Navigation ──── */
+  .nav {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 18px;
+  }
+  .btn-back {
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: transparent;
+    color: #8A1B1A;
+    border: 1.5px solid #E8D5D5;
+    padding: 10px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-back:hover:not(:disabled) {
+    background: #FFFAFD;
+    border-color: #8A1B1A;
+  }
+  .btn-back:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  /* ── Result ──── */
+  .result { display: none; animation: slideIn 0.45s ease; }
+  .result.active { display: block; }
+
+  .result-icon-wrap {
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .result-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    font-size: 36px;
+  }
+  .result-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 8px;
+    margin-top: 10px;
+  }
+  .result-title {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #450100;
+    line-height: 1.3;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .result-desc {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: #2b1212;
+    background: #FFFAFD;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 16px;
+    padding: 18px 20px;
+  }
+
+  .result.red .result-icon { background: #FFE1E1; }
+  .result.red .result-label { color: #8A1B1A; }
+  .result.yellow .result-icon { background: #FFF1DB; }
+  .result.yellow .result-label { color: #8a5a1a; }
+  .result.green .result-icon { background: #F0F8E8; }
+  .result.green .result-label { color: #4A7C1E; }
+
+  .result-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 18px;
+  }
+  .btn-restart {
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: transparent;
+    color: #8A1B1A;
+    border: 1.5px solid #E8D5D5;
+    padding: 10px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-restart:hover {
+    background: #FFFAFD;
+    border-color: #8A1B1A;
+  }
+
+  @media (max-width: 520px) {
+    .quiz-wrap { padding: 22px 16px; border-radius: 18px; }
+    .q-text { font-size: 15px; }
+    .opt { font-size: 13.5px; padding: 12px 15px; }
+    .result-title { font-size: 18px; }
+  }
+</style>
 </head>
 <body>
 
-<script>
-function olpVote(qNum, score, btn) {
-  var g = document.getElementById('olp-q' + qNum);
-  if (g.getAttribute('data-voted')) return;
-  g.setAttribute('data-voted', '1');
-  g.setAttribute('data-score', score);
-  g.querySelectorAll('button').forEach(function(b) {
-    b.style.background = '#fff';
-    b.style.borderColor = '#E8D5D5';
-    b.style.fontWeight = '600';
-    b.style.cursor = 'default';
-    b.onclick = null;
-  });
-  btn.style.background = '#FFDE59';
-  btn.style.borderColor = '#FFDE59';
-  btn.style.fontWeight = '700';
-  var scores = [];
-  for (var i = 1; i <= 7; i++) {
-    var s = document.getElementById('olp-q' + i).getAttribute('data-score');
-    if (s === null) return;
-    scores.push(parseInt(s));
-  }
-  var total = scores.reduce(function(a, b) { return a + b; }, 0);
-  var bx = document.getElementById('olp-res-box');
-  var ic = document.getElementById('olp-res-icon');
-  var ti = document.getElementById('olp-res-title');
-  var de = document.getElementById('olp-res-desc');
-  if (total >= 10) {
-    ic.textContent = '🔴';
-    ti.textContent = 'Le conditionnement est profond';
-    de.textContent = "Tu portes beaucoup de messages intériorisés sur ce que le plaisir devrait être — ou ne pas être. Ce n'est pas un défaut, c'est le résultat d'une éducation, d'une culture, d'images absorbées sans filtre. Le travail qu'on fait ici est exactement fait pour toi.";
-    bx.style.borderColor = '#DC143C';
-    bx.style.background = '#FFF5F5';
-  } else if (total >= 5) {
-    ic.textContent = '🟡';
-    ti.textContent = 'Tu portes des traces, mais tu les questionnes';
-    de.textContent = "Tu as déjà commencé à déconstruire certaines injonctions, mais d'autres résistent encore. C'est souvent là que se passe le vrai travail — dans cet entre-deux où on sait que quelque chose cloche sans encore savoir comment le défaire.";
-    bx.style.borderColor = '#FFDE59';
-    bx.style.background = '#FFFBEA';
-  } else {
-    ic.textContent = '🟢';
-    ti.textContent = "Tu t'es largement affranchi·e";
-    de.textContent = "Tu sembles avoir une relation assez libre avec ton plaisir et ton désir. Ce module va te permettre de solidifier ça — et peut-être de mettre des mots sur ce qui t'a aidé à en arriver là.";
-    bx.style.borderColor = '#8A1B1A';
-    bx.style.background = '#F5EDE3';
-  }
-  bx.style.display = 'block';
-  sendHeight();
-}
-</script>
-
-<!-- Q1 -->
-<div style="background:#fff; border:1.5px solid #E8D5D5; border-radius:18px; padding:20px 22px; margin-bottom:14px;">
-  <p style="font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 8px;">Question 1 sur 7</p>
-  <p style="font-size:15px; font-weight:700; color:#1a0505; line-height:1.5; margin:0 0 16px;">Quand je ressens du désir (envie de sexe, fantasme, après une masturbation), il m'arrive de me dire que c'est sale ou honteux, même si personne autour de moi ne le dit clairement.</p>
-  <div id="olp-q1" style="display:flex; flex-direction:column; gap:9px;">
-    <button onclick="olpVote(1,'2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Oui, souvent</button>
-    <button onclick="olpVote(1,'1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Parfois</button>
-    <button onclick="olpVote(1,'0',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Non, rarement</button>
-  </div>
+<!-- ── HEADER ─────────────────── -->
+<div class="section-title">
+  <div class="section-tag">🪞 Bloc 1 · Quiz</div>
+  <div class="section-heading">Comment ton plaisir a été limité</div>
+  <div class="section-sub">7 questions pour repérer les conditionnements intériorisés — souvent invisibles — qui bloquent ton rapport au plaisir.</div>
 </div>
 
-<!-- Q2 -->
-<div style="background:#fff; border:1.5px solid #E8D5D5; border-radius:18px; padding:20px 22px; margin-bottom:14px;">
-  <p style="font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 8px;">Question 2 sur 7</p>
-  <p style="font-size:15px; font-weight:700; color:#1a0505; line-height:1.5; margin:0 0 16px;">Quand je commence vraiment à me laisser aller dans le plaisir (sexuel ou non), une partie de moi a peur de "partir trop loin", de "perdre le contrôle" ou de "devenir quelqu'un de mauvais / excès / trop", comme si le plaisir pouvait me faire déraper.</p>
-  <div id="olp-q2" style="display:flex; flex-direction:column; gap:9px;">
-    <button onclick="olpVote(2,'2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Oui, souvent</button>
-    <button onclick="olpVote(2,'1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Parfois</button>
-    <button onclick="olpVote(2,'0',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Non, rarement</button>
-  </div>
-</div>
+<!-- ── QUIZ ─────────────── -->
+<div class="subhead">🪞 Auto-évaluation</div>
 
-<!-- Q3 -->
-<div style="background:#fff; border:1.5px solid #E8D5D5; border-radius:18px; padding:20px 22px; margin-bottom:14px;">
-  <p style="font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 8px;">Question 3 sur 7</p>
-  <p style="font-size:15px; font-weight:700; color:#1a0505; line-height:1.5; margin:0 0 16px;">Quand je vois que mon excitation ou mes orgasmes ne ressemblent pas au "modèle" (jouir par la pénétration, jouir vite, jouir à chaque fois), je me demande si je suis "anormal·e", "pas une vraie femme / un vrai homme".</p>
-  <div id="olp-q3" style="display:flex; flex-direction:column; gap:9px;">
-    <button onclick="olpVote(3,'2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Oui, souvent</button>
-    <button onclick="olpVote(3,'1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Parfois</button>
-    <button onclick="olpVote(3,'0',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Non, rarement</button>
-  </div>
-</div>
+<div class="quiz-wrap">
+  <div class="quiz-intro" id="quizIntro">Prends ton temps. <strong>Pas de bonne ou mauvaise réponse</strong> — juste observer ce qui se passe en toi.<br>Clique sur ta réponse — ça avance tout seul.</div>
 
-<!-- Q4 -->
-<div style="background:#fff; border:1.5px solid #E8D5D5; border-radius:18px; padding:20px 22px; margin-bottom:14px;">
-  <p style="font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 8px;">Question 4 sur 7</p>
-  <p style="font-size:15px; font-weight:700; color:#1a0505; line-height:1.5; margin:0 0 16px;">Quand je suis en train de faire l'amour, il m'arrive de reproduire des scènes vues dans le porno (positions, bruitages, expressions), pas parce que ça me fait vraiment envie sur le moment, mais parce que j'ai l'impression que "le sexe, ça doit ressembler à ça".</p>
-  <div id="olp-q4" style="display:flex; flex-direction:column; gap:9px;">
-    <button onclick="olpVote(4,'2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Oui, souvent</button>
-    <button onclick="olpVote(4,'1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Parfois</button>
-    <button onclick="olpVote(4,'0',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Non, rarement</button>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label">
+      <span id="progressText">0 / 7 questions répondues</span>
+      <span id="progressPct">0 %</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   </div>
-</div>
 
-<!-- Q5 -->
-<div style="background:#fff; border:1.5px solid #E8D5D5; border-radius:18px; padding:20px 22px; margin-bottom:14px;">
-  <p style="font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 8px;">Question 5 sur 7</p>
-  <p style="font-size:15px; font-weight:700; color:#1a0505; line-height:1.5; margin:0 0 16px;">Quand je me projette en train d'assumer pleinement mon désir (parler de ce que je veux, prendre des initiatives, jouir fort, demander certaines pratiques, avoir autant de partenaires que je veux), une partie de moi a peur d'être perçu·e comme "une salope / pute / insérer une insulte misogyne".</p>
-  <div id="olp-q5" style="display:flex; flex-direction:column; gap:9px;">
-    <button onclick="olpVote(5,'2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Oui, souvent</button>
-    <button onclick="olpVote(5,'1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Parfois</button>
-    <button onclick="olpVote(5,'0',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Non, rarement</button>
+  <div id="questions"></div>
+
+  <div class="nav" id="nav">
+    <button class="btn-back" id="btnBack" disabled>← Précédent</button>
   </div>
-</div>
 
-<!-- Q6 -->
-<div style="background:#fff; border:1.5px solid #E8D5D5; border-radius:18px; padding:20px 22px; margin-bottom:14px;">
-  <p style="font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 8px;">Question 6 sur 7</p>
-  <p style="font-size:15px; font-weight:700; color:#1a0505; line-height:1.5; margin:0 0 16px;">En repensant à mon enfance/adolescence, je me souviens que chez moi, on ne parlait jamais de sexualité ou de plaisir, ou alors avec de la gêne, des blagues humiliantes, du dégoût. Aujourd'hui, rien que l'idée de parler de mon plaisir me met mal à l'aise, comme si je brisais une règle.</p>
-  <div id="olp-q6" style="display:flex; flex-direction:column; gap:9px;">
-    <button onclick="olpVote(6,'2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Oui, souvent</button>
-    <button onclick="olpVote(6,'1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Parfois</button>
-    <button onclick="olpVote(6,'0',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Non, rarement</button>
-  </div>
-</div>
-
-<!-- Q7 -->
-<div style="background:#fff; border:1.5px solid #E8D5D5; border-radius:18px; padding:20px 22px; margin-bottom:14px;">
-  <p style="font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 8px;">Question 7 sur 7</p>
-  <p style="font-size:15px; font-weight:700; color:#1a0505; line-height:1.5; margin:0 0 16px;">Quand je pense à ce que c'est "un bon coup" ou "une bonne sexualité", ce sont surtout des images venant de séries, films, clips, réseaux ou porno qui me viennent — beaucoup plus que des souvenirs où je me suis senti·e vraiment bien dans mon corps.</p>
-  <div id="olp-q7" style="display:flex; flex-direction:column; gap:9px;">
-    <button onclick="olpVote(7,'2',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Oui, souvent</button>
-    <button onclick="olpVote(7,'1',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Parfois</button>
-    <button onclick="olpVote(7,'0',this)" style="background:#fff; border:1.5px solid #E8D5D5; border-radius:999px; padding:12px 20px; font-family:'Raleway',sans-serif; font-size:14px; font-weight:600; color:#450100; cursor:pointer; text-align:left;">Non, rarement</button>
-  </div>
-</div>
-
-<!-- Profil -->
-<div id="olp-res-box" style="display:none; border:2px solid #DC143C; border-radius:18px; padding:24px 26px; margin-top:6px;">
-  <div style="display:flex; align-items:flex-start; gap:14px;">
-    <span id="olp-res-icon" style="font-size:28px; flex-shrink:0; margin-top:2px;"></span>
-    <div>
-      <p style="font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#DC143C; margin:0 0 6px;">Ton profil</p>
-      <p id="olp-res-title" style="font-family:'Lora',serif; font-size:18px; font-weight:600; color:#450100; margin:0 0 10px; line-height:1.3;"></p>
-      <p id="olp-res-desc" style="font-family:'Raleway',sans-serif; font-size:14px; line-height:1.75; color:#444; margin:0;"></p>
+  <div class="result" id="result">
+    <div class="result-icon-wrap">
+      <div class="result-icon" id="resIcon"></div>
+    </div>
+    <div class="result-label">🎯 Ton profil</div>
+    <div class="result-title" id="resTitle"></div>
+    <div class="result-desc" id="resDesc"></div>
+    <div class="result-actions">
+      <button class="btn-restart" id="btnRestart">↻ Refaire le quiz</button>
     </div>
   </div>
 </div>
+
+<script>
+const QUESTIONS = [
+  "Quand je ressens du désir (envie de sexe, fantasme, après une masturbation), il m'arrive de me dire que c'est sale ou honteux, même si personne autour de moi ne le dit clairement.",
+  "Quand je commence vraiment à me laisser aller dans le plaisir (sexuel ou non), une partie de moi a peur de \"partir trop loin\", de \"perdre le contrôle\" ou de \"devenir quelqu'un de mauvais / excès / trop\", comme si le plaisir pouvait me faire déraper.",
+  "Quand je vois que mon excitation ou mes orgasmes ne ressemblent pas au \"modèle\" (jouir par la pénétration, jouir vite, jouir à chaque fois), je me demande si je suis \"anormal·e\", \"pas une vraie femme / un vrai homme\".",
+  "Quand je suis en train de faire l'amour, il m'arrive de reproduire des scènes vues dans le porno (positions, bruitages, expressions), pas parce que ça me fait vraiment envie sur le moment, mais parce que j'ai l'impression que \"le sexe, ça doit ressembler à ça\".",
+  "Quand je me projette en train d'assumer pleinement mon désir (parler de ce que je veux, prendre des initiatives, jouir fort, demander certaines pratiques, avoir autant de partenaires que je veux), une partie de moi a peur d'être perçu·e comme \"une salope / pute / insérer une insulte misogyne\".",
+  "En repensant à mon enfance/adolescence, je me souviens que chez moi, on ne parlait jamais de sexualité ou de plaisir, ou alors avec de la gêne, des blagues humiliantes, du dégoût. Aujourd'hui, rien que l'idée de parler de mon plaisir me met mal à l'aise, comme si je brisais une règle.",
+  "Quand je pense à ce que c'est \"un bon coup\" ou \"une bonne sexualité\", ce sont surtout des images venant de séries, films, clips, réseaux ou porno qui me viennent — beaucoup plus que des souvenirs où je me suis senti·e vraiment bien dans mon corps."
+];
+
+const OPTIONS = [
+  { label: 'Oui, souvent',  score: 2 },
+  { label: 'Parfois',       score: 1 },
+  { label: 'Non, rarement', score: 0 }
+];
+
+let currentQ = 0;
+const answers = new Array(QUESTIONS.length).fill(null);
+let advancing = false;
+
+const questionsEl = document.getElementById('questions');
+const progressText = document.getElementById('progressText');
+const progressPct = document.getElementById('progressPct');
+const progressFill = document.getElementById('progressFill');
+const btnBack = document.getElementById('btnBack');
+const navEl = document.getElementById('nav');
+const progressWrap = document.getElementById('progressWrap');
+const quizIntro = document.getElementById('quizIntro');
+const resultEl = document.getElementById('result');
+
+// Build questions
+QUESTIONS.forEach((qText, qi) => {
+  const div = document.createElement('div');
+  div.className = 'question' + (qi === 0 ? ' active' : '');
+  div.dataset.q = qi;
+
+  const label = document.createElement('div');
+  label.className = 'q-label';
+  label.textContent = 'Question ' + (qi + 1) + ' sur ' + QUESTIONS.length;
+  div.appendChild(label);
+
+  const text = document.createElement('div');
+  text.className = 'q-text';
+  text.textContent = qText;
+  div.appendChild(text);
+
+  const opts = document.createElement('div');
+  opts.className = 'options';
+  OPTIONS.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.dataset.score = opt.score;
+    btn.innerHTML = '<span class="opt-dot"></span><span class="opt-label">' + opt.label + '</span>';
+    btn.addEventListener('click', () => selectOption(qi, opt.score, btn));
+    opts.appendChild(btn);
+  });
+  div.appendChild(opts);
+
+  questionsEl.appendChild(div);
+});
+
+function selectOption(qi, score, el) {
+  if (advancing) return;
+  answers[qi] = score;
+  el.parentElement.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  updateProgress();
+
+  advancing = true;
+  setTimeout(() => {
+    advancing = false;
+    if (currentQ < QUESTIONS.length - 1) showQuestion(currentQ + 1);
+    else showResults();
+  }, 350);
+}
+
+function showQuestion(index) {
+  document.querySelectorAll('.question').forEach((q, i) => {
+    q.classList.toggle('active', i === index);
+  });
+  currentQ = index;
+  btnBack.disabled = index === 0;
+  const activeQ = document.querySelectorAll('.question')[index];
+  if (activeQ && answers[index] !== null) {
+    activeQ.querySelectorAll('.opt').forEach(o => {
+      o.classList.toggle('selected', parseInt(o.dataset.score) === answers[index]);
+    });
+  }
+  setTimeout(post, 100);
+}
+
+function updateProgress() {
+  const answered = answers.filter(a => a !== null).length;
+  const pct = Math.round((answered / QUESTIONS.length) * 100);
+  progressText.textContent = answered + ' / ' + QUESTIONS.length + ' question' + (answered > 1 ? 's' : '') + ' répondue' + (answered > 1 ? 's' : '');
+  progressPct.textContent = pct + ' %';
+  progressFill.style.width = pct + '%';
+}
+
+btnBack.addEventListener('click', () => {
+  if (currentQ > 0) showQuestion(currentQ - 1);
+});
+
+function showResults() {
+  const total = answers.reduce((a, b) => a + b, 0);
+  let profile;
+  if (total >= 10) {
+    profile = { cls: 'red', icon: '🔴', title: 'Le conditionnement est profond',
+      desc: "Tu portes beaucoup de messages intériorisés sur ce que le plaisir devrait être — ou ne pas être. Ce n'est pas un défaut, c'est le résultat d'une éducation, d'une culture, d'images absorbées sans filtre. Le travail qu'on fait ici est exactement fait pour toi." };
+  } else if (total >= 5) {
+    profile = { cls: 'yellow', icon: '🟡', title: 'Tu portes des traces, mais tu les questionnes',
+      desc: "Tu as déjà commencé à déconstruire certaines injonctions, mais d'autres résistent encore. C'est souvent là que se passe le vrai travail — dans cet entre-deux où on sait que quelque chose cloche sans encore savoir comment le défaire." };
+  } else {
+    profile = { cls: 'green', icon: '🟢', title: "Tu t'es largement affranchi·e",
+      desc: "Tu sembles avoir une relation assez libre avec ton plaisir et ton désir. Ce module va te permettre de solidifier ça — et peut-être de mettre des mots sur ce qui t'a aidé à en arriver là." };
+  }
+
+  resultEl.classList.remove('red', 'yellow', 'green');
+  resultEl.classList.add(profile.cls);
+  document.getElementById('resIcon').textContent = profile.icon;
+  document.getElementById('resTitle').textContent = profile.title;
+  document.getElementById('resDesc').textContent = profile.desc;
+
+  questionsEl.style.display = 'none';
+  navEl.style.display = 'none';
+  progressWrap.style.display = 'none';
+  quizIntro.style.display = 'none';
+  resultEl.classList.add('active');
+  setTimeout(post, 150);
+}
+
+document.getElementById('btnRestart').addEventListener('click', () => {
+  answers.fill(null);
+  currentQ = 0;
+  document.querySelectorAll('.opt.selected').forEach(o => o.classList.remove('selected'));
+  questionsEl.style.display = '';
+  navEl.style.display = '';
+  progressWrap.style.display = '';
+  quizIntro.style.display = '';
+  resultEl.classList.remove('active');
+  showQuestion(0);
+  updateProgress();
+});
+
+updateProgress();
+
+/* ── Auto-resize iframe ── */
+(function() {
+  window.post = function() {
+    try {
+      var h = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        document.documentElement.offsetHeight
+      );
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'dpo-resize', height: h }, '*');
+      }
+    } catch(e) {}
+  };
+  if (typeof ResizeObserver !== 'undefined') {
+    try { new ResizeObserver(window.post).observe(document.body); } catch(e) {}
+  }
+  window.addEventListener('load', window.post);
+  window.addEventListener('resize', window.post);
+  setTimeout(window.post, 100);
+  setTimeout(window.post, 500);
+  setTimeout(window.post, 1500);
+})();
+</script>
 
 </body>
 </html>
