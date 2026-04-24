@@ -62,7 +62,9 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 14px;
+    width: 100%;
   }
+  .tool-grid > * { min-width: 0; }
   @media (min-width: 720px) {
     .tool-grid { grid-template-columns: 1fr 1fr; }
   }
@@ -75,6 +77,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
   }
   .tool-card.quiz { border-top: 4px solid #8A1B1A; }
   .tool-card.fiche { border-top: 4px solid #DC143C; }
@@ -107,6 +111,9 @@
     font-size: 13.5px;
     line-height: 1.65;
     color: #2b1212;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
   .tool-content p { margin-bottom: 10px; }
   .tool-content p:last-child { margin-bottom: 0; }
@@ -195,7 +202,8 @@
   .toggle-body-inner {
     padding: 6px 22px 22px;
     border-top: 1px solid #F0E0E0;
-    overflow-x: auto;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   /* ── Envies/limites table ──── */
@@ -287,6 +295,10 @@
   @media (max-width: 720px) {
     .el-table { font-size: 11px; }
     .el-table tbody td:first-child { font-size: 11.5px; min-width: 160px; }
+    .tool-card { padding: 18px 16px; }
+    .toggle-body-inner { padding: 6px 14px 16px; }
+    .toggle-head { padding: 14px 16px; }
+    .el-intro { font-size: 13px; }
   }
 </style>
 </head>
