@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Raleway', sans-serif; background: #fff; padding: 0; }
+
+  .container { padding: 0; }
+
+  .label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin-bottom: 14px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 999px;
+    padding: 13px 20px;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #450100;
+    text-align: left;
+    transition: all 0.2s;
+  }
+
+  .option-btn.active {
+    background: #DC143C;
+    border-color: #DC143C;
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .option-btn:hover:not(.active) {
+    border-color: #DC143C;
+    color: #DC143C;
+  }
+
+  .option-num {
+    font-size: 11px;
+    font-weight: 800;
+    opacity: 0.5;
+    margin-left: 10px;
+    flex-shrink: 0;
+  }
+
+  .gif-zone {
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1.5px solid #E8D5D5;
+    background: #FFFAFD;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gif-zone img {
+    width: 100%;
+    display: block;
+    border-radius: 16px;
+  }
+
+  .gif-placeholder {
+    font-size: 14px;
+    color: #8a6a5a;
+    text-align: center;
+    padding: 40px 20px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <p class="label">1. Éveiller toute la zone</p>
+
+  <div class="options">
+    <button class="option-btn active" onclick="selectOption(this, 'eveiller-1-paume-posee.png')">
+      Paume posée sur la vulve sans bouger
+      <span class="option-num">A</span>
+    </button>
+    <button class="option-btn" onclick="selectOption(this, 'eveiller-2-paume-bouge.gif')">
+      Paume posée qui bouge doucement sur la vulve
+      <span class="option-num">B</span>
+    </button>
+    <button class="option-btn" onclick="selectOption(this, 'eveiller-3-levres-epaules.gif')">
+      Mains qui massent les lèvres comme des "épaules"
+      <span class="option-num">C</span>
+    </button>
+    <button class="option-btn" onclick="selectOption(this, 'eveiller-4-cercles-entree.gif')">
+      Cercles lents autour de l'entrée du vagin
+      <span class="option-num">D</span>
+    </button>
+  </div>
+
+  <div class="gif-zone" id="gifZone">
+    <img id="gifDisplay" src="https://pljmpylo.github.io/merci-beaucul/eveiller-1-paume-posee.png" alt="Démonstration" />
+  </div>
+
+</div>
+
+<script>
+  function selectOption(btn, gif) {
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    var img = document.getElementById('gifDisplay');
+    img.src = 'https://pljmpylo.github.io/merci-beaucul/' + gif;
+    sendHeight();
+  }
+
+  function sendHeight() {
+    window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, '*');
+  }
+
+  window.addEventListener('load', function() {
+    sendHeight();
+    new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true, attributes: true });
+  });
+</script>
+</body>
+</html>
