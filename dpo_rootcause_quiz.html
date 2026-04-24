@@ -161,10 +161,9 @@
   /* ── Navigation ───────────────────── */
   .nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    margin-top: 22px;
-    gap: 12px;
+    margin-top: 18px;
   }
   .btn {
     font-family: 'Raleway', sans-serif;
@@ -412,10 +411,9 @@
   <!-- ── Questions container ────────── -->
   <div id="questions"></div>
 
-  <!-- ── Navigation ─────────────────── -->
+  <!-- ── Navigation (back only — auto-advance on select) ─── -->
   <div class="nav" id="nav">
     <button class="btn btn-back" id="btnBack" disabled>← Précédent</button>
-    <button class="btn btn-next" id="btnNext" disabled>Suivant →</button>
   </div>
 
   <!-- ── Results ────────────────────── -->
@@ -621,10 +619,12 @@ const progressText = document.getElementById('progressText');
 const progressPct = document.getElementById('progressPct');
 const progressFill = document.getElementById('progressFill');
 const btnBack = document.getElementById('btnBack');
-const btnNext = document.getElementById('btnNext');
 const resultsEl = document.getElementById('results');
 const navEl = document.getElementById('nav');
 const progressWrap = document.getElementById('progressWrap');
+
+// Lock pour éviter les doubles clics pendant la transition
+let advancing = false;
 
 // ── Build questions ──────────────────────────────────
 QUESTIONS.forEach((q, qi) => {
@@ -653,10 +653,21 @@ QUESTIONS.forEach((q, qi) => {
 });
 
 function selectOption(qi, letter, el) {
+  if (advancing) return;
   answers[qi] = letter;
   el.parentElement.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
-  btnNext.disabled = false;
+
+  // Auto-avance : petite pause pour que l'utilisateur voie sa sélection se cocher
+  advancing = true;
+  setTimeout(() => {
+    advancing = false;
+    if (currentQ < QUESTIONS.length - 1) {
+      showQuestion(currentQ + 1);
+    } else {
+      showResults();
+    }
+  }, 350);
 }
 
 function showQuestion(index) {
@@ -666,8 +677,13 @@ function showQuestion(index) {
   currentQ = index;
   updateProgress();
   btnBack.disabled = index === 0;
-  btnNext.disabled = answers[index] === null;
-  btnNext.textContent = index === QUESTIONS.length - 1 ? 'Voir mon résultat →' : 'Suivant →';
+  // Restaure la sélection visuelle si on revient en arrière
+  const activeQ = document.querySelectorAll('.question')[index];
+  if (activeQ && answers[index]) {
+    activeQ.querySelectorAll('.opt').forEach(o => {
+      o.classList.toggle('selected', o.dataset.letter === answers[index]);
+    });
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -677,14 +693,6 @@ function updateProgress() {
   progressPct.textContent = pct + '%';
   progressFill.style.width = pct + '%';
 }
-
-btnNext.addEventListener('click', () => {
-  if (currentQ < QUESTIONS.length - 1) {
-    showQuestion(currentQ + 1);
-  } else {
-    showResults();
-  }
-});
 
 btnBack.addEventListener('click', () => {
   if (currentQ > 0) showQuestion(currentQ - 1);
