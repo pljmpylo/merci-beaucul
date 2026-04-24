@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les outils — Merci Beaucul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow-x: hidden; }
+  body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
+
+  .section-title { margin-bottom: 20px; }
+  .section-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    background: #FFFAFD;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #E8D5D5;
+    margin-bottom: 10px;
+  }
+  .section-heading {
+    font-size: 22px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+  }
+  .section-sub {
+    font-size: 14px;
+    color: #6a4545;
+    font-style: italic;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  .category-title {
+    margin: 32px 0 14px;
+  }
+  .category-num {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin-bottom: 6px;
+  }
+  .category-heading {
+    font-size: 18px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+  }
+
+  /* ── Tool cards ──── */
+  .tool-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  @media (min-width: 720px) {
+    .tool-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .tool-card {
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 18px;
+    padding: 20px 22px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .tool-card.quiz { border-top: 4px solid #8A1B1A; }
+  .tool-card.fiche { border-top: 4px solid #DC143C; }
+  .tool-card.fiche-full {
+    grid-column: 1 / -1;
+    border-top: 4px solid #F5A623;
+  }
+
+  .tool-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #F0E0E0;
+  }
+  .tool-emoji {
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .tool-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+  }
+
+  .tool-content {
+    flex: 1;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #2b1212;
+  }
+  .tool-content p { margin-bottom: 10px; }
+  .tool-content p:last-child { margin-bottom: 0; }
+  .tool-content strong { color: #450100; }
+  .tool-content em { color: #DC143C; font-style: italic; }
+
+  .tool-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0;
+  }
+  .tool-list li {
+    position: relative;
+    padding-left: 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #2b1212;
+    margin-bottom: 6px;
+  }
+  .tool-list li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: #DC143C;
+    font-weight: 800;
+  }
+
+  .tool-subtitle {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    margin: 12px 0 6px;
+  }
+
+  .tool-box {
+    background: #FFFAFD;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  /* ── Toggle ──── */
+  .toggle {
+    border: 1.5px solid #E8D5D5;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-top: 14px;
+    background: #fff;
+  }
+  .toggle-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 22px;
+    cursor: pointer;
+    background: #fff;
+    user-select: none;
+    gap: 12px;
+  }
+  .toggle-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #450100;
+    line-height: 1.35;
+  }
+  .toggle-arrow {
+    font-size: 22px;
+    color: #DC143C;
+    line-height: 1;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+  .toggle-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.8s ease, opacity 0.35s ease;
+    opacity: 0;
+  }
+  .toggle-body-inner {
+    padding: 6px 22px 22px;
+    border-top: 1px solid #F0E0E0;
+    overflow-x: auto;
+  }
+
+  /* ── Envies/limites table ──── */
+  .el-intro {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #2b1212;
+    margin: 14px 0 12px;
+  }
+
+  .el-scroll-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #8A1B1A;
+    background: #FFFAFD;
+    border: 1px solid #E8D5D5;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+
+  .el-table-wrap {
+    overflow-x: auto;
+    border-radius: 14px;
+    border: 1.5px solid #E8D5D5;
+    background: #fff;
+    -webkit-overflow-scrolling: touch;
+  }
+  .el-table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 720px;
+    font-size: 12px;
+  }
+  .el-table th, .el-table td {
+    border-right: 1px solid #F0E0E0;
+    border-bottom: 1px solid #F0E0E0;
+    padding: 8px 10px;
+    vertical-align: middle;
+  }
+  .el-table th:last-child, .el-table td:last-child { border-right: none; }
+  .el-table tr:last-child td { border-bottom: none; }
+
+  .el-table thead tr:first-child th {
+    background: #FFFAFD;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    text-align: center;
+  }
+  .el-table thead tr:first-child th.donner { background: #FFF5F5; color: #8A1B1A; }
+  .el-table thead tr:first-child th.recevoir { background: #FFFBEA; color: #8a6d1a; }
+  .el-table thead tr:nth-child(2) th {
+    background: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    color: #6a4545;
+    text-align: center;
+  }
+  .el-table thead tr:nth-child(2) th.col-aime { color: #3e6f16; }
+  .el-table thead tr:nth-child(2) th.col-test { color: #8a5a1a; }
+  .el-table thead tr:nth-child(2) th.col-ssp { color: #6a4545; }
+  .el-table thead tr:nth-child(2) th.col-non { color: #8A1B1A; }
+
+  .el-table tbody td:first-child {
+    font-weight: 700;
+    color: #450100;
+    background: #FFFAFD;
+    text-align: left;
+    min-width: 200px;
+    font-size: 12.5px;
+  }
+  .el-table tbody td {
+    min-width: 52px;
+    height: 36px;
+    background: #fff;
+  }
+  .el-table tbody tr:nth-child(even) td:first-child { background: #FFF5F5; }
+
+  /* Section dividers for col groups */
+  .el-table .divider-donner { border-right: 2px solid #E8D5D5 !important; }
+
+  @media (max-width: 720px) {
+    .el-table { font-size: 11px; }
+    .el-table tbody td:first-child { font-size: 11.5px; min-width: 160px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ─────────────────── -->
+<div class="section-title">
+  <div class="section-tag">🛠️ Bloc 2</div>
+  <div class="section-heading">Les outils</div>
+  <div class="section-sub">Des supports à utiliser en solo ou à partager à l'autre — à recontextualiser à chaque usage.</div>
+</div>
+
+<!-- ════════════════════════════════ -->
+<!-- 4.1 LES QUIZ                     -->
+<!-- ════════════════════════════════ -->
+<div class="category-title">
+  <div class="category-num">I · Les quiz</div>
+  <div class="category-heading">🧭 Identifier ce qui te parle (ou te bloque)</div>
+</div>
+
+<div class="tool-grid">
+
+  <!-- Quiz 1 -->
+  <div class="tool-card quiz">
+    <div class="tool-header">
+      <span class="tool-emoji">💋</span>
+      <div class="tool-title">Langages du cul</div>
+    </div>
+    <div class="tool-content">
+      <p>Sur le modèle des <em>langages de l'amour</em>, mais version sexo.</p>
+      <div class="tool-subtitle">Les 5 langages</div>
+      <ul class="tool-list">
+        <li>Toucher / gestes</li>
+        <li>Paroles (compliments, dirty talk)</li>
+        <li>Temps &amp; rituels</li>
+        <li>Jeux / scénarios</li>
+        <li>Cadeaux érotiques / surprises</li>
+      </ul>
+      <div class="tool-box">
+        🎯 Quiz pour identifier <strong>les 2 langages principaux</strong> de chacun·e.
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz 2 -->
+  <div class="tool-card quiz">
+    <div class="tool-header">
+      <span class="tool-emoji">🚧</span>
+      <div class="tool-title">Blocages orgasme</div>
+    </div>
+    <div class="tool-content">
+      <p>Questions pour repérer ce qui coince.</p>
+      <div class="tool-subtitle">3 axes explorés</div>
+      <ul class="tool-list">
+        <li><strong>Croyances</strong> : « il faut jouir à deux », « il faut jouir par pénétration ».</li>
+        <li><strong>Peurs</strong> : jugement, temps, bruit, expression du plaisir.</li>
+        <li><strong>Difficultés</strong> à parler ou à demander.</li>
+      </ul>
+      <div class="tool-box">
+        🎯 À la fin du quiz : <strong>pistes concrètes associées</strong> (travailler le plaisir sans objectif d'orgasme, ritualiser un temps pour parler, etc.).
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════ -->
+<!-- 4.2 LES FICHES                   -->
+<!-- ════════════════════════════════ -->
+<div class="category-title">
+  <div class="category-num">II · Les fiches</div>
+  <div class="category-heading">📝 Des supports à remplir seul·e ou à deux</div>
+</div>
+
+<div class="tool-grid">
+
+  <!-- Fiche 1 Dirty talk -->
+  <div class="tool-card fiche">
+    <div class="tool-header">
+      <span class="tool-emoji">🔥</span>
+      <div class="tool-title">Fiches dirty talk</div>
+    </div>
+    <div class="tool-content">
+      <div class="tool-subtitle">3 catégories</div>
+      <ul class="tool-list">
+        <li>Décrire ce que <strong>je ressens</strong></li>
+        <li>Décrire ce que <strong>tu fais</strong></li>
+        <li>Dire ce que <strong>je veux</strong></li>
+      </ul>
+      <p style="margin-top:10px;">Exemples prêts à l'emploi <strong>+ espaces</strong> pour écrire tes propres phrases.</p>
+    </div>
+  </div>
+
+  <!-- Fiche 2 Libido -->
+  <div class="tool-card fiche">
+    <div class="tool-header">
+      <span class="tool-emoji">⚡</span>
+      <div class="tool-title">Fiches de la libido</div>
+    </div>
+    <div class="tool-content">
+      <div class="tool-subtitle">2 fiches complémentaires</div>
+      <p>🟢 <strong>Mon carburant</strong> : ce qui nourrit mon désir (contexte, timing, gestes de tendresse, scénarios).</p>
+      <p>🔴 <strong>Ce qui me coupe</strong> : fatigue, ressentiment, stress, façon dont on démarre le sexe…</p>
+      <div class="tool-box">
+        🎯 Pouvoir dire à l'autre <em>« voilà ce qui aide mon désir »</em>, au lieu de <em>« j'ai pas de libido »</em>.
+      </div>
+    </div>
+  </div>
+
+  <!-- Fiche 3 Pleasure sheets -->
+  <div class="tool-card fiche">
+    <div class="tool-header">
+      <span class="tool-emoji">🗺️</span>
+      <div class="tool-title">Pleasure sheets</div>
+    </div>
+    <div class="tool-content">
+      <p>Ta <strong>carte du plaisir</strong> personnelle à construire.</p>
+      <div class="tool-subtitle">Tu cartographies</div>
+      <ul class="tool-list">
+        <li><strong>Zones érogènes</strong> (pas que génitales) : j'adore / à explorer / pas maintenant / non.</li>
+        <li><strong>Types de stimulations</strong> : doux vs intense, lent vs rapide, continu vs contrasté, avec ou sans parole.</li>
+        <li><strong>Moments</strong>, contextes, dynamiques qui t'excitent.</li>
+      </ul>
+      <div class="tool-subtitle">Utilisation</div>
+      <ul class="tool-list">
+        <li>À remplir <strong>seul·e</strong>, puis à partager avec un·e partenaire.</li>
+        <li>Se complète au fil du temps, comme une carte qui se met à jour.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Fiche 4 Liste envies / limites (full width) -->
+  <div class="tool-card fiche-full">
+    <div class="tool-header">
+      <span class="tool-emoji">📋</span>
+      <div class="tool-title">Liste des envies &amp; limites</div>
+    </div>
+    <div class="tool-content">
+      <p class="el-intro">Pour chaque zone ou activité, positionne-toi en <strong>donner</strong> et en <strong>recevoir</strong> selon 4 niveaux : j'aime / je veux tester / je sais pas / non.</p>
+
+      <div class="toggle">
+        <div class="toggle-head" onclick="var n=this.nextElementSibling; var o=n.style.maxHeight&&n.style.maxHeight!=='0px'; n.style.maxHeight=o?'0px':n.scrollHeight+'px'; n.style.opacity=o?'0':'1'; var a=this.querySelector('.toggle-arrow'); if(a) a.style.transform=o?'rotate(0deg)':'rotate(180deg)';">
+          <div class="toggle-title">
+            <span style="font-size:18px;">👉</span>
+            <span>Ouvrir la grille complète (28 zones · donner &amp; recevoir)</span>
+          </div>
+          <span class="toggle-arrow">&#8964;</span>
+        </div>
+        <div class="toggle-body">
+          <div class="toggle-body-inner">
+            <div class="el-scroll-hint">← fais défiler horizontalement →</div>
+            <div class="el-table-wrap">
+              <table class="el-table">
+                <thead>
+                  <tr>
+                    <th rowspan="2" style="text-align:left;">Zone / activité</th>
+                    <th colspan="4" class="donner">👐 Donner</th>
+                    <th colspan="4" class="recevoir">🤲 Recevoir</th>
+                  </tr>
+                  <tr>
+                    <th class="col-aime">J'aime</th>
+                    <th class="col-test">Je veux test</th>
+                    <th class="col-ssp">Je sais pas</th>
+                    <th class="col-non divider-donner">Non</th>
+                    <th class="col-aime">J'aime</th>
+                    <th class="col-test">Je veux test</th>
+                    <th class="col-ssp">Je sais pas</th>
+                    <th class="col-non">Non</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Tête &amp; visage (massage / contact)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Cou &amp; épaules</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Dos &amp; bas du dos</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Poitrine / seins / tétons</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Ventre &amp; hanches</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Fesses</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Jambes &amp; pieds</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Baisers bouche / visage</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Baisers cou / poitrine</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Baisers ventre / sexe / anus</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Lécher / sucer seins / tétons</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Lécher / sucer sexe / anus</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Mordre (zones ok à préciser)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Griffer / agripper / tirer cheveux</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Chatouilles (zones ok)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Claques / spanking (zones ok)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Pénétration orale</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Pénétration vaginale</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Pénétration anale</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Doigts (bouche / sexe / anus)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Jouets (vibro, plug, dildo…)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Lien / contention (corde, menottes)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Jeu de pouvoir (dom / sub, ordres…)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Dirty talk / humiliation consentie</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Contrôle / refus d'orgasme</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Multi-partenaires (3, orgie…)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Voyeurisme / être regardé·e</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Jeux avec fluides corporels</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                  <tr><td>Autre (à préciser)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ── Auto-resize iframe ── */
+(function() {
+  function post() {
+    try {
+      var h = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        document.documentElement.offsetHeight
+      );
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'dpo-resize', height: h }, '*');
+      }
+    } catch(e) {}
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    try { new ResizeObserver(post).observe(document.body); } catch(e) {}
+  }
+  window.addEventListener('load', post);
+  window.addEventListener('resize', post);
+  document.addEventListener('click', function(){ setTimeout(post, 100); setTimeout(post, 600); }, true);
+  setTimeout(post, 100);
+  setTimeout(post, 500);
+  setTimeout(post, 1500);
+})();
+</script>
+
+</body>
+</html>
