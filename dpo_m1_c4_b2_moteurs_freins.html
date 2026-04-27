@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moteurs & Freins — Merci Beaucul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow-x: hidden; }
+  body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
+
+  .h-section {
+    font-size: 16px;
+    font-weight: 800;
+    color: #450100;
+    margin: 0 0 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .h-section.mt { margin-top: 28px; }
+
+  /* ── Toggles ────────────────────── */
+  .tog {
+    border: 1.5px solid #E8D5D5;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    background: #fff;
+  }
+  .tog.yellow { border-color: #FFDE59; }
+  .tog.yellow .tog-head { background: #FFFBEA; }
+  .tog-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 22px;
+    cursor: pointer;
+    background: #fff;
+    user-select: none;
+    gap: 12px;
+  }
+  .tog-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #8a1b1a;
+  }
+  .tog-title .num {
+    font-size: 16px;
+    color: #1a0505;
+  }
+  .tog-arrow {
+    font-size: 22px;
+    color: #dc143c;
+    line-height: 1;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+  .tog-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.35s ease;
+    opacity: 0;
+  }
+  .tog-body-inner {
+    padding: 4px 22px 22px;
+    border-top: 1px solid #F0E0E0;
+  }
+  .tog-body-inner > p:first-child { margin-top: 14px; }
+  .tog-arrow-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .tog-arrow-row:first-of-type { margin-top: 14px; }
+  .tog-arrow-row .red {
+    color: #dc143c;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .tog-arrow-row p {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.7;
+    margin: 0;
+  }
+  .tog-arrow-row p strong { color: #450100; }
+
+  /* ── Tableau ────────────────────── */
+  .tbl-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 14px;
+    margin-top: 14px;
+  }
+  .tbl {
+    border: 1.5px solid #E8D5D5;
+    border-radius: 14px;
+    overflow: hidden;
+    min-width: 500px;
+  }
+  .tbl-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1.6fr 1.6fr;
+  }
+  .tbl-row.head { background: #FFFAFD; }
+  .tbl-row.head > div {
+    padding: 13px 16px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #450100;
+    line-height: 1.4;
+  }
+  .tbl-row.head > div:not(:last-child) { border-right: 1px solid #E8D5D5; }
+  .tbl-row.body { background: #fff; border-bottom: 1px solid #F0E0E0; }
+  .tbl-row.body > div { padding: 14px 16px; font-size: 13px; line-height: 1.65; }
+  .tbl-row.body > div:not(:last-child) { border-right: 1px solid #E8D5D5; }
+  .tbl-row.body .label {
+    color: #450100;
+    font-style: italic;
+    line-height: 1.6;
+  }
+  .tbl-row.body .cell { color: #444; }
+  .tbl-row.empty { background: #FFFAFD; min-height: 14px; }
+
+  /* ── Iframe sketchfab/external ── */
+  .external-iframe-wrap {
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  /* ── Custom audio player ───────── */
+  .mb-player { display: flex; flex-direction: column; gap: 0; }
+  .mb-player-row { display: flex; align-items: center; gap: 14px; }
+  .mb-play-btn {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #8A1B1A;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(138, 27, 26, 0.25);
+    transition: all .2s ease;
+    padding: 0;
+  }
+  .mb-play-btn:hover { background: #450100; transform: scale(1.05); }
+  .mb-play-btn:active { transform: scale(0.97); }
+  .mb-play-btn svg { width: 18px; height: 18px; fill: #fff; }
+  .mb-play-btn.playing .mb-icon-play { display: none; }
+  .mb-play-btn:not(.playing) .mb-icon-pause { display: none; }
+  .mb-meter { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .mb-progress {
+    height: 6px;
+    background: #F0E0E0;
+    border-radius: 999px;
+    cursor: pointer;
+    position: relative;
+  }
+  .mb-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8A1B1A, #DC143C);
+    border-radius: 999px;
+    width: 0%;
+    transition: width 0.1s linear;
+    pointer-events: none;
+  }
+  .mb-times {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6a4545;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .mb-cur { color: #8A1B1A; font-weight: 700; }
+  .mb-speeds {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #F0E0E0;
+  }
+  .mb-speed {
+    font-family: 'Raleway', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #8A1B1A;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    padding: 4px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .mb-speed:hover { border-color: #8A1B1A; }
+  .mb-speed.active { background: #8A1B1A; color: #fff; border-color: #8A1B1A; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ MOTEURS ══════════ -->
+<p class="h-section">🔥 Mes moteurs</p>
+
+<!-- Toggle 1 -->
+<div class="tog">
+  <div class="tog-head" onclick="mbToggle(this)">
+    <div class="tog-title"><span class="num">1.</span><span>Contexte qui m'excite facilement</span></div>
+    <span class="tog-arrow">⌄</span>
+  </div>
+  <div class="tog-body">
+    <div class="tog-body-inner">
+      <div class="tog-arrow-row"><span class="red">→</span><p>Où est-ce que j'ai le plus envie / le plus de plaisir ? <em>(lit, douche, hôtel, chez moi seule, sexting…)</em></p></div>
+      <div class="tog-arrow-row"><span class="red">→</span><p>À quels moments de la journée / semaine je me sens le plus dispo au plaisir ?</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- Toggle 2 -->
+<div class="tog">
+  <div class="tog-head" onclick="mbToggle(this)">
+    <div class="tog-title"><span class="num">2.</span><span>Stimulations qui allument mon moteur</span></div>
+    <span class="tog-arrow">⌄</span>
+  </div>
+  <div class="tog-body">
+    <div class="tog-body-inner">
+      <div class="tog-arrow-row"><span class="red">→</span><p><strong>Touchers :</strong> doux, fermes, rythmiques, pression sur la vulve, massages du périnée, stimulation du gland du clito, pénétration lente…</p></div>
+      <div class="tog-arrow-row"><span class="red">→</span><p><strong>Sens :</strong> sons (gémissements, musique), odeurs (parfum, peau), lumières tamisées, textures (soie, mains rugueuses), goûts</p></div>
+      <div class="tog-arrow-row"><span class="red">→</span><p><strong>Fantasmes, scénarios, attitudes :</strong> être regardé·e, diriger, se laisser guider, paroles explicites…</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- Toggle 3 -->
+<div class="tog" style="margin-bottom: 20px;">
+  <div class="tog-head" onclick="mbToggle(this)">
+    <div class="tog-title"><span class="num">3.</span><span>États internes qui m'aident à décoller</span></div>
+    <span class="tog-arrow">⌄</span>
+  </div>
+  <div class="tog-body">
+    <div class="tog-body-inner">
+      <div class="tog-arrow-row"><span class="red">→</span><p>Comment est mon corps quand je me sens très excité·e ? <em>(respiration, muscles, chaleur, lubrification…)</em></p></div>
+      <div class="tog-arrow-row"><span class="red">→</span><p>Comment est mon mental ? <em>(présent, rêveur, joueur, connecté à la personne…)</em></p></div>
+    </div>
+  </div>
+</div>
+
+<!-- Tableau moteurs -->
+<div class="tog yellow">
+  <div class="tog-head" onclick="mbToggle(this)">
+    <div class="tog-title"><span style="font-size: 16px;">✏️</span><span>Tableau à remplir avec tes moteurs</span></div>
+    <span class="tog-arrow">⌄</span>
+  </div>
+  <div class="tog-body">
+    <div class="tog-body-inner" style="padding: 0 14px 14px;">
+      <div class="tbl-wrap">
+        <div class="tbl">
+          <div class="tbl-row head">
+            <div>Moteur identifié</div>
+            <div>Action solo</div>
+            <div>Action à deux</div>
+          </div>
+          <div style="height: 1px; background: #E8D5D5;">&nbsp;</div>
+          <div class="tbl-row body">
+            <div class="label">Me sentir ultra safe et connectée</div>
+            <div class="cell">Créer un rituel (douche, musique, lumière, tenue confortable) pour signaler à mon système nerveux "c'est un moment pour moi"</div>
+            <div class="cell">Instaurer un mini check-in avant ("t'as envie de quoi ? qu'est-ce qu'on évite aujourd'hui ?")</div>
+          </div>
+          <div class="tbl-row empty">&nbsp;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toggle exemples -->
+<div class="tog" style="margin-bottom: 32px;">
+  <div class="tog-head" onclick="mbToggle(this)">
+    <div class="tog-title"><span style="font-size: 16px;">💡</span><span>Plein d'exemples non exhaustifs</span></div>
+    <span class="tog-arrow">⌄</span>
+  </div>
+  <div class="tog-body">
+    <div class="tog-body-inner" style="padding: 16px 22px 22px;">
+      <p style="font-size: 14px; color: #444; line-height: 2.0; margin: 0;">gémissements, peau à peau, transpiration, baisers lents, lumière tamisée, regard intense, compliments, odeurs rassurantes, massages, câlins longs, érection, caresses vulve, périnée, jeu, humour, sextos, lingerie, se sentir choisi·e, lenteur, adrénaline, musique, fantasmes, domination douce, se laisser guider, diriger, prendre son temps, respiration profonde, chaleur, douches chaudes, mains fermes, dirty talk, nuque, ventre, cuisses, sentir sa puissance, douceur, confiance, intimité, sécurité, connexion émotionnelle, spontanéité, nouveauté, hôtel, main dans les cheveux, voix, murmures à l'oreille, consentement clair, liberté de dire stop, exploration sans objectif, curiosité, auto-érotisme, masturbation, auto-regard bienveillant, fierté du corps, vulnérabilité partagée</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ FREINS ══════════ -->
+<p class="h-section">🧊 Mes freins</p>
+
+<div class="tog">
+  <div class="tog-head" onclick="mbToggle(this)">
+    <div class="tog-title"><span>Freins physiques</span></div>
+    <span class="tog-arrow">⌄</span>
+  </div>
+  <div class="tog-body"><div class="tog-body-inner"><p style="font-size: 14px; color: #444; line-height: 1.75;">Douleur, sécheresse, fatigue, cycle menstruel, médicaments, manque de sommeil…</p></div></div>
+</div>
+
+<div class="tog">
+  <div class="tog-head" onclick="mbToggle(this)">
+    <div class="tog-title"><span>Freins émotionnels</span></div>
+    <span class="tog-arrow">⌄</span>
+  </div>
+  <div class="tog-body"><div class="tog-body-inner"><p style="font-size: 14px; color: #444; line-height: 1.75;">Peur du rejet, honte du corps, peur d'être jugée, tristesse, colère…</p></div></div>
+</div>
+
+<div class="tog">
+  <div class="tog-head" onclick="mbToggle(this)">
+    <div class="tog-title"><span>Freins contextuels</span></div>
+    <span class="tog-arrow">⌄</span>
+  </div>
+  <div class="tog-body"><div class="tog-body-inner"><p style="font-size: 14px; color: #444; line-height: 1.75;">Bruit, coloc / enfants pas loin, manque d'intimité, temps limité, disputes non résolues…</p></div></div>
+</div>
+
+<div class="tog">
+  <div class="tog-head" onclick="mbToggle(this)">
+    <div class="tog-title"><span>Freins mentaux</span></div>
+    <span class="tog-arrow">⌄</span>
+  </div>
+  <div class="tog-body"><div class="tog-body-inner"><p style="font-size: 14px; color: #444; line-height: 1.75;">Pression de performance ("il faut que je jouisse vite / que j'assure"), hypercontrôle, difficulté à dire non ou stop…</p></div></div>
+</div>
+
+<div class="tog" style="margin-bottom: 20px;">
+  <div class="tog-head" onclick="mbToggle(this)">
+    <div class="tog-title"><span>Freins liés au trauma</span></div>
+    <span class="tog-arrow">⌄</span>
+  </div>
+  <div class="tog-body"><div class="tog-body-inner"><p style="font-size: 14px; color: #444; line-height: 1.75;">Flashbacks, sensations de dégoût ou de panique, dissociation, larmes "sans raison apparente"…</p></div></div>
+</div>
+
+<!-- Tableau freins -->
+<div class="tog yellow" style="margin-bottom: 32px;">
+  <div class="tog-head" onclick="mbToggle(this)">
+    <div class="tog-title"><span style="font-size: 16px;">✏️</span><span>Tableau à remplir avec tes freins</span></div>
+    <span class="tog-arrow">⌄</span>
+  </div>
+  <div class="tog-body">
+    <div class="tog-body-inner" style="padding: 0 14px 14px;">
+      <div class="tbl-wrap">
+        <div class="tbl">
+          <div class="tbl-row head">
+            <div>Frein identifié</div>
+            <div>Ce que je peux faire seule</div>
+            <div>Ce que je peux dire / faire à deux</div>
+          </div>
+          <div style="height: 1px; background: #E8D5D5;">&nbsp;</div>
+          <div class="tbl-row body">
+            <div class="label">Pression de performance ("il faut que je jouisse vite")</div>
+            <div class="cell">&nbsp;</div>
+            <div class="cell">&nbsp;</div>
+          </div>
+          <div class="tbl-row empty">&nbsp;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ RESPIRATION CARRÉE ══════════ -->
+<p style="font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #1a0505; margin: 0 0 12px; text-decoration: underline;">🫁 Exercice — Respiration carrée</p>
+
+<div class="external-iframe-wrap">
+  <iframe width="100%" height="670" style="border: none; display: block;" src="https://pljmpylo.github.io/merci-beaucul/kajabi_respiration_carree.html"></iframe>
+</div>
+
+<!-- ══════════ AUDIO GUIDE ══════════ -->
+<div style="background: #fff; border: 1.5px solid #E8D5D5; border-radius: 18px; padding: 20px 22px; margin-bottom: 20px; border-top: 4px solid #8A1B1A;">
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #F0E0E0;">
+    <span style="font-size: 22px; flex-shrink: 0;">🎧</span>
+    <div>
+      <div style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #dc143c; margin-bottom: 3px;">Guide audio</div>
+      <div style="font-size: 15px; font-weight: 800; color: #450100; line-height: 1.35;">Exercice de respiration guidée</div>
+    </div>
+  </div>
+  <div class="mb-player">
+    <div class="mb-player-row">
+      <button class="mb-play-btn" data-play aria-label="Lecture">
+        <svg class="mb-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="mb-icon-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+      </button>
+      <div class="mb-meter">
+        <div class="mb-progress" data-progress><div class="mb-progress-fill" data-fill></div></div>
+        <div class="mb-times"><span class="mb-cur" data-cur>0:00</span><span data-tot>--:--</span></div>
+      </div>
+    </div>
+    <div class="mb-speeds">
+      <button class="mb-speed" data-speed="0.75">0.75&times;</button>
+      <button class="mb-speed active" data-speed="1">1&times;</button>
+      <button class="mb-speed" data-speed="1.25">1.25&times;</button>
+      <button class="mb-speed" data-speed="1.5">1.5&times;</button>
+    </div>
+    <audio data-audio preload="metadata">
+      <source src="https://pljmpylo.github.io/merci-beaucul/dpo_audio_respiration.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+</div>
+
+<!-- ══════════ RESSOURCE CITÉE ══════════ -->
+<div style="background: #F5EDE3; border-radius: 18px; padding: 20px 24px;">
+  <p style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #dc143c; margin: 0 0 5px;">📖 Ressource citée</p>
+  <p style="font-family: 'Lora',serif; font-size: 15px; font-weight: 600; color: #450100; margin: 0 0 3px;">Respirer</p>
+  <p style="font-size: 12px; color: #8a6a5a; margin: 0 0 14px;">James Nestor</p>
+  <img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/site/2148843478/products/5d7227a-86f3-fda8-fc5f-ab35254d81fe_image_6_.png" width="200" height="293" style="border-radius: 8px; display: block;" alt="Respirer">
+</div>
+
+<script>
+/* ── Toggle ─── */
+function mbToggle(head) {
+  var body = head.nextElementSibling;
+  var arrow = head.querySelector('.tog-arrow');
+  var open = body.style.maxHeight && body.style.maxHeight !== '0px';
+  body.style.maxHeight = open ? '0px' : body.scrollHeight + 'px';
+  body.style.opacity = open ? '0' : '1';
+  if (arrow) arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+  if (typeof window.__post === 'function') {
+    setTimeout(window.__post, 200);
+    setTimeout(window.__post, 600);
+  }
+}
+
+/* ── Custom audio players ─── */
+(function () {
+  function fmt(sec) {
+    if (!isFinite(sec) || sec < 0) sec = 0;
+    var m = Math.floor(sec / 60);
+    var s = Math.floor(sec % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+  document.querySelectorAll('.mb-player').forEach(function (p) {
+    var audio = p.querySelector('[data-audio]');
+    var btn = p.querySelector('[data-play]');
+    var prog = p.querySelector('[data-progress]');
+    var fill = p.querySelector('[data-fill]');
+    var curEl = p.querySelector('[data-cur]');
+    var totEl = p.querySelector('[data-tot]');
+    var speedBtns = p.querySelectorAll('.mb-speed');
+
+    audio.addEventListener('loadedmetadata', function () { totEl.textContent = fmt(audio.duration); });
+    btn.addEventListener('click', function () { if (audio.paused) audio.play(); else audio.pause(); });
+    audio.addEventListener('play', function () { btn.classList.add('playing'); btn.setAttribute('aria-label', 'Pause'); });
+    audio.addEventListener('pause', function () { btn.classList.remove('playing'); btn.setAttribute('aria-label', 'Lecture'); });
+    audio.addEventListener('ended', function () { btn.classList.remove('playing'); btn.setAttribute('aria-label', 'Lecture'); });
+    audio.addEventListener('timeupdate', function () {
+      var pct = (audio.currentTime / audio.duration) * 100;
+      fill.style.width = (isFinite(pct) ? pct : 0) + '%';
+      curEl.textContent = fmt(audio.currentTime);
+    });
+    prog.addEventListener('click', function (e) {
+      var rect = prog.getBoundingClientRect();
+      var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      if (isFinite(audio.duration)) audio.currentTime = pct * audio.duration;
+    });
+    speedBtns.forEach(function (sb) {
+      sb.addEventListener('click', function () {
+        speedBtns.forEach(function (b) { b.classList.remove('active'); });
+        sb.classList.add('active');
+        audio.playbackRate = parseFloat(sb.dataset.speed);
+      });
+    });
+  });
+})();
+
+/* ── Auto-resize iframe for Kajabi ── */
+(function () {
+  function post() {
+    try {
+      var h = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        document.documentElement.offsetHeight
+      );
+      var msg = { type: 'dpo-resize', height: h };
+      var w = window.parent;
+      var hops = 0;
+      while (w && w !== window && hops < 10) {
+        try { w.postMessage(msg, '*'); } catch (e) {}
+        if (w === w.parent) break;
+        w = w.parent;
+        hops++;
+      }
+      try { if (window.top && window.top !== window) window.top.postMessage(msg, '*'); } catch (e) {}
+    } catch (e) {}
+  }
+  window.__post = post;
+  if (typeof ResizeObserver !== 'undefined') {
+    try { new ResizeObserver(post).observe(document.body); } catch (e) {}
+  }
+  window.addEventListener('load', post);
+  window.addEventListener('resize', post);
+  setTimeout(post, 100);
+  setTimeout(post, 500);
+  setTimeout(post, 1500);
+})();
+</script>
+
+</body>
+</html>
