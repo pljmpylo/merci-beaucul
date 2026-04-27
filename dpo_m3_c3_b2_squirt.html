@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pour aller plus loin · Le Squirt — Merci Beaucul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow-x: hidden; }
+  body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
+
+  .section-title { margin-bottom: 22px; }
+  .section-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    background: #FFFAFD;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #E8D5D5;
+    margin-bottom: 12px;
+  }
+  .section-heading {
+    font-size: 22px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+  }
+
+  .lead {
+    font-size: 15px;
+    color: #2b1212;
+    line-height: 1.7;
+    margin-bottom: 18px;
+  }
+
+  /* ── Sub-headers ─────────────────── */
+  .h-section {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #1a0505;
+    margin: 28px 0 14px;
+    text-decoration: underline;
+  }
+
+  /* ── Question rhétorique ──────────── */
+  .q-card {
+    background: #F5EDE3;
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+  }
+  .q-card .q-title {
+    font-family: 'Lora', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: #450100;
+    margin-bottom: 12px;
+  }
+  .q-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .q-card li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+    color: #2b1212;
+    line-height: 1.65;
+    margin-bottom: 8px;
+  }
+  .q-card li:last-child { margin-bottom: 0; }
+  .q-card li::before {
+    content: "→";
+    color: #8A1B1A;
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-weight: 700;
+  }
+
+  /* ── Conclusion ─────────────────── */
+  .conclusion {
+    background: #450100;
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    color: #ffde59;
+  }
+  .conclusion .label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #ffde59;
+    margin-bottom: 6px;
+  }
+  .conclusion p {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: #fff;
+    margin: 0;
+  }
+
+  /* ── Reassurance ─────────────────── */
+  .reassure {
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+  }
+  .reassure p {
+    font-size: 14px;
+    color: #2b1212;
+    line-height: 1.7;
+    margin: 0;
+  }
+  .reassure strong { color: #450100; }
+
+  /* ── Warning ─────────────────────── */
+  .warning {
+    background: #FFF1DB;
+    border-left: 4px solid #F5A623;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .warning .emoji {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .warning p {
+    font-size: 13.5px;
+    color: #6a4710;
+    line-height: 1.65;
+    margin: 0;
+  }
+  .warning strong { color: #450100; }
+
+  /* ── Tableau ─────────────────────── */
+  .tbl-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 18px;
+    margin-bottom: 22px;
+  }
+  .tbl {
+    border: 1.5px solid #E8D5D5;
+    border-radius: 18px;
+    overflow: hidden;
+    min-width: 520px;
+  }
+  .tbl-row {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+  }
+  .tbl-row.head { background: #FFFAFD; }
+  .tbl-row.head > div {
+    padding: 13px 16px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    line-height: 1.4;
+  }
+  .tbl-row.head > div:first-child { border-right: 1px solid #E8D5D5; }
+  .tbl-row.body { background: #fff; border-bottom: 1px solid #F0E0E0; }
+  .tbl-row.body:last-child { border-bottom: none; }
+  .tbl-row.body > div { padding: 14px 16px; font-size: 13px; line-height: 1.65; }
+  .tbl-row.body > div:first-child {
+    border-right: 1px solid #E8D5D5;
+    color: #450100;
+    font-weight: 700;
+    background: #FFFAFD;
+  }
+  .tbl-row.body > div:last-child { color: #444; }
+
+  /* ── Section header pour tableaux par profil ── */
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 26px 0 14px;
+  }
+  .profile-header .icon {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #FFFAFD;
+    border: 1.5px solid #8A1B1A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+  }
+  .profile-header .text {
+    font-size: 15px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.35;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ─────────────────────── -->
+<div class="section-title">
+  <div class="section-tag">💦 Pour aller plus loin</div>
+  <div class="section-heading">Le Squirt</div>
+</div>
+
+<p class="lead">Le <strong>squirting</strong> désigne une <strong>expulsion de liquide par l'urètre</strong> pendant l'excitation ou au moment de l'orgasme.</p>
+
+<!-- ── QUESTION RHÉTORIQUE ─────────── -->
+<div class="q-card">
+  <div class="q-title">« C'est du pipi ? c'est pas du pipi ? »</div>
+  <ul>
+    <li>Certaines études trouvent surtout de l'<strong>urine diluée</strong> (urée, créatinine).</li>
+    <li>D'autres montrent un <strong>mélange</strong> : urine + liquide para-urétral (glandes de Skene, souvent appelées « zone G »).</li>
+    <li>D'autres encore insistent sur le <strong>contexte</strong> : beaucoup de lubrification, vessie plus ou moins pleine, intensité de la stimulation, etc.</li>
+  </ul>
+</div>
+
+<!-- ── CONCLUSION ─────────────────── -->
+<div class="conclusion">
+  <div class="label">🌹 Conclusion simple</div>
+  <p>On sait pas vraiment, et surtout <strong style="color: #ffde59;">on s'en fout</strong>.</p>
+</div>
+
+<!-- ── REASSURANCE ────────────────── -->
+<div class="reassure">
+  <p>Si tu as peur que ce soit de l'urine, tu peux : aller aux toilettes avant, protéger les draps, en parler à ton·ta partenaire. <strong>L'essentiel reste le confort, le relâchement et la liberté d'exploration</strong>, pas le verdict chimique.</p>
+</div>
+
+<!-- ── WARNING ────────────────────── -->
+<div class="warning">
+  <span class="emoji">⚠️</span>
+  <p>Le squirt est très <strong>mécanique</strong> pour certaines personnes et n'ajoute rien au plaisir, et très <strong>intense</strong> pour d'autres. Donc <strong>squirt ≠ orgasme</strong>.</p>
+</div>
+
+<!-- ══════════ POUR LA PERSONNE QUI VEUT SQUIRTER ══════════ -->
+<div class="profile-header">
+  <div class="icon">🫦</div>
+  <div class="text">Pour la personne qui veut squirter</div>
+</div>
+
+<div class="tbl-wrap">
+  <div class="tbl">
+    <div class="tbl-row head">
+      <div>Objectif</div>
+      <div>Conseils simples</div>
+    </div>
+    <div class="tbl-row body">
+      <div>Créer un cadre safe</div>
+      <div>Protéger le lit (serviette, alèse), aller aux toilettes avant, décider d'un mot/phrase pour dire « stop » ou « pause ».</div>
+    </div>
+    <div class="tbl-row body">
+      <div>Accepter la sensation d'« envie de faire pipi »</div>
+      <div>Se rappeler que cette sensation est <em>normale</em> dans le squirting, respirer profondément, laisser le bassin se relâcher plutôt que se crisper.</div>
+    </div>
+    <div class="tbl-row body">
+      <div>Repérer la zone interne agréable</div>
+      <div>Insérer 1–2 doigts (ou un sextoy adapté), viser la <strong>paroi avant du vagin</strong> (vers le pubis), explorer doucement jusqu'à trouver une zone un peu plus rugueuse ou sensible.</div>
+    </div>
+    <div class="tbl-row body">
+      <div>Trouver le bon rythme</div>
+      <div>Tester des mouvements de « viens ici » ou des pressions / petits pompages réguliers, commencer lentement, augmenter progressivement la vitesse / la pression selon ce qui fait monter le plaisir.</div>
+    </div>
+    <div class="tbl-row body">
+      <div>Laisser sortir</div>
+      <div>Quand la sensation monte et que l'envie de « pousser » arrive, respirer par la bouche, <strong>relâcher le périnée</strong>, éventuellement pousser légèrement comme aux toilettes au lieu de se retenir.</div>
+    </div>
+    <div class="tbl-row body">
+      <div>Après</div>
+      <div>Se féliciter, se rassurer si des doutes remontent, boire un peu d'eau, se reposer : c'est une stimulation intense pour le corps.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ POUR LA PERSONNE QUI VEUT FAIRE SQUIRTER ══════════ -->
+<div class="profile-header">
+  <div class="icon">🤝</div>
+  <div class="text">Pour la personne qui veut faire squirter</div>
+</div>
+
+<div class="tbl-wrap">
+  <div class="tbl">
+    <div class="tbl-row head">
+      <div>Objectif</div>
+      <div>Conseils simples</div>
+    </div>
+    <div class="tbl-row body">
+      <div>Mettre la personne en confiance</div>
+      <div>Parler avant : « On peut explorer, sans obligation de résultat. » Personne ne squirt s'il est tendu·e, anxieux·se, ou ressent de la pression. Normaliser le risque de liquide / odeur, proposer de protéger le lit.</div>
+    </div>
+    <div class="tbl-row body">
+      <div>Demander son feu vert</div>
+      <div>Vérifier clairement le consentement, poser des questions pendant : « Ça va ? Je continue ? Plus doux ? Plus fort ? »</div>
+    </div>
+    <div class="tbl-row body">
+      <div>Préparer le corps</div>
+      <div>Commencer par de longues caresses externes (corps entier, vulve, clitoris) pour créer du plaisir et de la lubrification avant d'aller à l'intérieur. <strong>Rappel : l'excitation c'est 50% du taf.</strong> Take your time. Stimule tout.</div>
+    </div>
+    <div class="tbl-row body">
+      <div>Stimuler la zone G</div>
+      <div>Introduire 1–2 doigts, paume vers le haut, chercher la zone sensible sur la paroi avant, utiliser un mouvement de « viens ici » régulier, coordonné à la respiration de la personne. Appuie sur son pubis pour mettre de la pression sur la vessie.</div>
+    </div>
+    <div class="tbl-row body">
+      <div>Gérer l'envie de pipi</div>
+      <div>Quand la personne dit « j'ai l'impression que je vais faire pipi », l'encourager doucement à se laisser aller : « Si tu veux, laisse faire, c'est ok, on a protégé le lit. » Respecter si elle préfère s'arrêter.</div>
+    </div>
+    <div class="tbl-row body">
+      <div>Ajuster et lâcher prise</div>
+      <div>Observer les réactions (respiration, gémissements, contractions), adapter rythme / pression, accepter que parfois il n'y ait pas de jet et que ce soit quand même super agréable.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  function post() {
+    try {
+      var h = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        document.documentElement.offsetHeight
+      );
+      var msg = { type: 'dpo-resize', height: h };
+      var w = window.parent;
+      var hops = 0;
+      while (w && w !== window && hops < 10) {
+        try { w.postMessage(msg, '*'); } catch (e) {}
+        if (w === w.parent) break;
+        w = w.parent;
+        hops++;
+      }
+      try { if (window.top && window.top !== window) window.top.postMessage(msg, '*'); } catch (e) {}
+    } catch (e) {}
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    try { new ResizeObserver(post).observe(document.body); } catch (e) {}
+  }
+  window.addEventListener('load', post);
+  window.addEventListener('resize', post);
+  setTimeout(post, 100);
+  setTimeout(post, 500);
+  setTimeout(post, 1500);
+})();
+</script>
+
+</body>
+</html>

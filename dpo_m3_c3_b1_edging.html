@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pour aller plus loin · L'edging — Merci Beaucul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow-x: hidden; }
+  body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
+
+  /* ── Header ─────────────────────── */
+  .section-title { margin-bottom: 22px; }
+  .section-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    background: #FFFAFD;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #E8D5D5;
+    margin-bottom: 12px;
+  }
+  .section-heading {
+    font-size: 22px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+  }
+
+  .lead {
+    font-size: 15px;
+    color: #2b1212;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  /* ── Stat communauté ─────────────── */
+  .stat-card {
+    background: #FFFBEA;
+    border: 1.5px solid #FFDE59;
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-card .emoji {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .stat-card p {
+    font-size: 13.5px;
+    color: #6a5210;
+    line-height: 1.6;
+    font-style: italic;
+    margin: 0;
+  }
+  .stat-card strong { color: #450100; font-style: normal; }
+
+  /* ── Édging chart (courbe sinusoïdale lisse) ───── */
+  .edging-chart {
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 18px;
+    padding: 24px 22px 22px;
+    margin-bottom: 20px;
+  }
+  .edging-title {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin-bottom: 4px;
+  }
+  .edging-sub {
+    font-size: 12.5px;
+    color: #8a6a5a;
+    margin-bottom: 18px;
+    font-style: italic;
+  }
+  .edging-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 14px;
+    overflow: visible;
+  }
+  .edging-axis-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    fill: #8a6a5a;
+  }
+  .edging-curve {
+    fill: none;
+    stroke: url(#edgingGradient);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .edging-curve-area {
+    fill: url(#edgingAreaGradient);
+    stroke: none;
+  }
+  .edging-peak-num {
+    font-family: 'Raleway', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    fill: #450100;
+    font-variant-numeric: tabular-nums;
+  }
+  .edging-valley-num {
+    font-family: 'Raleway', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    fill: #8A1B1A;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.7;
+  }
+  .edging-continuation {
+    font-family: 'Raleway', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    fill: #DC143C;
+    opacity: 0.5;
+    letter-spacing: 2px;
+  }
+  .edging-annotation {
+    font-family: 'Raleway', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    fill: #DC143C;
+  }
+  .edging-annotation-bg {
+    fill: #FFFAFD;
+    stroke: #DC143C;
+    stroke-width: 1.5;
+  }
+
+  /* ── Légende sous le chart ─────── */
+  .edging-legend {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid #F0E0E0;
+  }
+  .edging-legend-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex: 1;
+  }
+  .edging-legend-dot {
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-top: 3px;
+  }
+  .edging-legend-dot.up {
+    background: linear-gradient(180deg, #DC143C, #8A1B1A);
+  }
+  .edging-legend-dot.down {
+    background: linear-gradient(180deg, #E8D5D5, #C8A0A0);
+  }
+  .edging-legend-dot.peak {
+    background: #DC143C;
+    box-shadow: 0 0 6px rgba(220, 20, 60, 0.5);
+  }
+  .edging-legend-text {
+    font-size: 11.5px;
+    color: #6a4545;
+    line-height: 1.4;
+  }
+  .edging-legend-text strong { color: #450100; }
+
+  @media (max-width: 480px) {
+    .edging-chart { padding: 18px 14px; }
+    .edging-legend { flex-direction: column; gap: 10px; }
+    .edging-peak-num { font-size: 18px; }
+    .edging-valley-num { font-size: 14px; }
+  }
+
+  /* ── Method cards ───────────────── */
+  .h-section {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #1a0505;
+    margin: 26px 0 14px;
+    text-decoration: underline;
+  }
+  .method-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+  }
+  .method-card .red {
+    color: #dc143c;
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .method-card p {
+    font-size: 14px;
+    color: #1a0505;
+    line-height: 1.65;
+    margin: 0;
+  }
+  .method-card p strong { color: #450100; }
+
+  /* ── Tip duo ────────────────────── */
+  .tip-duo {
+    background: #F5EDE3;
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .tip-duo .emoji { color: #dc143c; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .tip-duo p {
+    font-size: 13.5px;
+    color: #450100;
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ─────────────────────── -->
+<div class="section-title">
+  <div class="section-tag">🪜 Pour aller plus loin</div>
+  <div class="section-heading">L'edging</div>
+</div>
+
+<p class="lead">L'edging est le fait de <strong>différer l'orgasme</strong> en passant par différentes intensités de plaisir. C'est une pratique qui permet de rester ancré·e dans ses sensations et qui peut grandement <strong>augmenter l'intensité</strong> d'un orgasme.</p>
+
+<!-- ── STAT COMMUNAUTÉ ────────────── -->
+<div class="stat-card">
+  <span class="emoji">📊</span>
+  <p><strong>X %</strong> des abonné·es de Merci Beaucul trouvent que l'edging intensifie leur orgasme.</p>
+</div>
+
+<!-- ── COURBE D'EDGING (zigzag) ────────── -->
+<div class="edging-chart">
+  <div class="edging-title">📈 La courbe de l'edging</div>
+  <div class="edging-sub">On monte d'un palier, on redescend au précédent, puis on remonte un peu plus haut. Et on recommence — jusqu'à atteindre le 9.</div>
+
+  <svg class="edging-svg" viewBox="0 0 940 380" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <!-- Gradient bordeaux → rouge pour la courbe -->
+      <linearGradient id="edgingGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#8A1B1A"/>
+        <stop offset="50%" stop-color="#DC143C"/>
+        <stop offset="100%" stop-color="#8A1B1A"/>
+      </linearGradient>
+      <!-- Gradient pour l'aire sous la courbe -->
+      <linearGradient id="edgingAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#DC143C" stop-opacity="0.14"/>
+        <stop offset="100%" stop-color="#DC143C" stop-opacity="0.0"/>
+      </linearGradient>
+      <!-- Pattern grille fine en arrière-plan, façon papier millimétré rosé -->
+      <pattern id="gridPattern" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+        <rect width="30" height="30" fill="#FFFAFD"/>
+        <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#F0D5D5" stroke-width="0.6"/>
+      </pattern>
+    </defs>
+
+    <!-- Fond grille -->
+    <rect x="0" y="0" width="940" height="380" fill="url(#gridPattern)" rx="14"/>
+
+    <!--
+      Courbe sinusoïdale lisse (Bézier cubique).
+      Pattern : alternance de peaks numérotés 1→5 et de creux (valleys) avec montée progressive.
+      
+      ViewBox 940×380 ; ligne de base "0" à y=300, peaks vers le haut.
+      
+      Échelle Y : palier 0=300, 1=240, 2=180, 3=130, 4=85, 5=45
+      
+      Séquence (comme dans la capture Notion) :
+      0 → peak 1 → valley 0 → peak 2 → valley 0 → peak 3 → valley 2 → peak 4 → valley 2 → peak 5
+    -->
+
+    <!-- Aire sous la courbe -->
+    <path class="edging-curve-area" d="
+      M 30,300
+      C 60,300 90,240 120,240
+      C 150,240 180,300 210,300
+      C 240,300 270,180 300,180
+      C 330,180 360,300 390,300
+      C 420,300 450,130 480,130
+      C 510,130 540,180 570,180
+      C 600,180 630,85 660,85
+      C 690,85 720,180 750,180
+      C 780,180 810,45 840,45
+      L 840,300 L 30,300 Z"/>
+
+    <!-- Courbe principale (sinusoïdale, fluide) -->
+    <path class="edging-curve" d="
+      M 30,300
+      C 60,300 90,240 120,240
+      C 150,240 180,300 210,300
+      C 240,300 270,180 300,180
+      C 330,180 360,300 390,300
+      C 420,300 450,130 480,130
+      C 510,130 540,180 570,180
+      C 600,180 630,85 660,85
+      C 690,85 720,180 750,180
+      C 780,180 810,45 840,45"/>
+
+    <!-- Numéros des peaks (chiffres flottants, comme dans la capture Notion) -->
+    <text class="edging-peak-num" x="120" y="225" text-anchor="middle">1</text>
+    <text class="edging-peak-num" x="300" y="165" text-anchor="middle">2</text>
+    <text class="edging-peak-num" x="480" y="115" text-anchor="middle">3</text>
+    <text class="edging-peak-num" x="660" y="70" text-anchor="middle">4</text>
+    <text class="edging-peak-num" x="840" y="30" text-anchor="middle">5</text>
+
+    <!-- Numéros des valleys (creux) -->
+    <text class="edging-valley-num" x="210" y="322" text-anchor="middle">0</text>
+    <text class="edging-valley-num" x="390" y="322" text-anchor="middle">0</text>
+    <text class="edging-valley-num" x="570" y="202" text-anchor="middle">2</text>
+    <text class="edging-valley-num" x="750" y="202" text-anchor="middle">2</text>
+
+    <!-- "..." pour signifier que ça continue -->
+    <text class="edging-continuation" x="880" y="50" text-anchor="start">…</text>
+
+    <!-- Annotation : "Continue jusqu'au palier 9" -->
+    <rect class="edging-annotation-bg" x="660" y="2" width="276" height="24" rx="12"/>
+    <text class="edging-annotation" x="798" y="18" text-anchor="middle">★ Continue jusqu'au palier 9 (état orgasmique)</text>
+
+    <!-- Axe X label -->
+    <text class="edging-axis-label" x="30" y="358" text-anchor="start">Temps →</text>
+    <text class="edging-axis-label" x="910" y="358" text-anchor="end">Plus tu avances, plus tu montes haut</text>
+  </svg>
+  </svg>
+
+  <!-- Légende -->
+  <div class="edging-legend">
+    <div class="edging-legend-item">
+      <div class="edging-legend-dot up"></div>
+      <div class="edging-legend-text">Tu <strong>montes</strong> au palier suivant</div>
+    </div>
+    <div class="edging-legend-item">
+      <div class="edging-legend-dot down"></div>
+      <div class="edging-legend-text">Tu <strong>redescends</strong> au précédent avant de remonter plus haut</div>
+    </div>
+    <div class="edging-legend-item">
+      <div class="edging-legend-dot peak"></div>
+      <div class="edging-legend-text">Au palier <strong>9</strong>, restes-y le plus longtemps possible</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MÉTHODE ────────────────────── -->
+<p class="h-section">🎯 Comment faire</p>
+
+<div class="method-card">
+  <span class="red">→</span>
+  <p>L'idée est de <strong>passer par chaque palier</strong>, et de redescendre à celui d'avant avant de se diriger vers le suivant.</p>
+</div>
+
+<div class="method-card">
+  <span class="red">→</span>
+  <p>Quand tu arrives à <strong>9</strong>, restes-y le plus longtemps possible : t'as atteint <strong>« l'état orgasmique »</strong>.</p>
+</div>
+
+<div class="method-card">
+  <span class="red">→</span>
+  <p>Si jamais tu sens que ton excitation ne remonte plus une fois redescendue au palier précédent, n'hésite pas à <strong>te stimuler autrement en même temps</strong> : visuellement, avec du son, en sexting… pour qu'elle ne repose pas seulement sur la stimulation physique.</p>
+</div>
+
+<!-- ── TIP DUO ────────────────────── -->
+<div class="tip-duo">
+  <span class="emoji">💞</span>
+  <p><strong style="font-style: normal;">Si tu fais ça à deux :</strong> c'est plus simple qu'<strong style="font-style: normal;">une seule personne le fasse à la fois</strong>. L'un·e guide les paliers pendant que l'autre se laisse traverser.</p>
+</div>
+
+<script>
+(function () {
+  function post() {
+    try {
+      var h = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        document.documentElement.offsetHeight
+      );
+      var msg = { type: 'dpo-resize', height: h };
+      var w = window.parent;
+      var hops = 0;
+      while (w && w !== window && hops < 10) {
+        try { w.postMessage(msg, '*'); } catch (e) {}
+        if (w === w.parent) break;
+        w = w.parent;
+        hops++;
+      }
+      try { if (window.top && window.top !== window) window.top.postMessage(msg, '*'); } catch (e) {}
+    } catch (e) {}
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    try { new ResizeObserver(post).observe(document.body); } catch (e) {}
+  }
+  window.addEventListener('load', post);
+  window.addEventListener('resize', post);
+  setTimeout(post, 100);
+  setTimeout(post, 500);
+  setTimeout(post, 1500);
+})();
+</script>
+
+</body>
+</html>
