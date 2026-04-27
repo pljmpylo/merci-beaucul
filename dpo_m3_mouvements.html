@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Raleway', sans-serif; background: #fff; padding: 0; }
+
+  .container { padding: 0; }
+
+  .label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin-bottom: 14px;
+  }
+
+  .layout {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .video-side {
+    flex-shrink: 0;
+    width: 290px;
+  }
+
+  .video-zone {
+    width: 290px;
+    height: 360px;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1.5px solid #E8D5D5;
+    background: #FFFAFD;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .video-zone video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .description {
+    font-size: 13px;
+    font-weight: 600;
+    color: #450100;
+    line-height: 1.4;
+    text-align: center;
+    padding: 0 6px;
+  }
+
+  .options {
+    flex: 0 1 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 999px;
+    padding: 12px 18px;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #450100;
+    text-align: left;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  .option-btn.active {
+    background: #DC143C;
+    border-color: #DC143C;
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .option-btn:hover:not(.active) {
+    border-color: #DC143C;
+    color: #DC143C;
+  }
+
+  .option-num {
+    font-size: 10px;
+    font-weight: 800;
+    opacity: 0.5;
+    margin-left: 10px;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 480px) {
+    .layout { flex-direction: column; }
+    .video-side { width: 100%; }
+    .video-zone { width: 100%; height: 320px; }
+    .options { flex: 1; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <p class="label">À la mano, en solo</p>
+
+  <div class="layout">
+
+    <div class="video-side">
+      <div class="video-zone">
+        <video id="videoDisplay" autoplay loop muted playsinline preload="metadata">
+          <source id="videoSource" src="https://pljmpylo.github.io/merci-beaucul/dpo-mano-cercles.mp4" type="video/mp4">
+        </video>
+      </div>
+      <p class="description" id="descDisplay">Cercles lents autour ou sur le clitoris</p>
+    </div>
+
+    <div class="options">
+      <button class="option-btn active" onclick="selectOption(this, 'dpo-mano-cercles.mp4', 'Cercles lents autour ou sur le clitoris')">
+        Cercles
+      </button>
+      <button class="option-btn" onclick="selectOption(this, 'dpo-mano-tapoter.mp4', 'Petits tapotements rythmés sur le clitoris')">
+        Tapoter le clitoris
+      </button>
+      <button class="option-btn" onclick="selectOption(this, 'dpo-mano-vibrer.mp4', 'Mouvement rapide qui imite une vibration')">
+        Vibrer
+      </button>
+      <button class="option-btn" onclick="selectOption(this, 'dpo-mano-encercler.mp4', 'Le clitoris encerclé entre deux doigts')">
+        Encercler
+      </button>
+      <button class="option-btn" onclick="selectOption(this, 'dpo-mano-branler.mp4', 'Va-et-vient ferme et régulier sur le clitoris')">
+        Branler
+      </button>
+      <button class="option-btn" onclick="selectOption(this, 'dpo-mano-appuyer.mp4', 'Pression maintenue sur le clitoris')">
+        Appuyer
+      </button>
+      <button class="option-btn" onclick="selectOption(this, 'dpo-mano-humping.mp4', 'Le bassin qui frotte contre la main ou un coussin')">
+        Humping
+      </button>
+      <button class="option-btn" onclick="selectOption(this, 'dpo-mano-levres.mp4', 'Les lèvres massées entre les doigts')">
+        Les lèvres
+      </button>
+      <button class="option-btn" onclick="selectOption(this, 'dpo-mano-vagin.mp4', 'Cercles ou pression à l\'entrée du vagin')">
+        L'entrée du vagin
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function selectOption(btn, videoFile, description) {
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    var video = document.getElementById('videoDisplay');
+    var source = document.getElementById('videoSource');
+    source.src = 'https://pljmpylo.github.io/merci-beaucul/' + videoFile;
+    video.load();
+    video.play().catch(function() {});
+
+    document.getElementById('descDisplay').textContent = description;
+
+    sendHeight();
+  }
+
+  function sendHeight() {
+    window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, '*');
+  }
+
+  window.addEventListener('load', function() {
+    sendHeight();
+    new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true, attributes: true });
+  });
+</script>
+</body>
+</html>
