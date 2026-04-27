@@ -9,6 +9,79 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: transparent; overflow-x: hidden; }
   body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
+
+  /* ── Custom audio player ───────── */
+  .mb-player { display: flex; flex-direction: column; gap: 0; }
+  .mb-player-row { display: flex; align-items: center; gap: 14px; }
+  .mb-play-btn {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #8A1B1A;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(138, 27, 26, 0.25);
+    transition: all .2s ease;
+    padding: 0;
+  }
+  .mb-play-btn:hover { background: #450100; transform: scale(1.05); }
+  .mb-play-btn:active { transform: scale(0.97); }
+  .mb-play-btn svg { width: 18px; height: 18px; fill: #fff; }
+  .mb-play-btn.playing .mb-icon-play { display: none; }
+  .mb-play-btn:not(.playing) .mb-icon-pause { display: none; }
+  .mb-meter { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .mb-progress {
+    height: 6px;
+    background: #F0E0E0;
+    border-radius: 999px;
+    cursor: pointer;
+    position: relative;
+  }
+  .mb-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8A1B1A, #DC143C);
+    border-radius: 999px;
+    width: 0%;
+    transition: width 0.1s linear;
+    pointer-events: none;
+  }
+  .mb-times {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6a4545;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .mb-cur { color: #8A1B1A; font-weight: 700; }
+  .mb-speeds {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #F0E0E0;
+  }
+  .mb-speed {
+    font-family: 'Raleway', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #8A1B1A;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    padding: 4px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .mb-speed:hover { border-color: #8A1B1A; }
+  .mb-speed.active { background: #8A1B1A; color: #fff; border-color: #8A1B1A; }
 </style>
 </head>
 <body>
@@ -70,11 +143,28 @@
       <div style="font-size: 10.5px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #8A1B1A; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
         <span style="font-size: 14px;">🫶</span> En solo
       </div>
-      <p style="font-size: 13.5px; line-height: 1.65; color: #2b1212; margin: 0 0 12px;">Excitation <strong>sans se toucher</strong> &mdash; laisser monter le d&eacute;sir avant toute stimulation.</p>
-      <audio controls preload="metadata" style="width: 100%; height: 40px; border-radius: 999px;">
-        <source src="https://pljmpylo.github.io/merci-beaucul/dpo_audio_attendre_excite.mp3" type="audio/mpeg">
-        Ton navigateur ne supporte pas la lecture audio.
-      </audio>
+      <p style="font-size: 13.5px; line-height: 1.65; color: #2b1212; margin: 0 0 14px;">Excitation <strong>sans se toucher</strong> &mdash; laisser monter le d&eacute;sir avant toute stimulation.</p>
+      <div class="mb-player">
+        <div class="mb-player-row">
+          <button class="mb-play-btn" data-play aria-label="Lecture">
+            <svg class="mb-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="mb-icon-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+          </button>
+          <div class="mb-meter">
+            <div class="mb-progress" data-progress><div class="mb-progress-fill" data-fill></div></div>
+            <div class="mb-times"><span class="mb-cur" data-cur>0:00</span><span data-tot>--:--</span></div>
+          </div>
+        </div>
+        <div class="mb-speeds">
+          <button class="mb-speed" data-speed="0.75">0.75&times;</button>
+          <button class="mb-speed active" data-speed="1">1&times;</button>
+          <button class="mb-speed" data-speed="1.25">1.25&times;</button>
+          <button class="mb-speed" data-speed="1.5">1.5&times;</button>
+        </div>
+        <audio data-audio preload="metadata">
+          <source src="https://pljmpylo.github.io/merci-beaucul/dpo_audio_attendre_excite.mp3" type="audio/mpeg">
+        </audio>
+      </div>
     </div>
 
     <!-- DUO -->
@@ -82,11 +172,28 @@
       <div style="font-size: 10.5px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #8A1B1A; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
         <span style="font-size: 14px;">💞</span> &Agrave; deux
       </div>
-      <p style="font-size: 13.5px; line-height: 1.65; color: #2b1212; margin: 0 0 12px;">Idem &agrave; deux : <strong>pas de contact g&eacute;nital</strong> avant d'&ecirc;tre vraiment allum&eacute;&middot;e.</p>
-      <audio controls preload="metadata" style="width: 100%; height: 40px; border-radius: 999px;">
-        <source src="https://pljmpylo.github.io/merci-beaucul/dpo_audio_excitation_duo.mp3" type="audio/mpeg">
-        Ton navigateur ne supporte pas la lecture audio.
-      </audio>
+      <p style="font-size: 13.5px; line-height: 1.65; color: #2b1212; margin: 0 0 14px;">Idem &agrave; deux : <strong>pas de contact g&eacute;nital</strong> avant d'&ecirc;tre vraiment allum&eacute;&middot;e.</p>
+      <div class="mb-player">
+        <div class="mb-player-row">
+          <button class="mb-play-btn" data-play aria-label="Lecture">
+            <svg class="mb-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="mb-icon-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+          </button>
+          <div class="mb-meter">
+            <div class="mb-progress" data-progress><div class="mb-progress-fill" data-fill></div></div>
+            <div class="mb-times"><span class="mb-cur" data-cur>0:00</span><span data-tot>--:--</span></div>
+          </div>
+        </div>
+        <div class="mb-speeds">
+          <button class="mb-speed" data-speed="0.75">0.75&times;</button>
+          <button class="mb-speed active" data-speed="1">1&times;</button>
+          <button class="mb-speed" data-speed="1.25">1.25&times;</button>
+          <button class="mb-speed" data-speed="1.5">1.5&times;</button>
+        </div>
+        <audio data-audio preload="metadata">
+          <source src="https://pljmpylo.github.io/merci-beaucul/dpo_audio_excitation_duo.mp3" type="audio/mpeg">
+        </audio>
+      </div>
     </div>
   </div>
 </div>
@@ -110,6 +217,52 @@ function mbToggle(head) {
   arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
   setTimeout(window.post, 500);
 }
+
+/* ── Custom audio players ─── */
+(function () {
+  function fmt(sec) {
+    if (!isFinite(sec) || sec < 0) sec = 0;
+    var m = Math.floor(sec / 60);
+    var s = Math.floor(sec % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+  document.querySelectorAll('.mb-player').forEach(function (p) {
+    var audio = p.querySelector('[data-audio]');
+    var btn = p.querySelector('[data-play]');
+    var prog = p.querySelector('[data-progress]');
+    var fill = p.querySelector('[data-fill]');
+    var curEl = p.querySelector('[data-cur]');
+    var totEl = p.querySelector('[data-tot]');
+    var speedBtns = p.querySelectorAll('.mb-speed');
+
+    audio.addEventListener('loadedmetadata', function () {
+      totEl.textContent = fmt(audio.duration);
+    });
+    btn.addEventListener('click', function () {
+      if (audio.paused) audio.play(); else audio.pause();
+    });
+    audio.addEventListener('play', function () { btn.classList.add('playing'); btn.setAttribute('aria-label', 'Pause'); });
+    audio.addEventListener('pause', function () { btn.classList.remove('playing'); btn.setAttribute('aria-label', 'Lecture'); });
+    audio.addEventListener('ended', function () { btn.classList.remove('playing'); btn.setAttribute('aria-label', 'Lecture'); });
+    audio.addEventListener('timeupdate', function () {
+      var pct = (audio.currentTime / audio.duration) * 100;
+      fill.style.width = (isFinite(pct) ? pct : 0) + '%';
+      curEl.textContent = fmt(audio.currentTime);
+    });
+    prog.addEventListener('click', function (e) {
+      var rect = prog.getBoundingClientRect();
+      var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      if (isFinite(audio.duration)) audio.currentTime = pct * audio.duration;
+    });
+    speedBtns.forEach(function (sb) {
+      sb.addEventListener('click', function () {
+        speedBtns.forEach(function (b) { b.classList.remove('active'); });
+        sb.classList.add('active');
+        audio.playbackRate = parseFloat(sb.dataset.speed);
+      });
+    });
+  });
+})();
 
 /* ── Auto-resize iframe for Kajabi ── */
 (function() {
