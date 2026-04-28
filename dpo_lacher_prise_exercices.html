@@ -188,5 +188,35 @@
   </div>
 </div>
 
+
+<!-- ── AUTO-RESIZE IFRAME (communication avec Kajabi) ─────────────── -->
+<script>
+(function() {
+  function sendHeight() {
+    var height = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight
+    );
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: 'resize-iframe', height: height }, '*');
+    }
+  }
+  window.addEventListener('load', sendHeight);
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(sendHeight).observe(document.body);
+  }
+  document.addEventListener('click', function() {
+    setTimeout(sendHeight, 50);
+    setTimeout(sendHeight, 350);
+    setTimeout(sendHeight, 700);
+    setTimeout(sendHeight, 1000);
+  });
+  window.addEventListener('resize', sendHeight);
+  setTimeout(sendHeight, 100);
+})();
+</script>
+
 </body>
 </html>
