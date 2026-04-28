@@ -189,32 +189,54 @@
 </div>
 
 
-<!-- ── AUTO-RESIZE IFRAME (communication avec Kajabi) ─────────────── -->
+<!-- ── AUTO-RESIZE IFRAME (anti boucle infinie) ─────────────── -->
 <script>
 (function() {
+  var lastSent = 0;
+  var pending = null;
+
+  function measure() {
+    // On mesure UNIQUEMENT le contenu, pas la viewport
+    var els = document.body.children;
+    var maxBottom = 0;
+    for (var i = 0; i < els.length; i++) {
+      var rect = els[i].getBoundingClientRect();
+      var bottom = rect.bottom + window.scrollY;
+      if (bottom > maxBottom) maxBottom = bottom;
+    }
+    return Math.ceil(maxBottom);
+  }
+
   function sendHeight() {
-    var height = Math.max(
-      document.body.scrollHeight,
-      document.documentElement.scrollHeight,
-      document.body.offsetHeight,
-      document.documentElement.offsetHeight
-    );
+    var h = measure();
+    if (h <= 0) return;
+    // Hystérésis : on n'envoie que si la diff est > 3px
+    if (Math.abs(h - lastSent) <= 3) return;
+    lastSent = h;
     if (window.parent && window.parent !== window) {
-      window.parent.postMessage({ type: 'resize-iframe', height: height }, '*');
+      window.parent.postMessage({ type: 'resize-iframe', height: h }, '*');
     }
   }
-  window.addEventListener('load', sendHeight);
+
+  function schedule() {
+    if (pending) return;
+    pending = requestAnimationFrame(function() {
+      pending = null;
+      sendHeight();
+    });
+  }
+
+  window.addEventListener('load', schedule);
   if ('ResizeObserver' in window) {
-    new ResizeObserver(sendHeight).observe(document.body);
+    new ResizeObserver(schedule).observe(document.body);
   }
   document.addEventListener('click', function() {
-    setTimeout(sendHeight, 50);
-    setTimeout(sendHeight, 350);
-    setTimeout(sendHeight, 700);
-    setTimeout(sendHeight, 1000);
+    setTimeout(schedule, 50);
+    setTimeout(schedule, 350);
+    setTimeout(schedule, 800);
+    setTimeout(schedule, 1100);
   });
-  window.addEventListener('resize', sendHeight);
-  setTimeout(sendHeight, 100);
+  setTimeout(schedule, 100);
 })();
 </script>
 
