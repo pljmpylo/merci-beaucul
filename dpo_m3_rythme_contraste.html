@@ -6,19 +6,9 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { overflow: hidden; }
   body { font-family: 'Raleway', sans-serif; background: #fff; padding: 0; }
 
   .container { padding: 0; }
-
-  .label {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #DC143C;
-    margin-bottom: 14px;
-  }
 
   .layout {
     display: flex;
@@ -116,14 +106,6 @@
     color: #DC143C;
   }
 
-  .option-num {
-    font-size: 10px;
-    font-weight: 800;
-    opacity: 0.5;
-    margin-left: 10px;
-    flex-shrink: 0;
-  }
-
   @media (max-width: 768px) {
     .layout { flex-direction: column; }
     .media-side { width: 100%; }
@@ -134,8 +116,6 @@
 </head>
 <body>
 <div class="container">
-
-  <p class="label">4. Contraste vs Durée</p>
 
   <div class="layout">
 
@@ -152,11 +132,9 @@
     <div class="options">
       <button class="option-btn active" onclick="selectOption(this, 'eveiller-meme-rythme.gif', 'Mouvement constant et prévisible, sans variation')">
         Rythme régulier
-        <span class="option-num">A</span>
       </button>
       <button class="option-btn" onclick="selectOption(this, 'eveiller-rythme-irregulier.gif', 'Variations de vitesse et d\'intensité')">
         Rythme irrégulier
-        <span class="option-num">B</span>
       </button>
     </div>
 
