@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Est-ce que tu connais ta partenaire ? — Merci Beaucul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Raleway', sans-serif;
+    background: transparent;
+    color: #1a0505;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  body { padding: 8px 4px; }
+
+  .quiz-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 22px;
+    padding: 28px 24px;
+    box-shadow: 0 2px 14px rgba(69, 1, 0, 0.04);
+  }
+
+  /* ── Header ───────────────────────── */
+  .quiz-header { text-align: center; margin-bottom: 22px; }
+  .quiz-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    background: #FFFAFD;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #E8D5D5;
+    margin-bottom: 12px;
+  }
+  .quiz-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .quiz-sub {
+    font-size: 13px;
+    color: #6a4545;
+    font-style: italic;
+  }
+
+  /* ── Progress ─────────────────────── */
+  .progress-wrap {
+    margin: 22px 0 26px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #8A1B1A;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .progress-bar {
+    height: 6px;
+    background: #F5E6E6;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8A1B1A, #DC143C);
+    border-radius: 999px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* ── Question ─────────────────────── */
+  .question { display: none; animation: slideIn 0.35s ease; }
+  .question.active { display: block; }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-section {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #DC143C;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .q-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a0505;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    padding-bottom: 14px;
+    border-bottom: 1.5px solid #F0E0E0;
+  }
+  .q-hint {
+    font-size: 13px;
+    color: #6a4545;
+    font-style: italic;
+    margin-top: -4px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  /* ── Textarea ─────────────────────── */
+  .q-textarea {
+    width: 100%;
+    min-height: 130px;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    color: #1a0505;
+    line-height: 1.55;
+    background: #FFFCFC;
+    resize: vertical;
+    transition: all 0.2s ease;
+  }
+  .q-textarea:focus {
+    outline: none;
+    border-color: #8A1B1A;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(138, 27, 26, 0.08);
+  }
+  .q-textarea::placeholder { color: #b59999; font-style: italic; }
+
+  /* ── Options ──────────────────────── */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #2b1212;
+  }
+  .opt:hover {
+    border-color: #DC143C;
+    background: #FFFAFD;
+    transform: translateY(-1px);
+  }
+  .opt.selected {
+    border-color: #8A1B1A;
+    background: #FFF5F5;
+    box-shadow: 0 2px 8px rgba(138, 27, 26, 0.1);
+  }
+  .opt-letter {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #FFFAFD;
+    border: 1.5px solid #E8D5D5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    color: #8A1B1A;
+    transition: all 0.2s ease;
+  }
+  .opt.selected .opt-letter {
+    background: #8A1B1A;
+    border-color: #8A1B1A;
+    color: #fff;
+  }
+  .opt-text { flex: 1; padding-top: 1px; }
+
+  /* ── Navigation ───────────────────── */
+  .nav {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 18px;
+    gap: 10px;
+  }
+  .btn {
+    font-family: 'Raleway', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-back {
+    background: transparent;
+    color: #8A1B1A;
+    border: 1.5px solid #E8D5D5;
+  }
+  .btn-back:hover:not(:disabled) {
+    background: #FFFAFD;
+    border-color: #8A1B1A;
+  }
+  .btn-back:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .btn-next {
+    background: #8A1B1A;
+    color: #fff;
+    margin-left: auto;
+  }
+  .btn-next:hover:not(:disabled) {
+    background: #450100;
+    transform: translateY(-1px);
+  }
+  .btn-next:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .btn-next.hidden { display: none; }
+
+  /* ── Results ──────────────────────── */
+  .results { display: none; animation: slideIn 0.45s ease; }
+  .results.active { display: block; }
+
+  .result-intro {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .result-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8A1B1A;
+    background: #FFFAFD;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #E8D5D5;
+    margin-bottom: 12px;
+  }
+  .result-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .result-sub {
+    font-size: 13px;
+    color: #6a4545;
+    font-style: italic;
+    line-height: 1.55;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── Recap ────────────────────────── */
+  .recap-section {
+    margin-bottom: 24px;
+  }
+  .recap-section-title {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #DC143C;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1.5px solid #F0E0E0;
+  }
+  .recap-item {
+    background: #FFFAFD;
+    border: 1px solid #F0E0E0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .recap-q {
+    font-size: 13px;
+    font-weight: 700;
+    color: #450100;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .recap-a {
+    font-size: 13.5px;
+    color: #2b1212;
+    line-height: 1.55;
+    white-space: pre-wrap;
+  }
+  .recap-a.empty {
+    color: #b59999;
+    font-style: italic;
+    font-size: 12px;
+  }
+  .recap-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #8A1B1A;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    margin-right: 8px;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+  .recap-multi-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  .recap-multi-item:last-child { margin-bottom: 0; }
+
+  .restart {
+    display: block;
+    margin: 18px auto 0;
+    background: transparent;
+    color: #8A1B1A;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    transition: all 0.2s ease;
+  }
+  .restart:hover {
+    background: #FFFAFD;
+    border-color: #8A1B1A;
+  }
+
+  @media (max-width: 520px) {
+    .quiz-wrap { padding: 22px 16px; border-radius: 18px; }
+    .quiz-title { font-size: 19px; }
+    .q-text { font-size: 15px; }
+    .opt { font-size: 13.5px; padding: 12px 14px; }
+    .btn { font-size: 12px; padding: 11px 18px; }
+    .q-textarea { font-size: 13.5px; min-height: 110px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="quiz-wrap">
+
+  <!-- ── Header ─────────────────────── -->
+  <div class="quiz-header">
+    <div class="quiz-tag">💞 Quiz final</div>
+    <div class="quiz-title">Est-ce que tu connais ta partenaire&nbsp;?</div>
+    <div class="quiz-sub">26 questions pour vérifier — et ouvrir la discussion</div>
+  </div>
+
+  <!-- ── Progress ───────────────────── -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label">
+      <span id="progressText">Question 1 / 26</span>
+      <span id="progressPct">4%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <!-- ── Questions container ────────── -->
+  <div id="questions"></div>
+
+  <!-- ── Navigation ─── -->
+  <div class="nav" id="nav">
+    <button class="btn btn-back" id="btnBack" disabled>← Précédent</button>
+    <button class="btn btn-next hidden" id="btnNext">Suivant →</button>
+  </div>
+
+  <!-- ── Results ────────────────────── -->
+  <div class="results" id="results">
+    <div class="result-intro">
+      <div class="result-tag">🎯 Quiz terminé</div>
+      <div class="result-title">Voici ton récap</div>
+      <div class="result-sub">Maintenant, le plus utile : compare avec elle. Là où vous êtes alignés, c'est de la confirmation. Là où vous différez, c'est une conversation à ouvrir.</div>
+    </div>
+
+    <div id="recap"></div>
+
+    <button class="restart" id="btnRestart">↻ Refaire le quiz</button>
+  </div>
+
+</div>
+
+<script>
+// ── Data ─────────────────────────────────────────────
+const QUESTIONS = [
+  // ── A. Sécurité (Module 1) ──
+  {
+    section: "Module 1 · Sécurité",
+    type: "text",
+    intro: "Q1 — Quand vous êtes sur le point d'avoir un rapport, qu'est-ce qui l'aide le plus à se sentir en sécurité avec toi ?",
+    hint: "Ambiance, mots, gestes, contexte…"
+  },
+  {
+    section: "Module 1 · Sécurité",
+    type: "text",
+    intro: "Q2 — Est-ce que tu sais dans quelles situations elle a le plus de mal à lâcher prise ?",
+    hint: "Stress, fatigue, dispute, pression de temps, regard sur le corps…"
+  },
+  {
+    section: "Module 1 · Sécurité",
+    type: "multi",
+    intro: "Q3 — Qu'est-ce qui, venant de toi, la rassure le plus pendant le sexe ?",
+    hint: "Coche tout ce qui s'applique.",
+    options: [
+      { l: "A", t: "Le contact physique (câlins, tenir la main, enlacer)" },
+      { l: "B", t: "Les mots (rassurer, dire que c'est ok de prendre du temps)" },
+      { l: "C", t: "Le regard (la regarder avec admiration)" },
+      { l: "D", t: "Le silence + présence" }
+    ]
+  },
+  {
+    section: "Module 1 · Sécurité",
+    type: "text",
+    intro: "Q4 — Est-ce que tu connais au moins 2 phrases qui la rassurent quand elle doute de son corps, de son odeur, de la forme de sa chatte, du temps qu'elle met à jouir ?",
+    hint: "Note-les ci-dessous."
+  },
+  {
+    section: "Module 1 · Sécurité",
+    type: "text",
+    intro: "Q5 — Sais-tu ce qu'elle préfère que tu fasses si elle n'a finalement pas envie de sexe alors que c'était prévu ?",
+    hint: "Plan B connexion : câlin, massage, film, rien…"
+  },
+
+  // ── B. Lâcher prise (Module 2) ──
+  {
+    section: "Module 2 · Lâcher prise",
+    type: "text",
+    intro: "Q6 — Qu'est-ce qui, chez elle, te montre qu'elle commence vraiment à lâcher prise ?",
+    hint: "Signaux corporels, respirations, sons, mouvements…"
+  },
+  {
+    section: "Module 2 · Lâcher prise",
+    type: "text",
+    intro: "Q7 — Est-ce que tu sais ce qui l'aide le plus à rester dans son corps plutôt que dans sa tête ?",
+    hint: "Respiration, musique, consignes, toucher lent, paroles…"
+  },
+  {
+    section: "Module 2 · Lâcher prise",
+    type: "multi",
+    intro: "Q8 — Parmi ces options, lesquelles penses-tu qu'elle préfère pour entrer dans le moment ?",
+    hint: "Coche tout ce qui s'applique.",
+    options: [
+      { l: "A", t: "Excitation qui monte sur la durée" },
+      { l: "B", t: "Plutôt direct dans la stimulation génitale" },
+      { l: "C", t: "Massage / câlin d'abord" },
+      { l: "D", t: "Discussion / dirty talk avant de se toucher" },
+      { l: "E", t: "Jeu / scénario (blague, défi, rôle…)" }
+    ]
+  },
+  {
+    section: "Module 2 · Lâcher prise",
+    type: "text",
+    intro: "Q9 — Quelles sont les 3 choses qui, selon toi, lui coupent le plus son envie ou son plaisir ?",
+    hint: "Ex : remarques, gestes trop rapides, insister sur la pénétration, manque de lubrifiant, lumière, timing…"
+  },
+  {
+    section: "Module 2 · Lâcher prise",
+    type: "text",
+    intro: "Q10 — Est-ce que tu connais sa différence entre « plaisir doux » et « plaisir intense », et comment elle aime qu'on alterne les deux ?",
+    hint: "Explique."
+  },
+  {
+    section: "Module 2 · Lâcher prise",
+    type: "text",
+    intro: "Q11 — Comment tu peux l'aider à lâcher prise ?",
+    hint: ""
+  },
+
+  // ── C. Zones érogènes (Module 1) ──
+  {
+    section: "Module 1 · Zones érogènes",
+    type: "text",
+    intro: "Q12 — Peux-tu citer au moins 3 zones érogènes hors vulve/vagin qu'elle aime qu'on stimule ?",
+    hint: "Cou, dos, seins, fesses, pieds, cuir chevelu, etc."
+  },
+  {
+    section: "Module 1 · Zones érogènes",
+    type: "multi",
+    intro: "Q13 — Sur la vulve, quelles sont les zones qu'elle aime le plus qu'on touche ?",
+    hint: "Coche tout ce qui s'applique.",
+    options: [
+      { l: "A", t: "Gland du clito direct" },
+      { l: "B", t: "Capuchon du clito" },
+      { l: "C", t: "Hampe / zone juste au-dessus du gland" },
+      { l: "D", t: "Petites lèvres" },
+      { l: "E", t: "Grandes lèvres" },
+      { l: "F", t: "Entrée du vagin" },
+      { l: "G", t: "Périnée" }
+    ]
+  },
+  {
+    section: "Module 1 · Zones érogènes",
+    type: "text",
+    intro: "Q14 — Y a-t-il des zones qu'elle préfère qu'on approche indirectement ? Lesquelles ?",
+    hint: "À travers un tissu, via les lèvres autour, à côté mais pas dessus, etc."
+  },
+  {
+    section: "Module 1 · Zones érogènes",
+    type: "text",
+    intro: "Q15 — Est-ce que tu sais s'il y a des zones « à demander avant » ?",
+    hint: "Anus, col de l'utérus, zones sensibles émotionnellement… Note-les."
+  },
+
+  // ── D. Stimulations (Module 3) ──
+  {
+    section: "Module 3 · Stimulations",
+    type: "single",
+    intro: "Q16 — Si tu devais choisir : elle est plutôt…",
+    options: [
+      { l: "A", t: "Touchers <strong>lents</strong> et réguliers" },
+      { l: "B", t: "Touchers <strong>rapides</strong> et toniques" },
+      { l: "C", t: "Un mélange, mais avec une préférence" }
+    ]
+  },
+  {
+    section: "Module 3 · Stimulations",
+    type: "multi",
+    intro: "Q17 — Avec les doigts sur sa vulve, qu'est-ce qu'elle préfère selon toi ?",
+    hint: "Coche tout ce qui s'applique.",
+    options: [
+      { l: "A", t: "Mouvements de haut en bas" },
+      { l: "B", t: "Cercles" },
+      { l: "C", t: "Tapoter" },
+      { l: "D", t: "Vibrer" },
+      { l: "E", t: "Encercler" },
+      { l: "F", t: "Appuyer / pousser" },
+      { l: "G", t: "Massage « global » de toute la vulve" }
+    ]
+  },
+  {
+    section: "Module 3 · Stimulations",
+    type: "multi",
+    intro: "Q18 — En interne (avec doigts, sextoy, pénis), qu'est-ce qu'elle semble aimer le plus ?",
+    hint: "Coche tout ce qui s'applique.",
+    options: [
+      { l: "A", t: "Entrée du vagin peu profonde" },
+      { l: "B", t: "Crochet zone G" },
+      { l: "C", t: "Va-et-vient profonds" },
+      { l: "D", t: "Pression statique + elle bouge son bassin" },
+      { l: "E", t: "Multistimulation (interne + clito externe en même temps)" }
+    ]
+  },
+  {
+    section: "Module 3 · Stimulations",
+    type: "single",
+    intro: "Q19 — Est-ce qu'elle préfère, la plupart du temps…",
+    options: [
+      { l: "A", t: "Contact <strong>direct</strong> sur le clito" },
+      { l: "B", t: "Contact <strong>indirect</strong> (au-dessus, autour, à travers un tissu, via la vulve entière)" }
+    ]
+  },
+  {
+    section: "Module 3 · Stimulations",
+    type: "single",
+    intro: "Q20 — Sais-tu si elle aime…",
+    options: [
+      { l: "A", t: "Qu'on <strong>change souvent</strong> de rythme et de geste" },
+      { l: "B", t: "Ou au contraire qu'on <strong>garde le même</strong> geste quand ça commence à monter" }
+    ]
+  },
+  {
+    section: "Module 3 · Stimulations",
+    type: "text",
+    intro: "Q21 — Est-ce que tu connais au moins 2 combinaisons « gagnantes » pour elle ? Note-les.",
+    hint: "Ex : langue + doigt, main + bassin qui bouge, pénétration + main sur le clito, pression sur le bas-ventre + crochet…"
+  },
+
+  // ── E. Communication (Module 4) ──
+  {
+    section: "Module 4 · Communication",
+    type: "text",
+    intro: "Q22 — Comment sais-tu qu'elle n'ose pas te dire que quelque chose ne lui convient pas ?",
+    hint: "Signaux, silence, crispation…"
+  },
+  {
+    section: "Module 4 · Communication",
+    type: "text",
+    intro: "Q23 — Quand elle aime vraiment, quelles sont les phrases, sons ou gestes qu'elle utilise le plus ?",
+    hint: ""
+  },
+  {
+    section: "Module 4 · Communication",
+    type: "text",
+    intro: "Q24 — Est-ce que tu connais un mot ou geste de stop / pause qu'elle aimerait utiliser quand ça ne lui va plus ?",
+    hint: ""
+  },
+  {
+    section: "Module 4 · Communication",
+    type: "multi",
+    intro: "Q25 — Est-ce que tu sais ce qui l'aide le plus à parler pendant le sexe ?",
+    hint: "Coche tout ce qui s'applique.",
+    options: [
+      { l: "A", t: "Que tu poses des questions précises" },
+      { l: "B", t: "Que tu lui proposes 2 options (« comme ça ou comme ça ? »)" },
+      { l: "C", t: "Que tu laisses du silence et du temps" },
+      { l: "D", t: "Que tu la rassures sur le fait qu'elle ne te « casse pas ton délire »" }
+    ]
+  },
+  {
+    section: "Module 4 · Communication",
+    type: "text",
+    intro: "Q26 — Si tu devais résumer en 3 phrases comment elle aime qu'on prenne soin de son plaisir, qu'écrirais-tu ?",
+    hint: ""
+  }
+];
+
+// ── State ────────────────────────────────────────────
+let currentQ = 0;
+const answers = new Array(QUESTIONS.length).fill(null);
+
+// ── DOM refs ────────────────────────────────────────
+const questionsEl = document.getElementById('questions');
+const progressText = document.getElementById('progressText');
+const progressPct = document.getElementById('progressPct');
+const progressFill = document.getElementById('progressFill');
+const btnBack = document.getElementById('btnBack');
+const btnNext = document.getElementById('btnNext');
+const resultsEl = document.getElementById('results');
+const navEl = document.getElementById('nav');
+const progressWrap = document.getElementById('progressWrap');
+
+// Lock pour éviter les doubles clics pendant la transition (single uniquement)
+let advancing = false;
+
+// ── Build questions ──────────────────────────────────
+QUESTIONS.forEach((q, qi) => {
+  const div = document.createElement('div');
+  div.className = 'question' + (qi === 0 ? ' active' : '');
+  div.dataset.q = qi;
+
+  // Section label
+  if (q.section) {
+    const sectionEl = document.createElement('div');
+    sectionEl.className = 'q-section';
+    sectionEl.textContent = q.section;
+    div.appendChild(sectionEl);
+  }
+
+  // Question text
+  const qText = document.createElement('div');
+  qText.className = 'q-text';
+  qText.innerHTML = q.intro;
+  div.appendChild(qText);
+
+  // Hint
+  if (q.hint) {
+    const hintEl = document.createElement('div');
+    hintEl.className = 'q-hint';
+    hintEl.textContent = q.hint;
+    div.appendChild(hintEl);
+  }
+
+  // Body based on type
+  if (q.type === 'text') {
+    const ta = document.createElement('textarea');
+    ta.className = 'q-textarea';
+    ta.placeholder = 'Ta réponse…';
+    ta.dataset.q = qi;
+    ta.addEventListener('input', () => {
+      answers[qi] = ta.value;
+    });
+    div.appendChild(ta);
+  } else if (q.type === 'multi') {
+    const optsWrap = document.createElement('div');
+    optsWrap.className = 'options';
+    q.options.forEach((opt) => {
+      const o = document.createElement('div');
+      o.className = 'opt';
+      o.dataset.letter = opt.l;
+      o.innerHTML = '<div class="opt-letter">' + opt.l + '</div><div class="opt-text">' + opt.t + '</div>';
+      o.addEventListener('click', () => toggleMulti(qi, opt.l, o));
+      optsWrap.appendChild(o);
+    });
+    div.appendChild(optsWrap);
+  } else if (q.type === 'single') {
+    const optsWrap = document.createElement('div');
+    optsWrap.className = 'options';
+    q.options.forEach((opt) => {
+      const o = document.createElement('div');
+      o.className = 'opt';
+      o.dataset.letter = opt.l;
+      o.innerHTML = '<div class="opt-letter">' + opt.l + '</div><div class="opt-text">' + opt.t + '</div>';
+      o.addEventListener('click', () => selectSingle(qi, opt.l, o));
+      optsWrap.appendChild(o);
+    });
+    div.appendChild(optsWrap);
+  }
+
+  questionsEl.appendChild(div);
+});
+
+function selectSingle(qi, letter, el) {
+  if (advancing) return;
+  answers[qi] = letter;
+  el.parentElement.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+
+  // Auto-avance pour les single (comme rootcause)
+  advancing = true;
+  setTimeout(() => {
+    advancing = false;
+    advance();
+  }, 350);
+}
+
+function toggleMulti(qi, letter, el) {
+  if (!Array.isArray(answers[qi])) answers[qi] = [];
+  const idx = answers[qi].indexOf(letter);
+  if (idx >= 0) {
+    answers[qi].splice(idx, 1);
+    el.classList.remove('selected');
+  } else {
+    answers[qi].push(letter);
+    el.classList.add('selected');
+  }
+}
+
+function advance() {
+  if (currentQ < QUESTIONS.length - 1) {
+    showQuestion(currentQ + 1);
+  } else {
+    showResults();
+  }
+}
+
+function showQuestion(index) {
+  document.querySelectorAll('.question').forEach((q, i) => {
+    q.classList.toggle('active', i === index);
+  });
+  currentQ = index;
+  updateProgress();
+  btnBack.disabled = index === 0;
+
+  const activeQ = document.querySelectorAll('.question')[index];
+  const qDef = QUESTIONS[index];
+
+  // Restore visual state if revisiting
+  if (qDef.type === 'text') {
+    const ta = activeQ.querySelector('.q-textarea');
+    if (ta) ta.value = answers[index] || '';
+  } else if (qDef.type === 'single' && answers[index]) {
+    activeQ.querySelectorAll('.opt').forEach(o => {
+      o.classList.toggle('selected', o.dataset.letter === answers[index]);
+    });
+  } else if (qDef.type === 'multi') {
+    const arr = Array.isArray(answers[index]) ? answers[index] : [];
+    activeQ.querySelectorAll('.opt').forEach(o => {
+      o.classList.toggle('selected', arr.indexOf(o.dataset.letter) >= 0);
+    });
+  }
+
+  updateNextBtn();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateNextBtn() {
+  const q = QUESTIONS[currentQ];
+  const isLast = currentQ === QUESTIONS.length - 1;
+  if (q.type === 'single') {
+    btnNext.classList.add('hidden');
+  } else {
+    btnNext.classList.remove('hidden');
+    btnNext.textContent = isLast ? 'Voir mon récap →' : 'Suivant →';
+  }
+}
+
+function updateProgress() {
+  const pct = Math.round(((currentQ + 1) / QUESTIONS.length) * 100);
+  progressText.textContent = 'Question ' + (currentQ + 1) + ' / ' + QUESTIONS.length;
+  progressPct.textContent = pct + '%';
+  progressFill.style.width = pct + '%';
+}
+
+btnBack.addEventListener('click', () => {
+  if (currentQ > 0) showQuestion(currentQ - 1);
+});
+
+btnNext.addEventListener('click', () => {
+  advance();
+});
+
+// ── Results / Recap ─────────────────────────────────
+function showResults() {
+  const recap = document.getElementById('recap');
+  recap.innerHTML = '';
+
+  // Group questions by section (preserve order of first appearance)
+  const order = [];
+  const sections = {};
+  QUESTIONS.forEach((q, qi) => {
+    if (!sections[q.section]) {
+      sections[q.section] = [];
+      order.push(q.section);
+    }
+    sections[q.section].push({ q, qi });
+  });
+
+  order.forEach(sectionName => {
+    const sectionDiv = document.createElement('div');
+    sectionDiv.className = 'recap-section';
+
+    const titleDiv = document.createElement('div');
+    titleDiv.className = 'recap-section-title';
+    titleDiv.textContent = sectionName;
+    sectionDiv.appendChild(titleDiv);
+
+    sections[sectionName].forEach(({ q, qi }) => {
+      const item = document.createElement('div');
+      item.className = 'recap-item';
+
+      const qDiv = document.createElement('div');
+      qDiv.className = 'recap-q';
+      qDiv.innerHTML = q.intro;
+      item.appendChild(qDiv);
+
+      const aDiv = document.createElement('div');
+      aDiv.className = 'recap-a';
+
+      if (q.type === 'text') {
+        if (answers[qi] && String(answers[qi]).trim()) {
+          aDiv.textContent = answers[qi];
+        } else {
+          aDiv.classList.add('empty');
+          aDiv.textContent = '— pas de réponse —';
+        }
+      } else if (q.type === 'single') {
+        if (answers[qi]) {
+          const opt = q.options.find(o => o.l === answers[qi]);
+          aDiv.innerHTML = '<span class="recap-pill">' + answers[qi] + '</span>' + (opt ? opt.t : '');
+        } else {
+          aDiv.classList.add('empty');
+          aDiv.textContent = '— pas de réponse —';
+        }
+      } else if (q.type === 'multi') {
+        if (Array.isArray(answers[qi]) && answers[qi].length > 0) {
+          aDiv.innerHTML = answers[qi].map(l => {
+            const opt = q.options.find(o => o.l === l);
+            return '<div class="recap-multi-item"><span class="recap-pill">' + l + '</span><span>' + (opt ? opt.t : '') + '</span></div>';
+          }).join('');
+        } else {
+          aDiv.classList.add('empty');
+          aDiv.textContent = '— pas de réponse —';
+        }
+      }
+
+      item.appendChild(aDiv);
+      sectionDiv.appendChild(item);
+    });
+
+    recap.appendChild(sectionDiv);
+  });
+
+  // Hide quiz, show results
+  questionsEl.style.display = 'none';
+  navEl.style.display = 'none';
+  progressWrap.style.display = 'none';
+  resultsEl.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('btnRestart').addEventListener('click', () => {
+  answers.fill(null);
+  currentQ = 0;
+  document.querySelectorAll('.opt.selected').forEach(o => o.classList.remove('selected'));
+  document.querySelectorAll('.q-textarea').forEach(ta => { ta.value = ''; });
+  questionsEl.style.display = '';
+  navEl.style.display = '';
+  progressWrap.style.display = '';
+  resultsEl.classList.remove('active');
+  showQuestion(0);
+});
+
+// Init
+updateProgress();
+updateNextBtn();
+</script>
+
+</body>
+</html>
