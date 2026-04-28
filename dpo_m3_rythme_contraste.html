@@ -8,6 +8,8 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Raleway', sans-serif; background: #fff; padding: 0; }
 
+  .container { padding: 0; }
+
   .label {
     font-size: 10px;
     font-weight: 800;
@@ -19,32 +21,65 @@
 
   .layout {
     display: flex;
-    gap: 16px;
-    align-items: flex-start;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .media-side {
+    flex-shrink: 0;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 
   .gif-zone {
-    flex-shrink: 0;
-    width: 220px;
-    min-height: 358px;
-    border-radius: 18px;
+    width: 400px;
+    height: 480px;
+    border-radius: 22px;
     overflow: hidden;
     border: 1.5px solid #E8D5D5;
     background: #FFFAFD;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
   }
 
   .gif-zone img {
     width: 100%;
-    height: 200px;
+    height: 100%;
+    object-fit: cover;
     display: block;
-    object-fit: contain;
+  }
+
+  .description-box {
+    background: #FFFAFD;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 16px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+  }
+
+  .description-emoji {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .description {
+    font-size: 14px;
+    font-weight: 600;
+    color: #450100;
+    line-height: 1.4;
+    margin: 0;
   }
 
   .options {
-    flex: 1;
+    flex: 1 1 380px;
+    max-width: 480px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -57,7 +92,7 @@
     background: #fff;
     border: 1.5px solid #E8D5D5;
     border-radius: 999px;
-    padding: 13px 20px;
+    padding: 14px 22px;
     cursor: pointer;
     font-family: 'Raleway', sans-serif;
     font-size: 14px;
@@ -88,28 +123,37 @@
     flex-shrink: 0;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     .layout { flex-direction: column; }
-    .gif-zone { width: 100%; }
+    .media-side { width: 100%; }
+    .gif-zone { width: 100%; height: 380px; }
+    .options { flex: 1; max-width: none; width: 100%; }
   }
 </style>
 </head>
 <body>
+<div class="container">
 
   <p class="label">4. Contraste vs Durée</p>
 
   <div class="layout">
 
-    <div class="gif-zone">
-      <img id="gifDisplay" src="https://pljmpylo.github.io/merci-beaucul/eveiller-meme-rythme.gif" alt="Démonstration" />
+    <div class="media-side">
+      <div class="gif-zone">
+        <img id="gifDisplay" src="https://pljmpylo.github.io/merci-beaucul/eveiller-meme-rythme.gif" alt="Démonstration" />
+      </div>
+      <div class="description-box">
+        <span class="description-emoji">🔍</span>
+        <p class="description" id="descDisplay">Mouvement constant et prévisible, sans variation</p>
+      </div>
     </div>
 
     <div class="options">
-      <button class="option-btn active" onclick="selectOption(this, 'eveiller-meme-rythme.gif')">
+      <button class="option-btn active" onclick="selectOption(this, 'eveiller-meme-rythme.gif', 'Mouvement constant et prévisible, sans variation')">
         Rythme régulier
         <span class="option-num">A</span>
       </button>
-      <button class="option-btn" onclick="selectOption(this, 'eveiller-rythme-irregulier.gif')">
+      <button class="option-btn" onclick="selectOption(this, 'eveiller-rythme-irregulier.gif', 'Variations de vitesse et d\'intensité')">
         Rythme irrégulier
         <span class="option-num">B</span>
       </button>
@@ -117,11 +161,14 @@
 
   </div>
 
+</div>
+
 <script>
-  function selectOption(btn, gif) {
+  function selectOption(btn, gif, description) {
     document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('gifDisplay').src = 'https://pljmpylo.github.io/merci-beaucul/' + gif;
+    document.getElementById('descDisplay').textContent = description;
     sendHeight();
   }
 
