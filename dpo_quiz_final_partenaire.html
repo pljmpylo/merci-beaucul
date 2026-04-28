@@ -904,6 +904,37 @@ document.getElementById('btnRestart').addEventListener('click', () => {
 updateProgress();
 updateNextBtn();
 </script>
+<script>
+(function() {
+  function sendHeight() {
+    // On prend la hauteur réelle du contenu
+    var height = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight
+    );
+    window.parent.postMessage({ type: 'resize-iframe', height: height }, '*');
+  }
 
+  // Envoie la hauteur au chargement
+  window.addEventListener('load', sendHeight);
+
+  // Surveille tout changement de taille du contenu (ouverture/fermeture des toggles)
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(sendHeight).observe(document.body);
+  }
+
+  // Filet de sécurité : si un toggle déclenche une animation/transition
+  document.addEventListener('click', function() {
+    setTimeout(sendHeight, 50);
+    setTimeout(sendHeight, 350);
+    setTimeout(sendHeight, 700);
+  });
+
+  // Et au cas où
+  window.addEventListener('resize', sendHeight);
+})();
+</script>
 </body>
 </html>
