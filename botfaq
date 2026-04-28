@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>CSM Assistant — Merci Beaucul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bordeaux: #8A1B1A; --crimson: #DC143C; --dark: #450100; --bg: #FFFAFD;
+  --bg-card: #FFFFFF; --border: #F0E0E5; --muted: #6B5256; --highlight: #FFF3B0;
+  --merci: #8A1B1A; --pour-moi: #C26B0B; --sensibles: #C2186B;
+  --comment: #1B5C8A; --paiement: #2D7A3C; --support: #555; --ressources: #6B2D8C;
+  --shadow: 0 1px 3px rgba(69,1,0,.06), 0 4px 12px rgba(69,1,0,.04);
+  --radius: 12px; --transition: 150ms cubic-bezier(.4,0,.2,1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'Raleway', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg); color: var(--dark); line-height: 1.5;
+  padding: 20px; max-width: 920px; margin: 0 auto; min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+header { text-align: center; padding: 20px 0 24px; border-bottom: 2px solid var(--border); margin-bottom: 24px; }
+header h1 { font-family: 'Lora', serif; font-weight: 600; color: var(--bordeaux); font-size: 28px; margin-bottom: 6px; letter-spacing: -.02em; }
+header .meta { color: var(--muted); font-size: 13px; }
+header .meta .stale { color: #C2186B; font-weight: 600; }
+header .meta a { color: var(--bordeaux); text-decoration: none; }
+
+.search-wrap { position: sticky; top: 0; background: var(--bg); padding: 14px 0; z-index: 50; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+.search-input-wrap { position: relative; }
+#search {
+  width: 100%; padding: 14px 18px; padding-right: 60px; font-size: 16px; font-family: inherit;
+  border: 2px solid var(--border); border-radius: var(--radius); background: var(--bg-card);
+  color: var(--dark); transition: border-color var(--transition), box-shadow var(--transition);
+}
+#search:focus { outline: none; border-color: var(--bordeaux); box-shadow: 0 0 0 4px rgba(138,27,26,.08); }
+.kbd-hint { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-family: ui-monospace, monospace; font-size: 11px; padding: 3px 7px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--muted); pointer-events: none; }
+@media (max-width: 600px) { .kbd-hint { display: none; } }
+
+.chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+.chip { padding: 6px 12px; border: 1.5px solid var(--border); background: var(--bg-card); border-radius: 20px; font-size: 13px; font-family: inherit; color: var(--dark); cursor: pointer; transition: all var(--transition); user-select: none; }
+.chip:hover { border-color: var(--bordeaux); }
+.chip:focus-visible { outline: none; border-color: var(--bordeaux); box-shadow: 0 0 0 3px rgba(138,27,26,.15); }
+.chip[aria-selected="true"] { background: var(--bordeaux); color: white; border-color: var(--bordeaux); }
+
+.results-info { color: var(--muted); font-size: 13px; margin-bottom: 12px; min-height: 18px; }
+
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; transition: border-color var(--transition), box-shadow var(--transition); }
+.card:hover { border-color: #E2D0D5; }
+.card[aria-expanded="true"] { border-color: var(--bordeaux); box-shadow: var(--shadow); }
+.card.focused { border-color: var(--crimson); box-shadow: 0 0 0 3px rgba(220,20,60,.12); }
+.card-head { padding: 16px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; background: none; border: none; width: 100%; text-align: left; font: inherit; color: inherit; }
+.card-head:focus-visible { outline: none; }
+.card-q { flex: 1; font-weight: 500; font-size: 15px; line-height: 1.4; }
+.cat-badge { font-size: 11px; padding: 3px 8px; border-radius: 10px; white-space: nowrap; font-weight: 600; flex-shrink: 0; }
+.cat-merci { background: #FBE9E9; color: var(--merci); }
+.cat-pour-moi { background: #FCEAD3; color: var(--pour-moi); }
+.cat-sensibles { background: #FBE0EE; color: var(--sensibles); }
+.cat-comment { background: #DCE9F4; color: var(--comment); }
+.cat-paiement { background: #DCEFE0; color: var(--paiement); }
+.cat-support { background: #ECECEC; color: var(--support); }
+.cat-ressources { background: #EEDCF4; color: var(--ressources); }
+.toggle { color: var(--muted); font-size: 18px; line-height: 1; user-select: none; flex-shrink: 0; transition: transform var(--transition); }
+.card[aria-expanded="true"] .toggle { transform: rotate(45deg); }
+.card-body { display: none; padding: 0 18px 18px 18px; }
+.card[aria-expanded="true"] .card-body { display: block; animation: fadeIn 200ms ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.answer { white-space: pre-wrap; font-size: 14px; line-height: 1.65; color: var(--dark); padding: 12px 14px; background: var(--bg); border-left: 3px solid var(--bordeaux); border-radius: 4px; margin-bottom: 12px; word-break: break-word; }
+.answer a { color: var(--crimson); text-decoration: underline; word-break: break-all; }
+.answer a:hover { color: var(--bordeaux); }
+.answer strong { color: var(--bordeaux); font-weight: 600; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { padding: 8px 14px; border: none; border-radius: 8px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: background var(--transition), transform var(--transition); }
+.btn-primary { background: var(--bordeaux); color: white; }
+.btn-primary:hover { background: var(--crimson); }
+.btn-secondary { background: var(--bg); color: var(--bordeaux); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--bordeaux); }
+.btn:active { transform: scale(.97); }
+.btn.success { background: #2D7A3C; color: white; }
+.highlight { background: var(--highlight); padding: 1px 2px; border-radius: 2px; font-weight: 600; }
+
+.state { text-align: center; padding: 50px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); }
+.state h3 { color: var(--bordeaux); margin-bottom: 10px; font-family: 'Lora', serif; font-weight: 600; }
+.state p { color: var(--muted); margin-bottom: 18px; font-size: 14px; }
+.tally-btn { display: inline-block; padding: 12px 24px; background: var(--bordeaux); color: white !important; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 14px; transition: background var(--transition); }
+.tally-btn:hover { background: var(--crimson); }
+
+.spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--bordeaux); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #2D7A3C; color: white; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,.15); transition: transform 250ms cubic-bezier(.4,0,.2,1); z-index: 1000; pointer-events: none; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+footer { margin-top: 40px; padding: 20px 0; border-top: 1px solid var(--border); text-align: center; color: var(--muted); font-size: 12px; }
+footer a { color: var(--bordeaux); }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+@media (max-width: 600px) {
+  body { padding: 12px; }
+  header { padding: 12px 0 16px; margin-bottom: 16px; }
+  header h1 { font-size: 22px; }
+  .card-head { padding: 14px; }
+  .card-q { font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0ms !important; transition-duration: 0ms !important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🤖 CSM Assistant</h1>
+  <div class="meta" id="meta-info">Chargement…</div>
+</header>
+
+<div class="search-wrap">
+  <div class="search-input-wrap">
+    <input type="search" id="search" placeholder="Ex: « Je peux faire une séance avec Léa ? »" autocomplete="off" aria-label="Rechercher dans la FAQ" autofocus>
+    <kbd class="kbd-hint">⌘K</kbd>
+  </div>
+  <div class="chips" id="chips" role="tablist" aria-label="Filtrer par catégorie"></div>
+</div>
+
+<div class="results-info" id="count" aria-live="polite" aria-atomic="true"></div>
+<main id="results" role="region" aria-label="Résultats"></main>
+
+<div class="state" id="loading-state">
+  <div class="spinner" role="status" aria-label="Chargement"></div>
+  <p style="margin-top: 16px;">Chargement de la FAQ…</p>
+</div>
+
+<div class="state" id="error-state" hidden>
+  <h3>⚠️ Impossible de charger la FAQ</h3>
+  <p id="error-message">La synchronisation Notion n'a pas pu être chargée. Renvoie le client vers le formulaire support en attendant :</p>
+  <a class="tally-btn" href="https://tally.so/r/2Exd4L" target="_blank" rel="noopener">Formulaire support →</a>
+  <p style="margin-top: 20px; font-size: 12px;"><button class="btn btn-secondary" onclick="App.retryLoad()">↻ Réessayer</button></p>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<footer>
+  <span id="sync-info">—</span> · <a href="https://tally.so/r/2Exd4L" target="_blank" rel="noopener">Formulaire support</a> · <a href="https://www.notion.so/664711c07b3c4e9b96206d635edceca8" target="_blank" rel="noopener">Source Notion</a>
+</footer>
+
+<script>
+"use strict";
+
+const App = (() => {
+  const FAQ_URL = './faq.json';
+  const STORAGE_KEY = 'mbc-csm-faq-cache-v1';
+  const STORAGE_PREFS_KEY = 'mbc-csm-prefs-v1';
+  const STALE_HOURS = 24;
+  const TALLY_URL = 'https://tally.so/r/2Exd4L';
+  const CATS = [
+    { id: 'all', label: 'Toutes' },
+    { id: 'merci', label: '🌹 Merci Beaucul' },
+    { id: 'pour-moi', label: "🎯 C'est pour moi" },
+    { id: 'sensibles', label: '🩺 Profils sensibles' },
+    { id: 'comment', label: '🛠️ Comment ça marche' },
+    { id: 'paiement', label: '💳 Paiement & accès' },
+    { id: 'support', label: '🆘 Support & contact' },
+    { id: 'ressources', label: '📕 Ressources' }
+  ];
+
+  const state = {
+    items: [], generatedAt: null, activeCat: 'all', search: '', focusedIdx: -1,
+    expanded: new Set(), filtered: []
+  };
+  const dom = {};
+  let searchDebounce = null;
+
+  // ===== UTILS =====
+  const norm = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const escHtml = s => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const escAttr = s => String(s).replace(/"/g, '&quot;');
+
+  const linkify = text => {
+    const urlRe = /(https?:\/\/[^\s<>)]+)/g;
+    let out = escHtml(text);
+    out = out.replace(urlRe, url => `<a href="${escAttr(url)}" target="_blank" rel="noopener">${escHtml(url)}</a>`);
+    out = out.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+    return out;
+  };
+
+  const highlight = (text, term) => {
+    if (!term) return escHtml(text);
+    const nText = norm(text), nTerm = norm(term);
+    if (!nText.includes(nTerm)) return escHtml(text);
+    // Walk original text, mark accent-insensitive matches
+    const result = [];
+    let i = 0;
+    while (i < text.length) {
+      const slice = norm(text.slice(i, i + term.length));
+      if (slice === nTerm) {
+        result.push('<span class="highlight">' + escHtml(text.slice(i, i + term.length)) + '</span>');
+        i += term.length;
+      } else {
+        result.push(escHtml(text[i]));
+        i++;
+      }
+    }
+    return result.join('');
+  };
+
+  // Scoring: phrase match in question (1000) > phrase match in answer (300) >
+  // word matches in question (100) > word matches in answer (30)
+  const score = (item, query) => {
+    if (!query) return 0;
+    const nq = norm(query).trim();
+    if (!nq) return 0;
+    const qq = norm(item.q), qa = norm(item.a);
+    let s = 0;
+    if (qq.includes(nq)) s += 1000 - Math.min(qq.indexOf(nq), 100);
+    if (qa.includes(nq)) s += 300 - Math.min(qa.indexOf(nq) / 10, 100);
+    const words = nq.split(/\s+/).filter(w => w.length >= 2);
+    for (const w of words) {
+      if (qq.includes(w)) s += 100;
+      if (qa.includes(w)) s += 30;
+    }
+    return s;
+  };
+
+  // ===== DATA =====
+  const loadCache = () => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  };
+  const saveCache = data => {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+  };
+  const loadPrefs = () => {
+    try { return JSON.parse(localStorage.getItem(STORAGE_PREFS_KEY) || '{}'); } catch { return {}; }
+  };
+  const savePrefs = p => {
+    try { localStorage.setItem(STORAGE_PREFS_KEY, JSON.stringify(p)); } catch {}
+  };
+
+  const fetchFAQ = async () => {
+    const url = `${FAQ_URL}?v=${Date.now()}`;
+    const ctrl = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), 10000);
+    try {
+      const res = await fetch(url, { signal: ctrl.signal, cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (!data || !Array.isArray(data.items)) throw new Error('Format invalide');
+      return data;
+    } finally { clearTimeout(timeout); }
+  };
+
+  const loadData = async () => {
+    const cached = loadCache();
+    try {
+      const fresh = await fetchFAQ();
+      saveCache(fresh);
+      return { data: fresh, fromCache: false };
+    } catch (err) {
+      if (cached && Array.isArray(cached.items)) {
+        console.warn('Fetch failed, using cache:', err);
+        return { data: cached, fromCache: true, error: err };
+      }
+      throw err;
+    }
+  };
+
+  // ===== RENDER =====
+  const formatRelative = iso => {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    if (isNaN(d)) return '—';
+    const diff = (Date.now() - d.getTime()) / 1000;
+    if (diff < 60) return 'à l\'instant';
+    if (diff < 3600) return `il y a ${Math.floor(diff/60)} min`;
+    if (diff < 86400) return `il y a ${Math.floor(diff/3600)} h`;
+    return `il y a ${Math.floor(diff/86400)} j`;
+  };
+
+  const renderMeta = (fromCache = false) => {
+    const stale = state.generatedAt &&
+      (Date.now() - new Date(state.generatedAt).getTime()) > STALE_HOURS * 3600 * 1000;
+    const rel = formatRelative(state.generatedAt);
+    let html = `${state.items.length} questions · sync ${rel}`;
+    if (fromCache) html += ' · <span class="stale">⚠ Hors-ligne (cache)</span>';
+    else if (stale) html += ' · <span class="stale">⚠ Données anciennes</span>';
+    dom.meta.innerHTML = html;
+    dom.syncInfo.textContent = state.items.length ? `${state.items.length} questions · ${rel}` : '—';
+  };
+
+  const renderChips = () => {
+    dom.chips.innerHTML = CATS.map(c => {
+      const sel = c.id === state.activeCat;
+      return `<button class="chip" role="tab" data-cat="${c.id}" aria-selected="${sel}" tabindex="${sel ? 0 : -1}">${c.label}</button>`;
+    }).join('');
+  };
+
+  const computeFiltered = () => {
+    let items = state.items;
+    if (state.activeCat !== 'all') items = items.filter(i => i.cat === state.activeCat);
+    if (state.search.trim()) {
+      items = items
+        .map(i => ({ ...i, _s: score(i, state.search) }))
+        .filter(i => i._s > 0)
+        .sort((a, b) => b._s - a._s);
+    }
+    state.filtered = items;
+  };
+
+  const renderResults = () => {
+    computeFiltered();
+    const items = state.filtered;
+    const term = state.search.trim();
+    dom.count.textContent = `${items.length} question${items.length !== 1 ? 's' : ''}` +
+      (term ? ` pour « ${term} »` : '') +
+      (state.activeCat !== 'all' ? ` · ${CATS.find(c => c.id === state.activeCat)?.label}` : '');
+
+    if (items.length === 0) {
+      dom.results.innerHTML = `<div class="state"><h3>Pas de réponse trouvée</h3><p>Renvoie le client vers le formulaire support :</p><a class="tally-btn" href="${TALLY_URL}" target="_blank" rel="noopener">${TALLY_URL}</a></div>`;
+      return;
+    }
+
+    dom.results.innerHTML = items.map((item, i) => {
+      const expanded = state.expanded.has(item.id);
+      const focused = i === state.focusedIdx;
+      return `<article class="card${focused ? ' focused' : ''}" id="card-${escAttr(item.id)}" data-id="${escAttr(item.id)}" data-i="${i}" aria-expanded="${expanded}">
+        <button type="button" class="card-head" aria-controls="body-${escAttr(item.id)}">
+          <span class="card-q">${term ? highlight(item.q, term) : escHtml(item.q)}</span>
+          <span class="cat-badge cat-${escAttr(item.cat)}">${escHtml(item.catLabel)}</span>
+          <span class="toggle" aria-hidden="true">+</span>
+        </button>
+        <div class="card-body" id="body-${escAttr(item.id)}">
+          <div class="answer">${linkify(item.a)}</div>
+          <div class="actions">
+            <button type="button" class="btn btn-primary" data-action="copy" data-id="${escAttr(item.id)}">📋 Copier la réponse</button>
+            <button type="button" class="btn btn-secondary" data-action="link" data-id="${escAttr(item.id)}">🔗 Copier le lien</button>
+          </div>
+        </div>
+      </article>`;
+    }).join('');
+  };
+
+  // ===== INTERACTIONS =====
+  const toggleCard = (id, force) => {
+    const willOpen = force !== undefined ? force : !state.expanded.has(id);
+    if (willOpen) state.expanded.add(id); else state.expanded.delete(id);
+    const card = document.getElementById('card-' + CSS.escape(id));
+    if (card) card.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    return willOpen;
+  };
+
+  const copyAnswer = async id => {
+    const item = state.items.find(i => i.id === id);
+    if (!item) return;
+    const ok = await copyToClipboard(item.a);
+    showToast(ok ? '✓ Réponse copiée' : '⚠ Copie échouée');
+  };
+
+  const copyLink = async id => {
+    const url = location.origin + location.pathname + '#q/' + id;
+    const ok = await copyToClipboard(url);
+    showToast(ok ? '🔗 Lien copié' : '⚠ Copie échouée');
+  };
+
+  const copyToClipboard = async text => {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none;';
+      document.body.appendChild(ta); ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch {}
+      document.body.removeChild(ta);
+      return ok;
+    }
+  };
+
+  let toastTimer = null;
+  const showToast = msg => {
+    dom.toast.textContent = msg;
+    dom.toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => dom.toast.classList.remove('show'), 1800);
+  };
+
+  const setSearch = (v, syncURL = true) => {
+    state.search = v;
+    state.focusedIdx = -1;
+    renderResults();
+    if (syncURL) syncURLFromState();
+  };
+
+  const setCat = (id, syncURL = true) => {
+    state.activeCat = id;
+    state.focusedIdx = -1;
+    renderChips();
+    renderResults();
+    if (syncURL) syncURLFromState();
+    savePrefs({ ...loadPrefs(), cat: id });
+  };
+
+  // ===== URL ROUTING =====
+  const syncURLFromState = () => {
+    const params = new URLSearchParams();
+    if (state.search) params.set('q', state.search);
+    if (state.activeCat !== 'all') params.set('cat', state.activeCat);
+    const qs = params.toString();
+    const url = location.pathname + (qs ? '?' + qs : '') + location.hash;
+    history.replaceState(null, '', url);
+  };
+
+  const syncStateFromURL = () => {
+    const params = new URLSearchParams(location.search);
+    const q = params.get('q') || '';
+    const cat = params.get('cat') || loadPrefs().cat || 'all';
+    if (CATS.some(c => c.id === cat)) state.activeCat = cat;
+    state.search = q;
+    if (dom.search) dom.search.value = q;
+    // Hash deep-link: #q/notion-id
+    const m = location.hash.match(/^#q\/(.+)$/);
+    if (m) {
+      const id = decodeURIComponent(m[1]);
+      state.expanded.add(id);
+      setTimeout(() => {
+        const card = document.getElementById('card-' + CSS.escape(id));
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+  };
+
+  // ===== KEYBOARD =====
+  const moveFocus = delta => {
+    const max = state.filtered.length - 1;
+    if (max < 0) return;
+    state.focusedIdx = Math.max(0, Math.min(max, state.focusedIdx + delta));
+    renderResults();
+    const card = dom.results.querySelector('.card.focused');
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
+
+  const onKeydown = e => {
+    // Cmd/Ctrl+K → focus search
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      dom.search.focus();
+      dom.search.select();
+      return;
+    }
+    // / → focus search (when not typing)
+    if (e.key === '/' && document.activeElement !== dom.search) {
+      e.preventDefault(); dom.search.focus();
+      return;
+    }
+    // ESC → blur or clear
+    if (e.key === 'Escape') {
+      if (document.activeElement === dom.search) {
+        if (dom.search.value) { dom.search.value = ''; setSearch(''); }
+        else dom.search.blur();
+      }
+      return;
+    }
+    // ↑↓ → navigate (when search is focused)
+    if (document.activeElement === dom.search && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+      e.preventDefault();
+      moveFocus(e.key === 'ArrowDown' ? 1 : -1);
+      return;
+    }
+    // Enter → expand focused
+    if (e.key === 'Enter' && document.activeElement === dom.search && state.focusedIdx >= 0) {
+      e.preventDefault();
+      const item = state.filtered[state.focusedIdx];
+      if (item) toggleCard(item.id, true);
+    }
+  };
+
+  const onClick = e => {
+    const head = e.target.closest('.card-head');
+    if (head) {
+      const card = head.closest('.card');
+      if (card) toggleCard(card.dataset.id);
+      return;
+    }
+    const action = e.target.closest('[data-action]');
+    if (action) {
+      e.stopPropagation();
+      const id = action.dataset.id;
+      if (action.dataset.action === 'copy') copyAnswer(id);
+      else if (action.dataset.action === 'link') copyLink(id);
+      return;
+    }
+    const chip = e.target.closest('.chip');
+    if (chip) setCat(chip.dataset.cat);
+  };
+
+  // ===== INIT =====
+  const init = async () => {
+    dom.meta = document.getElementById('meta-info');
+    dom.syncInfo = document.getElementById('sync-info');
+    dom.search = document.getElementById('search');
+    dom.chips = document.getElementById('chips');
+    dom.count = document.getElementById('count');
+    dom.results = document.getElementById('results');
+    dom.loading = document.getElementById('loading-state');
+    dom.errorState = document.getElementById('error-state');
+    dom.errorMsg = document.getElementById('error-message');
+    dom.toast = document.getElementById('toast');
+
+    syncStateFromURL();
+    renderChips();
+
+    try {
+      const { data, fromCache, error } = await loadData();
+      state.items = data.items;
+      state.generatedAt = data.generated_at || data.generatedAt;
+      dom.loading.hidden = true;
+      renderMeta(fromCache);
+      renderResults();
+    } catch (err) {
+      console.error('Load failed:', err);
+      dom.loading.hidden = true;
+      dom.errorState.hidden = false;
+      dom.errorMsg.textContent = `Erreur : ${err.message}. Renvoie le client vers le formulaire support en attendant.`;
+      return;
+    }
+
+    dom.search.addEventListener('input', e => {
+      clearTimeout(searchDebounce);
+      searchDebounce = setTimeout(() => setSearch(e.target.value), 100);
+    });
+    document.addEventListener('click', onClick);
+    document.addEventListener('keydown', onKeydown);
+    window.addEventListener('hashchange', syncStateFromURL);
+
+    // Refresh meta every minute
+    setInterval(() => renderMeta(), 60000);
+  };
+
+  return { init, retryLoad: () => location.reload() };
+})();
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', App.init);
+else App.init();
+</script>
+</body>
+</html>
