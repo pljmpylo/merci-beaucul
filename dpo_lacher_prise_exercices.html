@@ -189,14 +189,15 @@
 </div>
 
 
-<!-- ── AUTO-RESIZE IFRAME (anti boucle infinie) ─────────────── -->
+<!-- ── AUTO-RESIZE IFRAME (grandit ET rétrécit, anti boucle) ─────────────── -->
 <script>
 (function() {
   var lastSent = 0;
   var pending = null;
 
   function measure() {
-    // On mesure UNIQUEMENT le contenu, pas la viewport
+    // Mesure le bas du dernier enfant du body (ignore le body lui-même
+    // au cas où il serait étiré par l'iframe parente)
     var els = document.body.children;
     var maxBottom = 0;
     for (var i = 0; i < els.length; i++) {
@@ -210,7 +211,6 @@
   function sendHeight() {
     var h = measure();
     if (h <= 0) return;
-    // Hystérésis : on n'envoie que si la diff est > 3px
     if (Math.abs(h - lastSent) <= 3) return;
     lastSent = h;
     if (window.parent && window.parent !== window) {
@@ -227,15 +227,27 @@
   }
 
   window.addEventListener('load', schedule);
+
   if ('ResizeObserver' in window) {
     new ResizeObserver(schedule).observe(document.body);
   }
+
+  // Détecte explicitement le DÉBUT et la FIN des transitions CSS
+  // (utile pour les animations max-height des toggles, à l'ouverture ET fermeture)
+  document.addEventListener('transitionrun', schedule, true);
+  document.addEventListener('transitionend', schedule, true);
+  document.addEventListener('transitioncancel', schedule, true);
+
+  // Suivi pendant l'animation (toutes les ~50ms pendant 1.2s = couvre les 0.8s de transition)
   document.addEventListener('click', function() {
-    setTimeout(schedule, 50);
-    setTimeout(schedule, 350);
-    setTimeout(schedule, 800);
-    setTimeout(schedule, 1100);
+    var t = 0;
+    var iv = setInterval(function() {
+      t += 60;
+      schedule();
+      if (t >= 1200) clearInterval(iv);
+    }, 60);
   });
+
   setTimeout(schedule, 100);
 })();
 </script>
