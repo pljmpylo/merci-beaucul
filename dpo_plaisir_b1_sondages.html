@@ -12,19 +12,6 @@
 
   /* ── HEADER ─────────────────────── */
   .section-title { margin-bottom: 20px; }
-  .section-tag {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: #8A1B1A;
-    background: #FFFAFD;
-    padding: 6px 14px;
-    border-radius: 999px;
-    border: 1px solid #E8D5D5;
-    margin-bottom: 10px;
-  }
   .section-heading {
     font-size: 22px;
     font-weight: 800;
@@ -54,14 +41,6 @@
     border-radius: 18px;
     padding: 20px 22px;
     margin-bottom: 14px;
-  }
-  .poll-label {
-    font-size: 10.5px;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #DC143C;
-    margin-bottom: 8px;
   }
   .poll-question {
     font-size: 15.5px;
@@ -193,8 +172,34 @@
     border: 1.5px solid #E8D5D5;
     border-radius: 18px;
     overflow: hidden;
-    margin: 24px 0 20px;
+    margin: 14px 0 0;
     background: #fff;
+  }
+  /* Variante jaune — Tata Léa */
+  .toggle.toggle-lea {
+    border-color: #FFDE59;
+  }
+  .toggle.toggle-lea .toggle-head {
+    background: #FFFBEA;
+  }
+  .toggle.toggle-lea .toggle-body {
+    background: #FFFBEA;
+  }
+  .toggle.toggle-lea .toggle-body-inner {
+    border-top-color: #F5E5A0;
+  }
+  /* Variante beige — Ressource */
+  .toggle.toggle-resource {
+    border-color: #E8D5C2;
+  }
+  .toggle.toggle-resource .toggle-head {
+    background: #F5EDE3;
+  }
+  .toggle.toggle-resource .toggle-body {
+    background: #F5EDE3;
+  }
+  .toggle.toggle-resource .toggle-body-inner {
+    border-top-color: #E0D0BB;
   }
   .toggle-head {
     display: flex;
@@ -258,7 +263,7 @@
     line-height: 1.75;
     color: #450100;
     border-left: 3px solid #DC143C;
-    background: #FFF5F5;
+    background: #fff;
     padding: 14px 18px;
     border-radius: 0 12px 12px 0;
     margin: 16px 0 14px;
@@ -270,6 +275,57 @@
     margin-top: 12px;
   }
 
+  /* ── DIVIDER ─────────────────────── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #E8D5D5 20%, #E8D5D5 80%, transparent 100%);
+    margin: 32px 0;
+  }
+
+  /* ── RESSOURCE CARD (dans toggle) ── */
+  .resource-card {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    background: #fff;
+    border: 1px solid #E0D0BB;
+    border-radius: 14px;
+    padding: 16px 18px;
+  }
+  .resource-cover {
+    width: 110px;
+    height: auto;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: block;
+  }
+  .resource-info {
+    flex: 1;
+    min-width: 180px;
+  }
+  .resource-title {
+    font-family: 'Lora', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: #450100;
+    line-height: 1.3;
+    margin: 0 0 6px;
+  }
+  .resource-authors {
+    font-size: 13px;
+    color: #6a4545;
+    margin: 0 0 2px;
+    font-weight: 600;
+  }
+  .resource-publisher {
+    font-size: 12px;
+    color: #8a6a5a;
+    font-style: italic;
+    margin: 0;
+  }
+
 </style>
 </head>
 <body>
@@ -277,15 +333,13 @@
 <!-- ── HEADER ─────────────────────── -->
 <div class="section-title">
   <div class="section-heading">Ton rapport au plaisir aujourd'hui</div>
-  <div class="section-sub">Deux questions rapides pour situer où tu en es, et voir comment la communauté MBCL se positionne.</div>
+  <div class="section-sub">Une question rapide pour situer où tu en es, et voir comment la communauté MBCL se positionne.</div>
 </div>
 
-<!-- ── SONDAGES ───────────────────── -->
-<div class="subhead">📊 Sondages communauté</div>
+<!-- ── SONDAGE ────────────────────── -->
+<div class="subhead">📊 Sondage communauté</div>
 
-<!-- Sondage 1 -->
 <div class="poll">
-  <div class="poll-label">Sondage 1</div>
   <div class="poll-question">Je mets plus systématiquement le plaisir de l'autre avant le mien.</div>
   <div class="poll-options" id="q1">
     <button class="poll-opt" onclick="pollVote('q1', this, 'r1')">Oui</button>
@@ -324,49 +378,11 @@
   </div>
 </div>
 
-<!-- Sondage 2 -->
-<div class="poll">
-  <div class="poll-label">Sondage 2</div>
-  <div class="poll-question">J'ose pas trop demander des choses qui concernent mon plaisir, dans le quotidien et dans la sexualité.</div>
-  <div class="poll-options" id="q2">
-    <button class="poll-opt" onclick="pollVote('q2', this, 'r2')">Oui</button>
-    <button class="poll-opt" onclick="pollVote('q2', this, 'r2')">Non</button>
-    <button class="poll-opt" onclick="pollVote('q2', this, 'r2')">Ça dépend</button>
-  </div>
-  <button class="revote-btn" id="rev-q2" onclick="pollReset('q2', 'r2')" style="display:none;">↻ Revoter</button>
-</div>
-
-<!-- Résultats Q2 -->
-<div class="results" id="r2">
-  <div class="results-label">
-    <span>📣 Résultats de la communauté</span>
-    <span class="results-count">stats indicatives à remplacer</span>
-  </div>
-  <div class="result-row">
-    <div class="result-head">
-      <span>Oui</span>
-      <span class="result-pct">58 %</span>
-    </div>
-    <div class="result-bar"><div class="result-fill" data-pct="58"></div></div>
-  </div>
-  <div class="result-row">
-    <div class="result-head">
-      <span>Non</span>
-      <span class="result-pct">12 %</span>
-    </div>
-    <div class="result-bar"><div class="result-fill" data-pct="12"></div></div>
-  </div>
-  <div class="result-row">
-    <div class="result-head">
-      <span>Ça dépend</span>
-      <span class="result-pct">30 %</span>
-    </div>
-    <div class="result-bar"><div class="result-fill" data-pct="30"></div></div>
-  </div>
-</div>
+<!-- ── DIVIDER ────────────────────── -->
+<div class="divider"></div>
 
 <!-- ── TOGGLE TATA LÉA ────────────── -->
-<div class="toggle">
+<div class="toggle toggle-lea">
   <div class="toggle-head" onclick="togglePanel(this)">
     <div class="toggle-title-wrap">
       <span class="toggle-emoji">💋</span>
@@ -386,12 +402,33 @@
   </div>
 </div>
 
-<!-- ── RESSOURCE CITÉE ────────────── -->
-<div style="background: #F5EDE3; border-radius: 18px; padding: 20px 24px; margin-top: 20px;">
-  <p style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #dc143c; margin: 0 0 5px;">📖 Ressource citée</p>
-  <p style="font-family: 'Lora',serif; font-size: 15px; font-weight: 600; color: #450100; margin: 0 0 3px;">À quoi sert le sexe ?</p>
-  <p style="font-size: 12px; color: #8a6a5a; margin: 0 0 14px;">Bonierbale, Bozon, Gouyon · Éditions Belin</p>
-  <img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/site/2148843478/products/b8a107a-f24e-45b1-7450-a537d25bef81_image_9_.png" width="200" height="293" style="border-radius: 8px; display: block;" alt="À quoi sert le sexe ?">
+<!-- ── DIVIDER ────────────────────── -->
+<div class="divider"></div>
+
+<!-- ── TOGGLE RESSOURCE CITÉE ─────── -->
+<div class="toggle toggle-resource">
+  <div class="toggle-head" onclick="togglePanel(this)">
+    <div class="toggle-title-wrap">
+      <span class="toggle-emoji">📖</span>
+      <div>
+        <div class="toggle-title">Ressource citée</div>
+        <div class="toggle-sub">À quoi sert le sexe ? — Bonierbale, Bozon, Gouyon</div>
+      </div>
+    </div>
+    <span class="toggle-arrow">&#8964;</span>
+  </div>
+  <div class="toggle-body">
+    <div class="toggle-body-inner">
+      <div class="resource-card">
+        <img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/site/2148843478/products/b8a107a-f24e-45b1-7450-a537d25bef81_image_9_.png" alt="À quoi sert le sexe ?" class="resource-cover">
+        <div class="resource-info">
+          <p class="resource-title">À quoi sert le sexe ?</p>
+          <p class="resource-authors">Bonierbale, Bozon, Gouyon</p>
+          <p class="resource-publisher">Éditions Belin</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -407,14 +444,12 @@ function pollVote(groupId, button, resultsId) {
   });
   button.classList.add('chosen');
 
-  // Show revoter button inside the poll card
   var revBtn = document.getElementById('rev-' + groupId);
   if (revBtn) revBtn.style.display = 'inline-flex';
 
   var results = document.getElementById(resultsId);
   results.style.display = 'block';
 
-  // Animate bars after reveal
   setTimeout(function() {
     results.querySelectorAll('.result-fill').forEach(function(fill) {
       fill.style.width = fill.dataset.pct + '%';
@@ -432,13 +467,11 @@ function pollReset(groupId, resultsId) {
     b.onclick = function() { pollVote(groupId, b, resultsId); };
   });
 
-  // Hide revoter button
   var revBtn = document.getElementById('rev-' + groupId);
   if (revBtn) revBtn.style.display = 'none';
 
   var results = document.getElementById(resultsId);
   results.style.display = 'none';
-  // Reset bar widths for the next reveal animation
   results.querySelectorAll('.result-fill').forEach(function(fill) {
     fill.style.width = '0%';
   });
