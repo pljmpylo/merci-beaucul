@@ -18,15 +18,15 @@
 
   .video-side {
     flex-shrink: 0;
-    width: 400px;
+    width: 640px;
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
 
   .video-zone {
-    width: 400px;
-    height: 480px;
+    width: 640px;
+    aspect-ratio: 1080 / 608;
     border-radius: 22px;
     overflow: hidden;
     border: 1.5px solid #E8D5D5;
@@ -41,7 +41,7 @@
   .video-zone img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     display: block;
   }
 
@@ -255,7 +255,7 @@
   @media (max-width: 768px) {
     .layout { flex-direction: column; }
     .video-side { width: 100%; }
-    .video-zone { width: 100%; height: 380px; }
+    .video-zone { width: 100%; }
     .accordion { flex: 1; max-width: none; width: 100%; }
     .schema-placeholder svg { width: 180px; height: 180px; }
   }
