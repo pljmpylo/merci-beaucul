@@ -10,45 +10,10 @@
 
   .container { padding: 0; }
 
-  .tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 18px;
-  }
-
-  .tab-btn {
-    flex: 1 1 auto;
-    min-width: 110px;
-    background: #fff;
-    border: 1.5px solid #E8D5D5;
-    border-radius: 999px;
-    padding: 10px 14px;
-    cursor: pointer;
-    font-family: 'Raleway', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: #450100;
-    text-align: center;
-    transition: all 0.2s;
-  }
-
-  .tab-btn.active {
-    background: #DC143C;
-    border-color: #DC143C;
-    color: #fff;
-    font-weight: 700;
-  }
-
-  .tab-btn:hover:not(.active) {
-    border-color: #DC143C;
-    color: #DC143C;
-  }
-
   .layout {
     display: flex;
     gap: 20px;
-    align-items: stretch;
+    align-items: flex-start;
   }
 
   .video-side {
@@ -72,13 +37,7 @@
     flex-shrink: 0;
   }
 
-  .video-zone video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
+  .video-zone video,
   .video-zone img {
     width: 100%;
     height: 100%;
@@ -130,7 +89,6 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    flex: 1;
   }
 
   .description-emoji {
@@ -146,25 +104,95 @@
     margin: 0;
   }
 
-  .options {
+  /* Accordéon — colonne droite */
+  .accordion {
     flex: 1 1 380px;
     max-width: 480px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: #FFFAFD;
+    border: 1.5px solid #E8D5D5;
+    border-radius: 999px;
+    padding: 13px 22px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #450100;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+
+  .section-header:hover {
+    border-color: #DC143C;
+    color: #DC143C;
+  }
+
+  .section.has-active .section-header {
+    border-color: #DC143C;
+    color: #DC143C;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .active-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #DC143C;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .section.has-active .active-dot { opacity: 1; }
+
+  .chevron {
+    transition: transform 0.25s ease;
+    font-size: 11px;
+    color: #8a1b1a;
+  }
+
+  .section.open .chevron {
+    transform: rotate(180deg);
+  }
+
+  .section-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 8px;
+  }
+
+  .section.open .section-body {
+    max-height: 600px;
+    padding: 6px 8px 4px;
   }
 
   .option-btn {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     background: #fff;
     border: 1.5px solid #E8D5D5;
     border-radius: 999px;
-    padding: 14px 22px;
+    padding: 11px 20px;
     cursor: pointer;
     font-family: 'Raleway', sans-serif;
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 600;
     color: #450100;
     text-align: left;
@@ -184,60 +212,17 @@
     color: #DC143C;
   }
 
-  .option-num {
-    font-size: 10px;
-    font-weight: 800;
-    opacity: 0.5;
-    margin-left: 10px;
-    flex-shrink: 0;
-  }
-
-  .empty-state {
-    flex: 1 1 380px;
-    max-width: 480px;
-    background: #FFFAFD;
-    border: 1.5px dashed #E8D5D5;
-    border-radius: 22px;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 10px;
-    min-height: 480px;
-  }
-
-  .empty-state-emoji { font-size: 32px; }
-
-  .empty-state-text {
-    color: #8a1b1a;
-    font-size: 14px;
-    line-height: 1.5;
-    font-style: italic;
-  }
-
   @media (max-width: 768px) {
     .layout { flex-direction: column; }
     .video-side { width: 100%; }
     .video-zone { width: 100%; height: 380px; }
-    .options, .empty-state { flex: 1; max-width: none; width: 100%; min-height: auto; }
+    .accordion { flex: 1; max-width: none; width: 100%; }
     .schema-placeholder svg { width: 180px; height: 180px; }
-    .tab-btn { min-width: 80px; font-size: 12px; padding: 9px 10px; }
   }
 </style>
 </head>
 <body>
 <div class="container">
-
-  <div class="tabs">
-    <button class="tab-btn active" data-cat="A">A. Haut / bas</button>
-    <button class="tab-btn" data-cat="B">B. Cercle</button>
-    <button class="tab-btn" data-cat="C">C. Gauche / droite</button>
-    <button class="tab-btn" data-cat="D">D. Vibrations</button>
-    <button class="tab-btn" data-cat="E">E. Aspirer</button>
-    <button class="tab-btn" data-cat="F">F. Pénétration</button>
-  </div>
 
   <div class="layout">
 
@@ -249,22 +234,23 @@
       </div>
     </div>
 
-    <div id="optionsContainer"></div>
+    <div class="accordion" id="accordion"></div>
 
   </div>
 
 </div>
 
 <script>
-  const categories = {
-    A: {
+  const sections = [
+    {
+      label: 'Haut / bas',
       schema: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#8a1b1a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
           <path d="M50 18 L50 82"/>
           <path d="M40 28 L50 18 L60 28"/>
           <path d="M40 72 L50 82 L60 72"/>
           <circle cx="50" cy="50" r="6" fill="#DC143C" stroke="none"/>
         </svg>
-        <p class="schema-label"><strong>A. Haut / bas</strong>Va-et-vient vertical de la langue</p>`,
+        <p class="schema-label"><strong>Haut / bas</strong>Va-et-vient vertical de la langue</p>`,
       variants: [
         { label: 'Bout de langue, lentement', desc: 'Bout de la langue seul qui va de haut en bas, lentement.' },
         { label: 'Plat de la langue', desc: 'Même geste avec le plat de la langue.' },
@@ -272,33 +258,36 @@
         { label: 'Variations de rythme', desc: 'Va-et-vient rapide puis très lent puis normal puis arrêt, puis rouler le gland du clitoris hyper lentement.' }
       ]
     },
-    B: {
+    {
+      label: 'Cercle',
       schema: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#8a1b1a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="50" cy="50" r="28"/>
           <path d="M75 42 L78 50 L70 53"/>
           <circle cx="50" cy="50" r="6" fill="#DC143C" stroke="none"/>
         </svg>
-        <p class="schema-label"><strong>B. Cercle</strong>Petits ou grands ronds, dans les deux sens</p>`,
+        <p class="schema-label"><strong>Cercle</strong>Petits ou grands ronds, dans les deux sens</p>`,
       variants: [
         { label: 'Petits cercles lents', desc: 'Langue qui fait de petits cercles lents.' },
         { label: 'Cercles plus grands', desc: 'Cercles plus grands.' },
         { label: 'Changement de sens', desc: 'Changement de sens du cercle.' }
       ]
     },
-    C: {
+    {
+      label: 'Gauche / droite',
       schema: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#8a1b1a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 50 L82 50"/>
           <path d="M28 40 L18 50 L28 60"/>
           <path d="M72 40 L82 50 L72 60"/>
           <circle cx="50" cy="50" r="6" fill="#DC143C" stroke="none"/>
         </svg>
-        <p class="schema-label"><strong>C. Gauche / droite</strong>Balayage horizontal, comme un essuie-glace</p>`,
+        <p class="schema-label"><strong>Gauche / droite</strong>Balayage horizontal, comme un essuie-glace</p>`,
       variants: [
         { label: 'Doucement', desc: 'Bout de la langue qui va doucement de gauche à droite.' },
         { label: 'Plus rapide', desc: 'Même geste un peu plus rapide.' }
       ]
     },
-    D: {
+    {
+      label: 'Vibrations & tapotements',
       schema: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#8a1b1a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
           <path d="M15 45 Q22 33 30 45 T45 45 T60 45 T75 45 T85 45"/>
           <circle cx="30" cy="65" r="2.5" fill="#DC143C" stroke="none"/>
@@ -306,50 +295,113 @@
           <circle cx="60" cy="65" r="2.5" fill="#DC143C" stroke="none"/>
           <circle cx="75" cy="68" r="2.5" fill="#DC143C" stroke="none"/>
         </svg>
-        <p class="schema-label"><strong>D. Vibrations &amp; tapotements</strong>Pulsations sur place ou mini coups répétés</p>`,
+        <p class="schema-label"><strong>Vibrations &amp; tapotements</strong>Pulsations sur place ou mini coups répétés</p>`,
       variants: [
         { label: 'Vibration sur place', desc: 'Langue à peine sortie, pointe vers le palais, qui pulse sur place.' },
         { label: 'Tapotements rapides', desc: 'Série de petits tapotements rapides au même endroit.' },
         { label: 'Rythmes variés', desc: 'Varier les rythmes des tapotements.' }
       ]
     },
-    E: {
+    {
+      label: 'Aspirer & embrasser',
       schema: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#8a1b1a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
           <path d="M25 50 Q35 35 50 38 Q65 35 75 50 Q65 62 50 60 Q35 62 25 50 Z"/>
           <path d="M25 50 Q50 50 75 50" stroke-dasharray="2 3"/>
           <circle cx="50" cy="50" r="4" fill="#DC143C" stroke="none"/>
         </svg>
-        <p class="schema-label"><strong>E. Aspirer &amp; embrasser</strong>Bouche posée, succion douce, baiser</p>`,
+        <p class="schema-label"><strong>Aspirer &amp; embrasser</strong>Bouche posée, succion douce, baiser</p>`,
       variants: [
         { label: 'Bisou', desc: 'Lèvres qui se posent comme pour un bisou, se referment doucement, puis se rouvrent.' },
         { label: 'Bouche qui englobe', desc: 'Bouche plus ouverte qui englobe plus large, comme si on mangeait la zone.' }
       ]
     },
-    F: {
+    {
+      label: 'Pénétration',
       schema: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#8a1b1a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
           <path d="M30 50 L70 50"/>
           <path d="M60 40 L70 50 L60 60"/>
           <ellipse cx="78" cy="50" rx="6" ry="14" fill="#FFFAFD"/>
         </svg>
-        <p class="schema-label"><strong>F. Pénétration</strong>Langue qui entre dans le vagin</p>`,
+        <p class="schema-label"><strong>Pénétration</strong>Langue qui entre dans le vagin</p>`,
       variants: [
         { label: 'Pénétration douce', desc: 'Pénétration douce avec la langue, en entrant lentement.', media: 'https://pljmpylo.github.io/merci-beaucul/dpo_video_langue_douce.gif' },
         { label: 'Ouverture de la mâchoire', desc: 'Ouvrir la mâchoire pour donner plus d\'amplitude au mouvement.' },
         { label: 'Agripper par les hanches', desc: 'Agripper les hanches pour amener le bassin vers soi pendant la pénétration.' }
       ]
     }
-  };
+  ];
 
-  let currentCategory = 'A';
-  let currentVariantIdx = 0;
+  let activeSection = 0;
+  let activeVariant = 0;
 
-  function renderMedia() {
-    const cat = currentCategory;
+  function buildAccordion() {
+    const acc = document.getElementById('accordion');
+    let html = '';
+    sections.forEach((section, sIdx) => {
+      const openClass = sIdx === activeSection ? 'open' : '';
+      const hasActive = sIdx === activeSection ? 'has-active' : '';
+      html += `
+        <div class="section ${openClass} ${hasActive}" data-section="${sIdx}">
+          <button class="section-header" data-section="${sIdx}">
+            <span class="header-left">
+              <span class="active-dot"></span>
+              ${section.label}
+            </span>
+            <span class="chevron">▾</span>
+          </button>
+          <div class="section-body">`;
+      section.variants.forEach((v, vIdx) => {
+        const activeClass = (sIdx === activeSection && vIdx === activeVariant) ? 'active' : '';
+        html += `<button class="option-btn ${activeClass}" data-section="${sIdx}" data-variant="${vIdx}">${v.label}</button>`;
+      });
+      html += `</div></div>`;
+    });
+    acc.innerHTML = html;
+
+    acc.querySelectorAll('.section-header').forEach(header => {
+      header.addEventListener('click', function() {
+        toggleSection(parseInt(this.dataset.section));
+      });
+    });
+
+    acc.querySelectorAll('.option-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        selectVariant(parseInt(this.dataset.section), parseInt(this.dataset.variant));
+      });
+    });
+  }
+
+  function toggleSection(sIdx) {
+    document.querySelectorAll('.section').forEach((s, i) => {
+      if (i === sIdx) {
+        s.classList.toggle('open');
+      } else {
+        s.classList.remove('open');
+      }
+    });
+    setTimeout(sendHeight, 320);
+  }
+
+  function selectVariant(sIdx, vIdx) {
+    activeSection = sIdx;
+    activeVariant = vIdx;
+
+    // Mettre à jour active sur tous les boutons et sur les sections
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('has-active'));
+
+    const targetBtn = document.querySelector(`.option-btn[data-section="${sIdx}"][data-variant="${vIdx}"]`);
+    if (targetBtn) targetBtn.classList.add('active');
+
+    const targetSection = document.querySelector(`.section[data-section="${sIdx}"]`);
+    if (targetSection) targetSection.classList.add('has-active');
+
+    // Render média
+    const section = sections[sIdx];
+    const variant = section.variants[vIdx];
     const zone = document.getElementById('videoZone');
-    const variants = categories[cat].variants;
-    const variant = variants ? variants[currentVariantIdx] : null;
 
-    if (variant && variant.media) {
+    if (variant.media) {
       const ext = variant.media.split('.').pop().toLowerCase().split('?')[0];
       if (ext === 'mp4' || ext === 'webm') {
         zone.innerHTML = `<video autoplay loop muted playsinline preload="metadata"><source src="${variant.media}" type="video/${ext}"></video>`;
@@ -357,45 +409,10 @@
         zone.innerHTML = `<img src="${variant.media}" alt="">`;
       }
     } else {
-      zone.innerHTML = `<div class="schema-placeholder">${categories[cat].schema}</div>`;
-    }
-  }
-
-  function selectCategory(cat, btn) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    currentCategory = cat;
-    currentVariantIdx = 0;
-
-    const optsBox = document.getElementById('optionsContainer');
-    if (categories[cat].empty) {
-      optsBox.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-state-emoji">✍️</div>
-          <p class="empty-state-text">Mouvements à compléter</p>
-        </div>`;
-      document.getElementById('descDisplay').textContent = categories[cat].placeholderDesc;
-    } else {
-      let html = '<div class="options">';
-      categories[cat].variants.forEach((v, i) => {
-        html += `<button class="option-btn ${i === 0 ? 'active' : ''}" onclick="selectVariant(this, ${i})">${v.label}</button>`;
-      });
-      html += '</div>';
-      optsBox.innerHTML = html;
-      document.getElementById('descDisplay').textContent = categories[cat].variants[0].desc;
+      zone.innerHTML = `<div class="schema-placeholder">${section.schema}</div>`;
     }
 
-    renderMedia();
-    sendHeight();
-  }
-
-  function selectVariant(btn, idx) {
-    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentVariantIdx = idx;
-    document.getElementById('descDisplay').textContent = categories[currentCategory].variants[idx].desc;
-    renderMedia();
+    document.getElementById('descDisplay').textContent = variant.desc;
     sendHeight();
   }
 
@@ -403,13 +420,8 @@
     window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, '*');
   }
 
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      selectCategory(this.dataset.cat, this);
-    });
-  });
-
-  selectCategory('A', document.querySelector('.tab-btn[data-cat="A"]'));
+  buildAccordion();
+  selectVariant(0, 0);
 
   window.addEventListener('load', function() {
     sendHeight();
