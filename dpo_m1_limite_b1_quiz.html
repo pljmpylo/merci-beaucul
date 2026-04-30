@@ -343,8 +343,8 @@
 <script>
 const QUESTIONS = [
   "Quand je ressens du désir (envie de sexe, fantasme, après une masturbation), il m'arrive de me dire que c'est sale ou honteux, même si personne autour de moi ne le dit clairement.",
-  "Quand je commence vraiment à me laisser aller dans le plaisir (sexuel ou non), une partie de moi a peur de \"partir trop loin\", de \"perdre le contrôle\" ou de \"devenir quelqu'un de mauvais / excès / trop\", comme si le plaisir pouvait me faire déraper.",
-  "Quand je vois que mon excitation ou mes orgasmes ne ressemblent pas au \"modèle\" (jouir par la pénétration, jouir vite, jouir à chaque fois), je me demande si je suis \"anormal·e\", \"pas une vraie femme / un vrai homme\".",
+  "Quand je commence vraiment à me laisser aller dans le plaisir (sexuel ou non), une partie de moi a peur de \"partir trop loin\", de \"perdre le contrôle\" ou de \"devenir quelqu'un de mauvais / too much\".",
+  "Quand je vois que mon excitation ou mes orgasmes ne ressemblent pas au modèle porn (jouir par la pénétration, jouir vite, jouir à chaque fois), je me demande si je suis pas \"anormal·e\".",
   "Quand je suis en train de faire l'amour, il m'arrive de reproduire des scènes vues dans le porno (positions, bruitages, expressions), pas parce que ça me fait vraiment envie sur le moment, mais parce que j'ai l'impression que \"le sexe, ça doit ressembler à ça\".",
   "Quand je me projette en train d'assumer pleinement mon désir (parler de ce que je veux, prendre des initiatives, jouir fort, demander certaines pratiques, avoir autant de partenaires que je veux), une partie de moi a peur d'être perçu·e comme \"une salope / pute / insérer une insulte misogyne\".",
   "En repensant à mon enfance/adolescence, je me souviens que chez moi, on ne parlait jamais de sexualité ou de plaisir, ou alors avec de la gêne, des blagues humiliantes, du dégoût. Aujourd'hui, rien que l'idée de parler de mon plaisir me met mal à l'aise, comme si je brisais une règle.",
@@ -448,14 +448,14 @@ function showResults() {
   const total = answers.reduce((a, b) => a + b, 0);
   let profile;
   if (total >= 10) {
-    profile = { cls: 'red', icon: '🔴', title: 'Le conditionnement est profond',
-      desc: "Tu portes beaucoup de messages intériorisés sur ce que le plaisir devrait être — ou ne pas être. Ce n'est pas un défaut, c'est le résultat d'une éducation, d'une culture, d'images absorbées sans filtre. Le travail qu'on fait ici est exactement fait pour toi." };
+    profile = { cls: 'red', icon: '🔴', title: 'Le conditionnement est bien ancré',
+      desc: "Tu portes beaucoup de messages intériorisés sur ce que le plaisir devrait être — ou ne pas être. C'est 100% pas ta faute, mais c'est le résultat d'une éducation, d'une culture, et d'images négatives sur la sexualité, absorbées depuis des années sans t'en rendre compte. Le travail qu'on fait ici est exactement fait pour toi. Certaines choses risquent de bousculer tes croyances, ton esprit va peut-être un peu résister : c'est que t'es sur la bonne voie." };
   } else if (total >= 5) {
-    profile = { cls: 'yellow', icon: '🟡', title: 'Tu portes des traces, mais tu les questionnes',
-      desc: "Tu as déjà commencé à déconstruire certaines injonctions, mais d'autres résistent encore. C'est souvent là que se passe le vrai travail — dans cet entre-deux où on sait que quelque chose cloche sans encore savoir comment le défaire." };
+    profile = { cls: 'yellow', icon: '🟡', title: 'Tu commences à questionner ta sexualité',
+      desc: "Tu as déjà commencé à déconstruire certaines injonctions, mais y'en a qui résistent encore. C'est typiquement ce qu'on va faire ici : déconstruire ce qu'il reste à déconstruire, mais surtout RECONSTRUIRE quelque chose qui te ressemble." };
   } else {
-    profile = { cls: 'green', icon: '🟢', title: "Tu t'es largement affranchi·e",
-      desc: "Tu sembles avoir une relation assez libre avec ton plaisir et ton désir. Ce module va te permettre de solidifier ça — et peut-être de mettre des mots sur ce qui t'a aidé à en arriver là." };
+    profile = { cls: 'green', icon: '🟢', title: "T'as déjà déconstruit pas mal de choses",
+      desc: "Tu sembles avoir une relation assez libre avec ton plaisir et ta sexualité. Ce module va te permettre de solidifier ça, et de surtout passer de l'intellectualisation au vécu dans le corps." };
   }
 
   resultEl.classList.remove('red', 'yellow', 'green');
