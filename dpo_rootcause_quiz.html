@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Identifier ce qui bloque ton lâcher prise — Merci Beaucul</title>
+<title>Identifier ta rootcause — Merci Beaucul</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -413,7 +413,7 @@
   <!-- ── Header ─────────────────────── -->
   <div class="quiz-header">
     <div class="quiz-tag">✨ Quiz</div>
-    <div class="quiz-title">Identifier ce qui bloque ton lâcher prise</div>
+    <div class="quiz-title">Identifier ta rootcause</div>
     <div class="quiz-sub">13 questions pour comprendre ce qui te freine vraiment</div>
   </div>
 
@@ -438,7 +438,7 @@
   <div class="results" id="results">
     <div class="result-intro">
       <div class="result-tag">🎯 Ton résultat</div>
-      <div class="result-title">Voici ton frein principal</div>
+      <div class="result-title" id="resultTitle">Voici ton frein principal</div>
     </div>
 
     <div class="score-bars">
@@ -619,11 +619,9 @@ const PROFILES = {
     link: "https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755860"
   },
   E: {
-    name: "Profil Neuroatypique",
-    desc: "Ton frein se situe du côté de la <strong>neuroatypie</strong> : ton système nerveux, ta gestion sensorielle ou ton traitement de l'info font que le lâcher prise \"taille unique\" ne marche pas pour toi. Tu as besoin d'un mode d'emploi plus précis et ajusté à ton fonctionnement.",
-    stat: "X personnes interrogées chez MBCL ont ce frein.",
-    cta: "Voir les propositions d'exercices pour le Profil Neuroatypique",
-    link: "https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755862"
+    name: "Tu lâches déjà prise en fait 🙂‍↕️",
+    desc: "Pas de frein particulier, t'arrives à mettre le cerveau en pose et à être dans ton corps quand tu le veux. Tu peux encore plus travailler ça avec quelques exercices si tu veux approfondir (parce que y'en a des cool quand même, ça fait tjrs du bien), sinon passe les exo !",
+    label: "🙂‍↕️ Pas de frein particulier"
   }
 };
 
@@ -729,6 +727,18 @@ function showResults() {
     else if (scores[l] === max) { dominant.push(l); }
   });
 
+  // Update result title based on dominant outcome
+  const resultTitle = document.getElementById('resultTitle');
+  if (resultTitle) {
+    if (dominant.length === 1 && dominant[0] === 'E') {
+      resultTitle.textContent = 'Bonne nouvelle';
+    } else if (dominant.length > 1) {
+      resultTitle.textContent = 'Voici tes freins principaux';
+    } else {
+      resultTitle.textContent = 'Voici ton frein principal';
+    }
+  }
+
   // Build score bars
   const scoreBars = document.getElementById('scoreBars');
   scoreBars.innerHTML = '';
@@ -754,18 +764,24 @@ function showResults() {
     const p = PROFILES[l];
     const card = document.createElement('div');
     card.className = 'profile-card';
-    const exAequoBadge = dominant.length > 1
-      ? '<div class="profile-label">✦ Ex æquo</div>'
-      : '<div class="profile-label">🎯 Ton frein principal</div>';
+    // Badge : ex æquo si tie, sinon label custom du profil sinon défaut
+    const defaultLabel = '<div class="profile-label">🎯 Ton frein principal</div>';
+    const exAequoBadge = '<div class="profile-label">✦ Ex æquo</div>';
+    const customLabel = p.label ? '<div class="profile-label">' + p.label + '</div>' : null;
+    let badge;
+    if (dominant.length > 1) {
+      badge = exAequoBadge;
+    } else if (customLabel) {
+      badge = customLabel;
+    } else {
+      badge = defaultLabel;
+    }
     let html =
-      exAequoBadge +
+      badge +
       '<div class="profile-name">' + p.name + '</div>' +
       '<div class="profile-desc">' + p.desc + '</div>';
     if (p.stat) html += '<div class="community-stat">' + p.stat + '</div>';
-    html += '<div class="profile-ctas">' +
-              '<a href="' + p.link + '" class="profile-cta" target="_top">' + p.cta + '</a>' +
-              '<a href="https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196754830" class="profile-cta-secondary" target="_top">Voir les exercices pour lâcher prise</a>' +
-            '</div>';
+    // CTA / liens de redirection retirés pour le moment (pages pas encore en ligne)
     card.innerHTML = html;
     profileCards.appendChild(card);
   });
