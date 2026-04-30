@@ -147,6 +147,79 @@
     line-height: 1.6;
     margin: 0;
   }
+
+  /* ── Custom audio player ──────────── */
+  .mb-player { display: flex; flex-direction: column; gap: 0; }
+  .mb-player-row { display: flex; align-items: center; gap: 14px; }
+  .mb-play-btn {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #8A1B1A;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(138, 27, 26, 0.25);
+    transition: all .2s ease;
+    padding: 0;
+  }
+  .mb-play-btn:hover { background: #450100; transform: scale(1.05); }
+  .mb-play-btn:active { transform: scale(0.97); }
+  .mb-play-btn svg { width: 18px; height: 18px; fill: #fff; }
+  .mb-play-btn.playing .mb-icon-play { display: none; }
+  .mb-play-btn:not(.playing) .mb-icon-pause { display: none; }
+  .mb-meter { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .mb-progress {
+    height: 6px;
+    background: #F0E0E0;
+    border-radius: 999px;
+    cursor: pointer;
+    position: relative;
+  }
+  .mb-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8A1B1A, #DC143C);
+    border-radius: 999px;
+    width: 0%;
+    transition: width 0.1s linear;
+    pointer-events: none;
+  }
+  .mb-times {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6a4545;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .mb-cur { color: #8A1B1A; font-weight: 700; }
+  .mb-speeds {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #F0E0E0;
+  }
+  .mb-speed {
+    font-family: 'Raleway', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #8A1B1A;
+    background: #fff;
+    border: 1.5px solid #E8D5D5;
+    padding: 4px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .mb-speed:hover { border-color: #8A1B1A; }
+  .mb-speed.active { background: #8A1B1A; color: #fff; border-color: #8A1B1A; }
 </style>
 </head>
 <body>
@@ -198,6 +271,81 @@
   <span class="emoji">💞</span>
   <p><strong style="font-style: normal;">Si tu fais ça à deux :</strong> c'est plus simple qu'<strong style="font-style: normal;">une seule personne le fasse à la fois</strong>. L'un·e guide les paliers pendant que l'autre se laisse traverser.</p>
 </div>
+
+<!-- ══════════ AUDIO GUIDE ══════════ -->
+<div style="background: #fff; border: 1.5px solid #E8D5D5; border-radius: 18px; padding: 20px 22px; margin: 24px 0 16px; border-top: 4px solid #8A1B1A;">
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #F0E0E0;">
+    <span style="font-size: 22px; flex-shrink: 0;">🎧</span>
+    <div>
+      <div style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #dc143c; margin-bottom: 3px;">Guide audio</div>
+      <div style="font-size: 15px; font-weight: 800; color: #450100; line-height: 1.35;">L'edging</div>
+    </div>
+  </div>
+  <div class="mb-player">
+    <div class="mb-player-row">
+      <button class="mb-play-btn" data-play aria-label="Lecture">
+        <svg class="mb-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="mb-icon-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+      </button>
+      <div class="mb-meter">
+        <div class="mb-progress" data-progress><div class="mb-progress-fill" data-fill></div></div>
+        <div class="mb-times"><span class="mb-cur" data-cur>0:00</span><span data-tot>--:--</span></div>
+      </div>
+    </div>
+    <div class="mb-speeds">
+      <button class="mb-speed" data-speed="0.75">0.75&times;</button>
+      <button class="mb-speed active" data-speed="1">1&times;</button>
+      <button class="mb-speed" data-speed="1.25">1.25&times;</button>
+      <button class="mb-speed" data-speed="1.5">1.5&times;</button>
+    </div>
+    <audio data-audio preload="metadata">
+      <source src="https://pljmpylo.github.io/merci-beaucul/dpo_audio_edging.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+</div>
+
+<script>
+/* ── Custom audio players ─── */
+(function () {
+  function fmt(sec) {
+    if (!isFinite(sec) || sec < 0) sec = 0;
+    var m = Math.floor(sec / 60);
+    var s = Math.floor(sec % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+  document.querySelectorAll('.mb-player').forEach(function (p) {
+    var audio = p.querySelector('[data-audio]');
+    var btn = p.querySelector('[data-play]');
+    var prog = p.querySelector('[data-progress]');
+    var fill = p.querySelector('[data-fill]');
+    var curEl = p.querySelector('[data-cur]');
+    var totEl = p.querySelector('[data-tot]');
+    var speedBtns = p.querySelectorAll('.mb-speed');
+    audio.addEventListener('loadedmetadata', function () { totEl.textContent = fmt(audio.duration); });
+    btn.addEventListener('click', function () { if (audio.paused) audio.play(); else audio.pause(); });
+    audio.addEventListener('play', function () { btn.classList.add('playing'); btn.setAttribute('aria-label', 'Pause'); });
+    audio.addEventListener('pause', function () { btn.classList.remove('playing'); btn.setAttribute('aria-label', 'Lecture'); });
+    audio.addEventListener('ended', function () { btn.classList.remove('playing'); btn.setAttribute('aria-label', 'Lecture'); });
+    audio.addEventListener('timeupdate', function () {
+      var pct = (audio.currentTime / audio.duration) * 100;
+      fill.style.width = (isFinite(pct) ? pct : 0) + '%';
+      curEl.textContent = fmt(audio.currentTime);
+    });
+    prog.addEventListener('click', function (e) {
+      var rect = prog.getBoundingClientRect();
+      var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      if (isFinite(audio.duration)) audio.currentTime = pct * audio.duration;
+    });
+    speedBtns.forEach(function (sb) {
+      sb.addEventListener('click', function () {
+        speedBtns.forEach(function (b) { b.classList.remove('active'); });
+        sb.classList.add('active');
+        audio.playbackRate = parseFloat(sb.dataset.speed);
+      });
+    });
+  });
+})();
+</script>
 
 <script>
 /* ── Animation canvas : courbe d'edging avec flamme animée ─── */
