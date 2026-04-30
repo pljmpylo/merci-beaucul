@@ -1,4 +1,32 @@
 <!DOCTYPE html>
+<!--
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  CODE D'INTÉGRATION KAJABI · Lâcher prise / B1 (réactif aux toggles)
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ► CAS 1 · Bloc « Custom Code » Kajabi (rendu inline dans la page) :
+    Colle ce fichier tel quel. Les toggles s'animent, le flux de la
+    page s'ajuste naturellement, rien d'autre à faire.
+
+  ► CAS 2 · Iframe (bloc embed, ou <iframe src="..."> custom) :
+    Ce bloc envoie sa hauteur au parent via postMessage à chaque
+    ouverture/fermeture de toggle. Pour que l'iframe se redimensionne,
+    colle ce snippet dans le code custom global de la page parente :
+
+    <script>
+    window.addEventListener('message', function(e){
+      if (e.data && e.data.type === 'mbc-resize'){
+        // ↓ adapte le sélecteur à ton iframe
+        var f = document.querySelector('iframe[data-mbc="lacher-prise-b1"]');
+        if (f) f.style.height = e.data.height + 'px';
+      }
+    });
+    </script>
+
+    Et sur l'iframe côté parent, ajoute l'attribut :
+      <iframe data-mbc="lacher-prise-b1" src="..." style="width:100%;border:0;"></iframe>
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+-->
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -130,6 +158,43 @@
     <p style="font-family:'Lora',serif; font-size:17px; font-style:italic; line-height:1.7; color:#450100; margin:0;">Si tu n'y arrives pas spontanément, c'est juste que ton corps a besoin de plus de sécurité, moins de pression, et de nouvelles habitudes.</p>
   </div>
 </div>
+
+<!-- ── SCRIPT RÉACTIVITÉ TOGGLES ─────── -->
+<script>
+(function(){
+  // Envoie la hauteur du document au parent (utile en contexte iframe)
+  function postHeight(){
+    try {
+      var h = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.offsetHeight
+      );
+      window.parent.postMessage({ type: 'mbc-resize', height: h }, '*');
+    } catch(e){}
+  }
+
+  // À chaque clic (toggles), on pulse la hauteur sur la fenêtre de transition (~500ms)
+  document.addEventListener('click', function(){
+    [60, 180, 320, 520, 720].forEach(function(ms){ setTimeout(postHeight, ms); });
+  });
+
+  // Quand une transition CSS finit (ouverture/fermeture du panneau)
+  document.addEventListener('transitionend', postHeight);
+
+  // Cycle de vie standard
+  postHeight();
+  document.addEventListener('DOMContentLoaded', postHeight);
+  window.addEventListener('load', postHeight);
+  window.addEventListener('resize', postHeight);
+
+  // Filet de sécurité : tout changement de layout déclenche un broadcast
+  if (typeof ResizeObserver !== 'undefined') {
+    try { new ResizeObserver(postHeight).observe(document.body); } catch(e){}
+  }
+})();
+</script>
 
 </body>
 </html>
