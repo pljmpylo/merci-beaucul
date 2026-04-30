@@ -11,19 +11,6 @@
   body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
 
   .section-title { margin-bottom: 20px; }
-  .section-tag {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: #8A1B1A;
-    background: #FFFAFD;
-    padding: 6px 14px;
-    border-radius: 999px;
-    border: 1px solid #E8D5D5;
-    margin-bottom: 10px;
-  }
   .section-heading {
     font-size: 22px;
     font-weight: 800;
@@ -39,7 +26,7 @@
   }
 
   .category-title {
-    margin: 32px 0 14px;
+    margin: 0 0 14px;
   }
   .category-num {
     display: inline-block;
@@ -55,6 +42,13 @@
     font-weight: 800;
     color: #450100;
     line-height: 1.3;
+  }
+
+  /* ── DIVIDER ─────────────────── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #E8D5D5 20%, #E8D5D5 80%, transparent 100%);
+    margin: 36px 0;
   }
 
   /* ── Tool cards ──── */
@@ -82,10 +76,6 @@
   }
   .tool-card.quiz { border-top: 4px solid #8A1B1A; }
   .tool-card.fiche { border-top: 4px solid #DC143C; }
-  .tool-card.fiche-full {
-    grid-column: 1 / -1;
-    border-top: 4px solid #F5A623;
-  }
 
   .tool-header {
     display: flex;
@@ -159,7 +149,69 @@
     line-height: 1.55;
   }
 
-  /* ── Toggle ──── */
+  /* ── EXERCICE block (rose gradient + bord rouge) ──── */
+  .exo-block {
+    background: linear-gradient(135deg, #FFFAFD 0%, #FFF5F5 100%);
+    border: 1.5px solid #E8D5D5;
+    border-left: 4px solid #DC143C;
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin: 18px 0 0;
+  }
+  .exo-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .exo-text-wrap {
+    flex: 1 1 240px;
+    min-width: 0;
+  }
+  .exo-tag {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin: 0 0 6px;
+  }
+  .exo-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.35;
+    margin: 0;
+  }
+  .exo-sub {
+    font-size: 13.5px;
+    color: #6a4545;
+    line-height: 1.55;
+    margin: 6px 0 0;
+  }
+  .notion-cta {
+    margin-left: auto;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    border: 1.5px solid #DC143C;
+    color: #8A1B1A;
+    font-family: 'Raleway', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    padding: 7px 13px;
+    border-radius: 999px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+  .notion-cta:hover { background: #DC143C; color: #fff; }
+
+  /* ── Toggle (yellow variant) ──── */
   .toggle {
     border: 1.5px solid #E8D5D5;
     border-radius: 18px;
@@ -167,6 +219,10 @@
     margin-top: 14px;
     background: #fff;
   }
+  .toggle.yellow { border-color: #FFDE59; }
+  .toggle.yellow .toggle-head { background: #FFFBEA; }
+  .toggle.yellow .toggle-title { color: #8A1B1A; }
+  .toggle.yellow .toggle-body-inner { border-top-color: #F5E5A0; background: #fff; }
   .toggle-head {
     display: flex;
     align-items: center;
@@ -211,7 +267,7 @@
     font-size: 13.5px;
     line-height: 1.65;
     color: #2b1212;
-    margin: 14px 0 12px;
+    margin: 0 0 12px;
   }
 
   .el-scroll-hint {
@@ -289,7 +345,6 @@
   }
   .el-table tbody tr:nth-child(even) td:first-child { background: #FFF5F5; }
 
-  /* Section dividers for col groups */
   .el-table .divider-donner { border-right: 2px solid #E8D5D5 !important; }
 
   @media (max-width: 720px) {
@@ -306,13 +361,12 @@
 
 <!-- ── HEADER ─────────────────── -->
 <div class="section-title">
-  <div class="section-tag">🛠️ Bloc 2</div>
   <div class="section-heading">Les outils</div>
   <div class="section-sub">Des supports à utiliser en solo ou à partager à l'autre — à recontextualiser à chaque usage.</div>
 </div>
 
 <!-- ════════════════════════════════ -->
-<!-- 4.1 LES QUIZ                     -->
+<!-- I · LES QUIZ                     -->
 <!-- ════════════════════════════════ -->
 <div class="category-title">
   <div class="category-num">I · Les quiz</div>
@@ -365,8 +419,11 @@
 
 </div>
 
+<!-- ── DIVIDER ─────────────── -->
+<div class="divider"></div>
+
 <!-- ════════════════════════════════ -->
-<!-- 4.2 LES FICHES                   -->
+<!-- II · LES FICHES                  -->
 <!-- ════════════════════════════════ -->
 <div class="category-title">
   <div class="category-num">II · Les fiches</div>
@@ -430,79 +487,83 @@
     </div>
   </div>
 
-  <!-- Fiche 4 Liste envies / limites (full width) -->
-  <div class="tool-card fiche-full">
-    <div class="tool-header">
-      <span class="tool-emoji">📋</span>
-      <div class="tool-title">Liste des envies &amp; limites</div>
-    </div>
-    <div class="tool-content">
-      <p class="el-intro">Pour chaque zone ou activité, positionne-toi en <strong>donner</strong> et en <strong>recevoir</strong> selon 4 niveaux : j'aime / je veux tester / je sais pas / non.</p>
+</div>
 
-      <div class="toggle">
-        <div class="toggle-head" onclick="var n=this.nextElementSibling; var o=n.style.maxHeight&&n.style.maxHeight!=='0px'; n.style.maxHeight=o?'0px':n.scrollHeight+'px'; n.style.opacity=o?'0':'1'; var a=this.querySelector('.toggle-arrow'); if(a) a.style.transform=o?'rotate(0deg)':'rotate(180deg)';">
-          <div class="toggle-title">
-            <span style="font-size:18px;">👉</span>
-            <span>Ouvrir la grille complète (28 zones · donner &amp; recevoir)</span>
-          </div>
-          <span class="toggle-arrow">&#8964;</span>
-        </div>
-        <div class="toggle-body">
-          <div class="toggle-body-inner">
-            <div class="el-scroll-hint">← fais défiler horizontalement →</div>
-            <div class="el-table-wrap">
-              <table class="el-table">
-                <thead>
-                  <tr>
-                    <th rowspan="2" style="text-align:left;">Zone / activité</th>
-                    <th colspan="4" class="donner">👐 Donner</th>
-                    <th colspan="4" class="recevoir">🤲 Recevoir</th>
-                  </tr>
-                  <tr>
-                    <th class="col-aime">J'aime</th>
-                    <th class="col-test">Je veux test</th>
-                    <th class="col-ssp">Je sais pas</th>
-                    <th class="col-non divider-donner">Non</th>
-                    <th class="col-aime">J'aime</th>
-                    <th class="col-test">Je veux test</th>
-                    <th class="col-ssp">Je sais pas</th>
-                    <th class="col-non">Non</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr><td>Tête &amp; visage (massage / contact)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Cou &amp; épaules</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Dos &amp; bas du dos</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Poitrine / seins / tétons</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Ventre &amp; hanches</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Fesses</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Jambes &amp; pieds</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Baisers bouche / visage</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Baisers cou / poitrine</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Baisers ventre / sexe / anus</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Lécher / sucer seins / tétons</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Lécher / sucer sexe / anus</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Mordre (zones ok à préciser)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Griffer / agripper / tirer cheveux</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Chatouilles (zones ok)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Claques / spanking (zones ok)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Pénétration orale</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Pénétration vaginale</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Pénétration anale</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Doigts (bouche / sexe / anus)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Jouets (vibro, plug, dildo…)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Lien / contention (corde, menottes)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Jeu de pouvoir (dom / sub, ordres…)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Dirty talk / humiliation consentie</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Contrôle / refus d'orgasme</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Multi-partenaires (3, orgie…)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Voyeurisme / être regardé·e</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Jeux avec fluides corporels</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                  <tr><td>Autre (à préciser)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+<!-- ── EXERCICE · Liste envies & limites (full width) ─────── -->
+<div class="exo-block">
+
+  <div class="exo-header">
+    <div class="exo-text-wrap">
+      <p class="exo-tag">✏️ Exercice</p>
+      <p class="exo-title">Liste des envies &amp; limites</p>
+      <p class="exo-sub">Pour chaque zone ou activité, positionne-toi en <strong>donner</strong> et en <strong>recevoir</strong> selon 4 niveaux : j'aime / je veux tester / je sais pas / non.</p>
+    </div>
+    <a href="https://even-balloon-f23.notion.site/Mon-journal-DPO-Tableaux-remplir-34b72e4fbd7781ecbabedd11c61be2da?source=copy_link" target="_blank" rel="noopener noreferrer" class="notion-cta">📝 Remplir sur Notion</a>
+  </div>
+
+  <!-- Toggle jaune avec la grille 28 zones -->
+  <div class="toggle yellow" style="margin-top: 0;">
+    <div class="toggle-head" onclick="var n=this.nextElementSibling; var o=n.style.maxHeight&&n.style.maxHeight!=='0px'; n.style.maxHeight=o?'0px':n.scrollHeight+'px'; n.style.opacity=o?'0':'1'; var a=this.querySelector('.toggle-arrow'); if(a) a.style.transform=o?'rotate(0deg)':'rotate(180deg)';">
+      <div class="toggle-title">
+        <span style="font-size:18px;">👉</span>
+        <span>Ouvrir la grille complète (28 zones · donner &amp; recevoir)</span>
+      </div>
+      <span class="toggle-arrow">&#8964;</span>
+    </div>
+    <div class="toggle-body">
+      <div class="toggle-body-inner">
+        <div class="el-scroll-hint">← fais défiler horizontalement →</div>
+        <div class="el-table-wrap">
+          <table class="el-table">
+            <thead>
+              <tr>
+                <th rowspan="2" style="text-align:left;">Zone / activité</th>
+                <th colspan="4" class="donner">👐 Donner</th>
+                <th colspan="4" class="recevoir">🤲 Recevoir</th>
+              </tr>
+              <tr>
+                <th class="col-aime">J'aime</th>
+                <th class="col-test">Je veux test</th>
+                <th class="col-ssp">Je sais pas</th>
+                <th class="col-non divider-donner">Non</th>
+                <th class="col-aime">J'aime</th>
+                <th class="col-test">Je veux test</th>
+                <th class="col-ssp">Je sais pas</th>
+                <th class="col-non">Non</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Tête &amp; visage (massage / contact)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Cou &amp; épaules</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Dos &amp; bas du dos</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Poitrine / seins / tétons</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Ventre &amp; hanches</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Fesses</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Jambes &amp; pieds</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Baisers bouche / visage</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Baisers cou / poitrine</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Baisers ventre / sexe / anus</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Lécher / sucer seins / tétons</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Lécher / sucer sexe / anus</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Mordre (zones ok à préciser)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Griffer / agripper / tirer cheveux</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Chatouilles (zones ok)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Claques / spanking (zones ok)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Pénétration orale</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Pénétration vaginale</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Pénétration anale</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Doigts (bouche / sexe / anus)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Jouets (vibro, plug, dildo…)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Lien / contention (corde, menottes)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Jeu de pouvoir (dom / sub, ordres…)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Dirty talk / humiliation consentie</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Contrôle / refus d'orgasme</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Multi-partenaires (3, orgie…)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Voyeurisme / être regardé·e</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Jeux avec fluides corporels</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>Autre (à préciser)</td><td></td><td></td><td></td><td class="divider-donner"></td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
