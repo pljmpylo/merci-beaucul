@@ -3,279 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Moteurs & Freins — Merci Beaucul</title>
+<title>Moteurs &amp; Freins — Merci Beaucul</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: transparent; overflow-x: hidden; }
   body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
 
-  .h-section {
-    font-size: 16px;
-    font-weight: 800;
-    color: #450100;
-    margin: 0 0 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .h-section.mt { margin-top: 28px; }
+  /* ── BIG STEP TOGGLES ─────────────── */
+  .step { border: 1.5px solid #E8D5D5; border-radius: 18px; overflow: hidden; margin-bottom: 16px; background: #fff; }
+  .step-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; cursor: pointer; background: #fff; user-select: none; gap: 12px; }
+  .step-title { font-size: 16px; font-weight: 800; color: #450100; line-height: 1.35; }
+  .step-arrow { font-size: 24px; color: #DC143C; line-height: 1; transition: transform 0.3s; flex-shrink: 0; }
+  .step-body { max-height: 0; overflow: hidden; transition: max-height 0.6s ease, opacity 0.4s ease; opacity: 0; }
+  .step-body-inner { padding: 4px 24px 24px; border-top: 1px solid #F0E0E0; }
 
-  /* ── Toggles ────────────────────── */
-  .tog {
-    border: 1.5px solid #E8D5D5;
-    border-radius: 18px;
-    overflow: hidden;
-    margin-bottom: 10px;
-    background: #fff;
-  }
-  .tog.yellow { border-color: #FFDE59; }
-  .tog.yellow .tog-head { background: #FFFBEA; }
-  .tog-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 22px;
-    cursor: pointer;
-    background: #fff;
-    user-select: none;
-    gap: 12px;
-  }
-  .tog-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #8a1b1a;
-  }
-  .tog-title .num {
-    font-size: 16px;
-    color: #1a0505;
-  }
-  .tog-arrow {
-    font-size: 22px;
-    color: #dc143c;
-    line-height: 1;
-    transition: transform 0.3s;
-    flex-shrink: 0;
-  }
-  .tog-body {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease, opacity 0.35s ease;
-    opacity: 0;
-  }
-  .tog-body-inner {
-    padding: 4px 22px 22px;
-    border-top: 1px solid #F0E0E0;
-  }
-  .tog-body-inner > p:first-child { margin-top: 14px; }
-  .tog-arrow-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  .tog-arrow-row:first-of-type { margin-top: 14px; }
-  .tog-arrow-row .red {
-    color: #dc143c;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .tog-arrow-row p {
-    font-size: 14px;
-    color: #444;
-    line-height: 1.7;
-    margin: 0;
-  }
-  .tog-arrow-row p strong { color: #450100; }
+  /* ── A. / B. headers ───── */
+  .ab-head { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #1a0505; margin: 22px 0 14px; }
+  .ab-head:first-child { margin-top: 14px; }
+
+  /* ── Category labels (rouge soulignés) ───── */
+  .cat-block { margin-bottom: 14px; }
+  .cat-label { font-size: 14px; font-weight: 700; color: #8A1B1A; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+  .cat-arrow-row { display: flex; align-items: flex-start; gap: 8px; margin-top: 6px; padding-left: 4px; }
+  .cat-arrow-row .red { color: #DC143C; flex-shrink: 0; margin-top: 2px; font-size: 14px; }
+  .cat-arrow-row p { font-size: 14px; color: #444; line-height: 1.7; margin: 0; font-style: italic; }
+  .cat-arrow-row p strong { color: #450100; font-style: normal; }
+
+  /* ── Inline freins ── */
+  .frein-line { margin-bottom: 10px; line-height: 1.7; }
+  .frein-line .cat-label { margin-right: 6px; }
+  .frein-line .red { color: #DC143C; margin: 0 6px; font-size: 14px; }
+  .frein-line .text { font-size: 14px; color: #444; font-style: italic; }
 
   /* ── Tableau ────────────────────── */
-  .tbl-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    border-radius: 14px;
-    margin-top: 14px;
-  }
-  .tbl {
-    border: 1.5px solid #E8D5D5;
-    border-radius: 14px;
-    overflow: hidden;
-    min-width: 500px;
-  }
-  .tbl-row {
-    display: grid;
-    grid-template-columns: 1.2fr 1.6fr 1.6fr;
-  }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 14px; margin-top: 8px; }
+  .tbl { border: 1.5px solid #E8D5D5; border-radius: 14px; overflow: hidden; min-width: 500px; background: #fff; }
+  .tbl-row { display: grid; grid-template-columns: 1.2fr 1.6fr 1.6fr; }
   .tbl-row.head { background: #FFFAFD; }
-  .tbl-row.head > div {
-    padding: 13px 16px;
-    font-size: 12px;
-    font-weight: bold;
-    color: #450100;
-    line-height: 1.4;
-  }
+  .tbl-row.head > div { padding: 13px 16px; font-size: 12px; font-weight: bold; color: #450100; line-height: 1.4; }
   .tbl-row.head > div:not(:last-child) { border-right: 1px solid #E8D5D5; }
   .tbl-row.body { background: #fff; border-bottom: 1px solid #F0E0E0; }
   .tbl-row.body > div { padding: 14px 16px; font-size: 13px; line-height: 1.65; }
   .tbl-row.body > div:not(:last-child) { border-right: 1px solid #E8D5D5; }
-  .tbl-row.body .label {
-    color: #450100;
-    font-style: italic;
-    line-height: 1.6;
-  }
+  .tbl-row.body .label { color: #450100; font-style: italic; line-height: 1.6; }
   .tbl-row.body .cell { color: #444; }
   .tbl-row.empty { background: #FFFAFD; min-height: 14px; }
 
-  /* ── Iframe sketchfab/external ── */
-  .external-iframe-wrap {
-    border-radius: 18px;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
+  .cta-notion { display: inline-flex; align-items: center; gap: 6px; background: #fff; border: 1.5px solid #DC143C; color: #8A1B1A; font-family: 'Raleway',sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.4px; padding: 7px 13px; border-radius: 999px; text-decoration: none; white-space: nowrap; margin-top: 10px; }
 
-  /* ── 2-col layout (respiration ↔ audio) ── */
-  .mb-2col { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px; }
+  /* ── Ex toggle ── */
+  .ex-toggle { border: 1.5px solid #E8D5D5; border-radius: 14px; overflow: hidden; margin-top: 14px; background: #fff; }
+  .ex-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; cursor: pointer; background: #FFFAFD; user-select: none; gap: 12px; }
+  .ex-title { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: bold; color: #8A1B1A; }
+  .ex-arrow { font-size: 20px; color: #DC143C; transition: transform 0.3s; flex-shrink: 0; }
+  .ex-body { max-height: 0; overflow: hidden; transition: max-height 0.5s ease, opacity 0.35s ease; opacity: 0; }
+
+  .external-iframe-wrap { border-radius: 18px; overflow: hidden; margin-bottom: 0; }
+
+  /* ── 2-col layout ── */
+  .mb-2col { display: flex; gap: 20px; align-items: flex-start; }
   .mb-2col > .mb-col { flex: 1 1 0; min-width: 0; }
-  .mb-2col .external-iframe-wrap,
-  .mb-2col > .mb-col > div:last-child { margin-bottom: 0; }
   @media (max-width: 720px) {
     .mb-2col { flex-direction: column; gap: 24px; }
   }
 
-  /* ── Custom audio player ───────── */
+  /* ── Audio player ───────── */
   .mb-player { display: flex; flex-direction: column; gap: 0; }
   .mb-player-row { display: flex; align-items: center; gap: 14px; }
-  .mb-play-btn {
-    flex-shrink: 0;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: #8A1B1A;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 3px 10px rgba(138, 27, 26, 0.25);
-    transition: all .2s ease;
-    padding: 0;
-  }
+  .mb-play-btn { flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%; background: #8A1B1A; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(138, 27, 26, 0.25); transition: all .2s ease; padding: 0; }
   .mb-play-btn:hover { background: #450100; transform: scale(1.05); }
   .mb-play-btn:active { transform: scale(0.97); }
   .mb-play-btn svg { width: 18px; height: 18px; fill: #fff; }
   .mb-play-btn.playing .mb-icon-play { display: none; }
   .mb-play-btn:not(.playing) .mb-icon-pause { display: none; }
   .mb-meter { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
-  .mb-progress {
-    height: 6px;
-    background: #F0E0E0;
-    border-radius: 999px;
-    cursor: pointer;
-    position: relative;
-  }
-  .mb-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #8A1B1A, #DC143C);
-    border-radius: 999px;
-    width: 0%;
-    transition: width 0.1s linear;
-    pointer-events: none;
-  }
-  .mb-times {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    font-weight: 600;
-    color: #6a4545;
-    font-variant-numeric: tabular-nums;
-    line-height: 1;
-  }
+  .mb-progress { height: 6px; background: #F0E0E0; border-radius: 999px; cursor: pointer; position: relative; }
+  .mb-progress-fill { height: 100%; background: linear-gradient(90deg, #8A1B1A, #DC143C); border-radius: 999px; width: 0%; transition: width 0.1s linear; pointer-events: none; }
+  .mb-times { display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: #6a4545; font-variant-numeric: tabular-nums; line-height: 1; }
   .mb-cur { color: #8A1B1A; font-weight: 700; }
-  .mb-speeds {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #F0E0E0;
-  }
-  .mb-speed {
-    font-family: 'Raleway', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    color: #8A1B1A;
-    background: #fff;
-    border: 1.5px solid #E8D5D5;
-    padding: 4px 10px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: all .2s;
-  }
+  .mb-speeds { display: flex; justify-content: center; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #F0E0E0; }
+  .mb-speed { font-family: 'Raleway',sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; color: #8A1B1A; background: #fff; border: 1.5px solid #E8D5D5; padding: 4px 10px; border-radius: 999px; cursor: pointer; transition: all .2s; }
   .mb-speed:hover { border-color: #8A1B1A; }
   .mb-speed.active { background: #8A1B1A; color: #fff; border-color: #8A1B1A; }
 </style>
 </head>
 <body>
 
-<!-- ══════════ MOTEURS ══════════ -->
-<p class="h-section">🔥 Mes moteurs</p>
+<!-- ══════════ ÉTAPE 1 ══════════ -->
+<div class="step">
+  <div class="step-head" onclick="mbStepToggle(this)">
+    <div class="step-title">Étape 1 : Identifier et composer avec ses moteurs et freins</div>
+    <span class="step-arrow">⌄</span>
+  </div>
+  <div class="step-body">
+    <div class="step-body-inner">
 
-<!-- Toggle 1 -->
-<div class="tog">
-  <div class="tog-head" onclick="mbToggle(this)">
-    <div class="tog-title"><span class="num">1.</span><span>Contexte qui m'excite facilement</span></div>
-    <span class="tog-arrow">⌄</span>
-  </div>
-  <div class="tog-body">
-    <div class="tog-body-inner">
-      <div class="tog-arrow-row"><span class="red">→</span><p>Où est-ce que j'ai le plus envie / le plus de plaisir ? <em>(lit, douche, hôtel, chez moi seul•e, sexting…)</em></p></div>
-      <div class="tog-arrow-row"><span class="red">→</span><p>À quels moments de la journée / semaine je me sens le plus dispo au plaisir ?</p></div>
-    </div>
-  </div>
-</div>
+      <!-- ══════════ MOTEURS ══════════ -->
+      <p class="ab-head">🔥 A. Identifier ses moteurs</p>
 
-<!-- Toggle 2 -->
-<div class="tog">
-  <div class="tog-head" onclick="mbToggle(this)">
-    <div class="tog-title"><span class="num">2.</span><span>Stimulations qui allument mon moteur</span></div>
-    <span class="tog-arrow">⌄</span>
-  </div>
-  <div class="tog-body">
-    <div class="tog-body-inner">
-      <div class="tog-arrow-row"><span class="red">→</span><p><strong>Touchers :</strong> doux, fermes, rythmiques, pression sur la vulve, massages du périnée, stimulation du gland du clito, pénétration lente…</p></div>
-      <div class="tog-arrow-row"><span class="red">→</span><p><strong>Sens :</strong> sons (gémissements, musique), odeurs (parfum, peau), lumières tamisées, textures (soie, mains rugueuses), goûts</p></div>
-      <div class="tog-arrow-row"><span class="red">→</span><p><strong>Fantasmes, scénarios, attitudes :</strong> être regardé·e, diriger, se laisser guider, paroles explicites…</p></div>
-    </div>
-  </div>
-</div>
+      <div class="cat-block">
+        <span class="cat-label">Contextes</span>
+        <div class="cat-arrow-row"><span class="red">→</span><p><em>Où est-ce que j'ai le plus envie / le plus de plaisir ? (lit, douche, hôtel, chez moi seul·e, sexting…)</em></p></div>
+        <div class="cat-arrow-row"><span class="red">→</span><p><em>À quels moments de la journée / semaine je me sens le plus dispo au plaisir ?</em></p></div>
+      </div>
 
-<!-- Toggle 3 -->
-<div class="tog" style="margin-bottom: 20px;">
-  <div class="tog-head" onclick="mbToggle(this)">
-    <div class="tog-title"><span class="num">3.</span><span>États internes qui m'aident à décoller</span></div>
-    <span class="tog-arrow">⌄</span>
-  </div>
-  <div class="tog-body">
-    <div class="tog-body-inner">
-      <div class="tog-arrow-row"><span class="red">→</span><p>Comment est mon corps quand je me sens très excité·e ? <em>(respiration, muscles, chaleur, lubrification…)</em></p></div>
-      <div class="tog-arrow-row"><span class="red">→</span><p>Comment est mon mental ? <em>(présent, rêveur, joueur, connecté à la personne…)</em></p></div>
-    </div>
-  </div>
-</div>
+      <div class="cat-block">
+        <span class="cat-label">Stimulations</span>
+        <div class="cat-arrow-row"><span class="red">→</span><p><em><strong>Touchers :</strong> doux, fermes, rythmiques, pression sur la vulve, massages du périnée, stimulation du gland du clito, pénétration lente…</em></p></div>
+        <div class="cat-arrow-row"><span class="red">→</span><p><em><strong>Sens :</strong> sons (gémissements, musique), odeurs (parfum, peau), lumières tamisées, textures (soie, mains rugueuses), goûts</em></p></div>
+        <div class="cat-arrow-row"><span class="red">→</span><p><em><strong>Fantasmes, scénarios, attitudes :</strong> être regardé·e, diriger, se laisser guider, paroles explicites…</em></p></div>
+      </div>
 
-<!-- Tableau moteurs -->
-<div class="tog yellow">
-  <div class="tog-head" onclick="mbToggle(this)">
-    <div class="tog-title"><span style="font-size: 16px;">✏️</span><span>Tableau à remplir avec tes moteurs</span></div>
-    <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
-      <a href="https://even-balloon-f23.notion.site/Mon-journal-DPO-Tableaux-remplir-34b72e4fbd7781ecbabedd11c61be2da?source=copy_link" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" style="display: inline-flex; align-items: center; gap: 6px; background: #fff; border: 1.5px solid #DC143C; color: #8A1B1A; font-family: 'Raleway', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.4px; padding: 7px 13px; border-radius: 999px; text-decoration: none; white-space: nowrap;">📝 Remplir sur Notion</a>
-      <span class="tog-arrow">⌄</span>
-    </div>
-  </div>
-  <div class="tog-body">
-    <div class="tog-body-inner" style="padding: 0 14px 14px;">
+      <div class="cat-block">
+        <span class="cat-label">États internes</span>
+        <div class="cat-arrow-row"><span class="red">→</span><p><em>Comment est mon corps quand je me sens très excité·e ? (respiration, muscles, chaleur, lubrification…)</em></p></div>
+        <div class="cat-arrow-row"><span class="red">→</span><p><em>Comment est mon mental ? (présent, rêveur, joueur, connecté à la personne…)</em></p></div>
+      </div>
+
+      <p class="ab-head">B. Composer avec</p>
+
       <div class="tbl-wrap">
         <div class="tbl">
           <div class="tbl-row head">
@@ -292,80 +139,40 @@
           <div class="tbl-row empty">&nbsp;</div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
-<!-- Toggle exemples -->
-<div class="tog" style="margin-bottom: 32px;">
-  <div class="tog-head" onclick="mbToggle(this)">
-    <div class="tog-title"><span style="font-size: 16px;">💡</span><span>Plein d'exemples non exhaustifs</span></div>
-    <span class="tog-arrow">⌄</span>
-  </div>
-  <div class="tog-body">
-    <div class="tog-body-inner" style="padding: 16px 22px 22px;">
-      <p style="font-size: 14px; color: #444; line-height: 2.0; margin: 0;">gémissements, peau à peau, transpiration, baisers lents, lumière tamisée, regard intense, compliments, odeurs rassurantes, massages, câlins longs, érection, caresses vulve, périnée, jeu, humour, sextos, lingerie, se sentir choisi·e, lenteur, adrénaline, musique, fantasmes, domination douce, se laisser guider, diriger, prendre son temps, respiration profonde, chaleur, douches chaudes, mains fermes, dirty talk, nuque, ventre, cuisses, sentir sa puissance, douceur, confiance, intimité, sécurité, connexion émotionnelle, spontanéité, nouveauté, hôtel, main dans les cheveux, voix, murmures à l'oreille, consentement clair, liberté de dire stop, exploration sans objectif, curiosité, auto-érotisme, masturbation, auto-regard bienveillant, fierté du corps, vulnérabilité partagée</p>
-    </div>
-  </div>
-</div>
+      <a href="https://even-balloon-f23.notion.site/Mon-journal-DPO-Tableaux-remplir-34b72e4fbd7781ecbabedd11c61be2da?source=copy_link" target="_blank" rel="noopener noreferrer" class="cta-notion">📝 Remplir sur Notion</a>
 
-<!-- ── DIVIDER ───────── -->
-<div style="height: 1px; background: linear-gradient(90deg, transparent 0%, #E8D5D5 20%, #E8D5D5 80%, transparent 100%); margin: 36px 0;">&nbsp;</div>
+      <!-- Toggle exemples interne -->
+      <div class="ex-toggle">
+        <div class="ex-head" onclick="mbExToggle(this)">
+          <div class="ex-title"><span style="font-size: 14px;">💡</span><span>Plein d'exemples non exhaustifs</span></div>
+          <span class="ex-arrow">⌄</span>
+        </div>
+        <div class="ex-body">
+          <div style="padding: 14px 18px 18px;">
+            <p style="font-size: 14px; color: #444; line-height: 2.0; margin: 0;">gémissements, peau à peau, transpiration, baisers lents, lumière tamisée, regard intense, compliments, odeurs rassurantes, massages, câlins longs, érection, caresses vulve, périnée, jeu, humour, sextos, lingerie, se sentir choisi·e, lenteur, adrénaline, musique, fantasmes, domination douce, se laisser guider, diriger, prendre son temps, respiration profonde, chaleur, douches chaudes, mains fermes, dirty talk, nuque, ventre, cuisses, sentir sa puissance, douceur, confiance, intimité, sécurité, connexion émotionnelle, spontanéité, nouveauté, hôtel, main dans les cheveux, voix, murmures à l'oreille, consentement clair, liberté de dire stop, exploration sans objectif, curiosité, auto-érotisme, masturbation, auto-regard bienveillant, fierté du corps, vulnérabilité partagée</p>
+          </div>
+        </div>
+      </div>
 
-<!-- ══════════ FREINS ══════════ -->
-<p class="h-section">🧊 Mes freins</p>
+      <!-- ── DIVIDER ───────── -->
+      <div style="height: 1px; background: linear-gradient(90deg, transparent 0%, #E8D5D5 20%, #E8D5D5 80%, transparent 100%); margin: 32px 0;">&nbsp;</div>
 
-<div class="tog">
-  <div class="tog-head" onclick="mbToggle(this)">
-    <div class="tog-title"><span>Freins physiques</span></div>
-    <span class="tog-arrow">⌄</span>
-  </div>
-  <div class="tog-body"><div class="tog-body-inner"><p style="font-size: 14px; color: #444; line-height: 1.75;">Douleur, sécheresse, fatigue, cycle menstruel, médicaments, manque de sommeil…</p></div></div>
-</div>
+      <!-- ══════════ FREINS ══════════ -->
+      <p class="ab-head">🧊 A. Identifier ses freins</p>
 
-<div class="tog">
-  <div class="tog-head" onclick="mbToggle(this)">
-    <div class="tog-title"><span>Freins émotionnels</span></div>
-    <span class="tog-arrow">⌄</span>
-  </div>
-  <div class="tog-body"><div class="tog-body-inner"><p style="font-size: 14px; color: #444; line-height: 1.75;">Peur du rejet, honte du corps, peur d'être jugée, tristesse, colère…</p></div></div>
-</div>
+      <div class="frein-line"><span class="cat-label">Physiques</span><span class="red">→</span><span class="text">Douleur, sécheresse, fatigue, cycle menstruel, médicaments, manque de sommeil…</span></div>
 
-<div class="tog">
-  <div class="tog-head" onclick="mbToggle(this)">
-    <div class="tog-title"><span>Freins contextuels</span></div>
-    <span class="tog-arrow">⌄</span>
-  </div>
-  <div class="tog-body"><div class="tog-body-inner"><p style="font-size: 14px; color: #444; line-height: 1.75;">Bruit, coloc / enfants pas loin, manque d'intimité, temps limité, disputes non résolues…</p></div></div>
-</div>
+      <div class="frein-line"><span class="cat-label">Émotionnels</span><span class="red">→</span><span class="text">Peur du rejet, honte du corps, peur d'être jugé·e, tristesse, colère…</span></div>
 
-<div class="tog">
-  <div class="tog-head" onclick="mbToggle(this)">
-    <div class="tog-title"><span>Freins mentaux</span></div>
-    <span class="tog-arrow">⌄</span>
-  </div>
-  <div class="tog-body"><div class="tog-body-inner"><p style="font-size: 14px; color: #444; line-height: 1.75;">Pression de performance ("il faut que je jouisse vite / que j'assure"), hypercontrôle, difficulté à dire non ou stop…</p></div></div>
-</div>
+      <div class="frein-line"><span class="cat-label">Contextuels</span><span class="red">→</span><span class="text">Bruit, coloc / enfants pas loin, manque d'intimité, temps limité, disputes non résolues…</span></div>
 
-<div class="tog" style="margin-bottom: 20px;">
-  <div class="tog-head" onclick="mbToggle(this)">
-    <div class="tog-title"><span>Freins liés au trauma</span></div>
-    <span class="tog-arrow">⌄</span>
-  </div>
-  <div class="tog-body"><div class="tog-body-inner"><p style="font-size: 14px; color: #444; line-height: 1.75;">Flashbacks, sensations de dégoût ou de panique, dissociation, larmes "sans raison apparente"…</p></div></div>
-</div>
+      <div class="frein-line"><span class="cat-label">Mentaux</span><span class="red">→</span><span class="text">Pression de performance ("il faut que je jouisse vite / que j'assure"), hypercontrôle, difficulté à dire non ou stop…</span></div>
 
-<!-- Tableau freins -->
-<div class="tog yellow" style="margin-bottom: 32px;">
-  <div class="tog-head" onclick="mbToggle(this)">
-    <div class="tog-title"><span style="font-size: 16px;">✏️</span><span>Tableau à remplir avec tes freins</span></div>
-    <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
-      <a href="https://even-balloon-f23.notion.site/Mon-journal-DPO-Tableaux-remplir-34b72e4fbd7781ecbabedd11c61be2da?source=copy_link" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" style="display: inline-flex; align-items: center; gap: 6px; background: #fff; border: 1.5px solid #DC143C; color: #8A1B1A; font-family: 'Raleway', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.4px; padding: 7px 13px; border-radius: 999px; text-decoration: none; white-space: nowrap;">📝 Remplir sur Notion</a>
-      <span class="tog-arrow">⌄</span>
-    </div>
-  </div>
-  <div class="tog-body">
-    <div class="tog-body-inner" style="padding: 0 14px 14px;">
+      <div class="frein-line"><span class="cat-label">Traumas</span><span class="red">→</span><span class="text">Flashbacks, sensations de dégoût ou de panique, dissociation, larmes "sans raison apparente"…</span></div>
+
+      <p class="ab-head">B. Composer avec</p>
+
       <div class="tbl-wrap">
         <div class="tbl">
           <div class="tbl-row head">
@@ -382,72 +189,82 @@
           <div class="tbl-row empty">&nbsp;</div>
         </div>
       </div>
+
+      <a href="https://even-balloon-f23.notion.site/Mon-journal-DPO-Tableaux-remplir-34b72e4fbd7781ecbabedd11c61be2da?source=copy_link" target="_blank" rel="noopener noreferrer" class="cta-notion">📝 Remplir sur Notion</a>
+
     </div>
   </div>
 </div>
 
-<!-- ── DIVIDER ───────── -->
-<div style="height: 1px; background: linear-gradient(90deg, transparent 0%, #E8D5D5 20%, #E8D5D5 80%, transparent 100%); margin: 36px 0;">&nbsp;</div>
-
-<!-- ══════════ ROW : RESPIRATION CARRÉE ↔ AUDIO GUIDÉ ══════════ -->
-<p style="font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #1a0505; margin: 0 0 16px; text-decoration: underline;">✏️ Exercices</p>
-
-<div class="mb-2col">
-
-  <!-- LEFT — Respiration carrée -->
-  <div class="mb-col">
-    <div class="external-iframe-wrap">
-      <iframe width="100%" height="430" style="border: none; display: block;" src="https://pljmpylo.github.io/merci-beaucul/kajabi_respiration_carree.html"></iframe>
-    </div>
+<!-- ══════════ ÉTAPE 2 ══════════ -->
+<div class="step">
+  <div class="step-head" onclick="mbStepToggle(this)">
+    <div class="step-title">Étape 2 : Agir directement dessus avec sa respiration</div>
+    <span class="step-arrow">⌄</span>
   </div>
+  <div class="step-body">
+    <div class="step-body-inner">
 
-  <!-- RIGHT — Audio guidé -->
-  <div class="mb-col">
-    <div style="background: #fff; border: 1.5px solid #E8D5D5; border-radius: 18px; padding: 20px 22px; margin-bottom: 20px; border-top: 4px solid #8A1B1A;">
-      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #F0E0E0;">
-        <span style="font-size: 22px; flex-shrink: 0;">🎧</span>
-        <div>
-          <div style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #dc143c; margin-bottom: 3px;">Guide audio</div>
-          <div style="font-size: 15px; font-weight: 800; color: #450100; line-height: 1.35;">Exercice de respiration guidée</div>
-        </div>
-      </div>
-      <div class="mb-player">
-        <div class="mb-player-row">
-          <button class="mb-play-btn" data-play aria-label="Lecture">
-            <svg class="mb-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg class="mb-icon-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
-          </button>
-          <div class="mb-meter">
-            <div class="mb-progress" data-progress><div class="mb-progress-fill" data-fill></div></div>
-            <div class="mb-times"><span class="mb-cur" data-cur>0:00</span><span data-tot>--:--</span></div>
+      <div class="mb-2col" style="margin-top: 14px;">
+
+        <!-- LEFT — Respiration carrée -->
+        <div class="mb-col">
+          <div class="external-iframe-wrap">
+            <iframe width="100%" height="430" style="border: none; display: block;" src="https://pljmpylo.github.io/merci-beaucul/kajabi_respiration_carree.html"></iframe>
           </div>
         </div>
-        <div class="mb-speeds">
-          <button class="mb-speed" data-speed="0.75">0.75&times;</button>
-          <button class="mb-speed active" data-speed="1">1&times;</button>
-          <button class="mb-speed" data-speed="1.25">1.25&times;</button>
-          <button class="mb-speed" data-speed="1.5">1.5&times;</button>
+
+        <!-- RIGHT — Audio guidé -->
+        <div class="mb-col">
+          <div style="background: #fff; border: 1.5px solid #E8D5D5; border-radius: 18px; padding: 20px 22px; border-top: 4px solid #8A1B1A;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #F0E0E0;">
+              <span style="font-size: 22px; flex-shrink: 0;">🎧</span>
+              <div>
+                <div style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #DC143C; margin-bottom: 3px;">Guide audio</div>
+                <div style="font-size: 15px; font-weight: 800; color: #450100; line-height: 1.35;">Exercice de respiration guidée</div>
+              </div>
+            </div>
+            <div class="mb-player">
+              <div class="mb-player-row">
+                <button class="mb-play-btn" data-play aria-label="Lecture">
+                  <svg class="mb-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  <svg class="mb-icon-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+                </button>
+                <div class="mb-meter">
+                  <div class="mb-progress" data-progress><div class="mb-progress-fill" data-fill></div></div>
+                  <div class="mb-times"><span class="mb-cur" data-cur>0:00</span><span data-tot>--:--</span></div>
+                </div>
+              </div>
+              <div class="mb-speeds">
+                <button class="mb-speed" data-speed="0.75">0.75&times;</button>
+                <button class="mb-speed active" data-speed="1">1&times;</button>
+                <button class="mb-speed" data-speed="1.25">1.25&times;</button>
+                <button class="mb-speed" data-speed="1.5">1.5&times;</button>
+              </div>
+              <audio data-audio preload="metadata">
+                <source src="https://pljmpylo.github.io/merci-beaucul/dpo_audio_respiration.mp3" type="audio/mpeg">
+              </audio>
+            </div>
+          </div>
         </div>
-        <audio data-audio preload="metadata">
-          <source src="https://pljmpylo.github.io/merci-beaucul/dpo_audio_respiration.mp3" type="audio/mpeg">
-        </audio>
+
       </div>
+
     </div>
   </div>
-
 </div>
 
 <!-- ══════════ RESSOURCE CITÉE (toggle) ══════════ -->
-<div style="background: #F5EDE3; border-radius: 18px; overflow: hidden; margin: 0 0 16px;">
+<div style="background: #F5EDE3; border-radius: 18px; overflow: hidden; margin: 16px 0 0;">
   <div onclick="mbRsrcToggle(this)" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 22px; cursor: pointer; user-select: none; gap: 12px;">
     <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0;">
       <span style="font-size: 18px; flex-shrink: 0; line-height: 1.2;">📖</span>
       <div style="min-width: 0;">
-        <div style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #dc143c; margin-bottom: 4px;">Ressource citée</div>
+        <div style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #DC143C; margin-bottom: 4px;">Ressource citée</div>
         <div style="font-family: 'Lora',serif; font-size: 14px; font-weight: 600; color: #450100; line-height: 1.4;">Respirer<span style="font-family: 'Raleway',sans-serif; font-weight: 500; color: #8a6a5a; font-size: 12.5px;"> — James Nestor</span></div>
       </div>
     </div>
-    <span class="mb-rsrc-arrow" style="display: inline-block; font-size: 22px; color: #dc143c; transition: transform .3s; line-height: 1; flex-shrink: 0;">&#8964;</span>
+    <span class="mb-rsrc-arrow" style="display: inline-block; font-size: 22px; color: #DC143C; transition: transform .3s; line-height: 1; flex-shrink: 0;">⌄</span>
   </div>
   <div class="mb-rsrc-body" style="max-height: 0; overflow: hidden; transition: max-height .5s ease, opacity .35s ease; opacity: 0;">
     <div style="padding: 4px 24px 22px; border-top: 1px solid #E0D0BB;">
@@ -463,6 +280,36 @@
 </div>
 
 <script>
+function mbStepToggle(head) {
+  var body = head.nextElementSibling;
+  var arrow = head.querySelector('.step-arrow');
+  var open = body.style.maxHeight && body.style.maxHeight !== '0px';
+  body.style.maxHeight = open ? '0px' : body.scrollHeight + 'px';
+  body.style.opacity = open ? '0' : '1';
+  arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+  if (typeof window.__post === 'function') {
+    setTimeout(window.__post, 200);
+    setTimeout(window.__post, 700);
+  }
+}
+
+function mbExToggle(head) {
+  var body = head.nextElementSibling;
+  var arrow = head.querySelector('.ex-arrow');
+  var open = body.style.maxHeight && body.style.maxHeight !== '0px';
+  body.style.maxHeight = open ? '0px' : body.scrollHeight + 'px';
+  body.style.opacity = open ? '0' : '1';
+  arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+  var parent = head.closest('.step-body');
+  if (parent && parent.style.maxHeight && parent.style.maxHeight !== '0px') {
+    parent.style.maxHeight = parent.scrollHeight + 'px';
+  }
+  if (typeof window.__post === 'function') {
+    setTimeout(window.__post, 200);
+    setTimeout(window.__post, 700);
+  }
+}
+
 function mbRsrcToggle(head) {
   var body = head.nextElementSibling;
   var arrow = head.querySelector('.mb-rsrc-arrow');
@@ -470,24 +317,9 @@ function mbRsrcToggle(head) {
   body.style.maxHeight = open ? '0px' : body.scrollHeight + 'px';
   body.style.opacity = open ? '0' : '1';
   arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
-  if (typeof window.post === 'function') setTimeout(window.post, 500);
+  if (typeof window.__post === 'function') setTimeout(window.__post, 500);
 }
 
-/* ── Toggle ─── */
-function mbToggle(head) {
-  var body = head.nextElementSibling;
-  var arrow = head.querySelector('.tog-arrow');
-  var open = body.style.maxHeight && body.style.maxHeight !== '0px';
-  body.style.maxHeight = open ? '0px' : body.scrollHeight + 'px';
-  body.style.opacity = open ? '0' : '1';
-  if (arrow) arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
-  if (typeof window.__post === 'function') {
-    setTimeout(window.__post, 200);
-    setTimeout(window.__post, 600);
-  }
-}
-
-/* ── Custom audio players ─── */
 (function () {
   function fmt(sec) {
     if (!isFinite(sec) || sec < 0) sec = 0;
@@ -529,7 +361,6 @@ function mbToggle(head) {
   });
 })();
 
-/* ── Auto-resize iframe for Kajabi ── */
 (function () {
   function post() {
     try {
