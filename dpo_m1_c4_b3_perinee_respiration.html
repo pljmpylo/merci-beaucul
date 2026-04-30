@@ -139,15 +139,38 @@
   </div>
 </div>
 
-<!-- ══════════ RESSOURCE CITÉE ══════════ -->
-<div style="background: #F5EDE3; border-radius: 18px; padding: 20px 24px;">
-  <p style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #dc143c; margin: 0 0 5px;">📖 Ressource citée</p>
-  <p style="font-family: 'Lora',serif; font-size: 15px; font-weight: 600; color: #450100; margin: 0 0 3px;">Le Sentiment même de soi</p>
-  <p style="font-size: 12px; color: #8a6a5a; margin: 0 0 14px;">Antonio Damasio</p>
-  <img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/site/2148843478/products/c7a784b-7ca2-0e-5f3-0eee4d63b70e_image_7_.png" width="200" height="293" style="border-radius: 8px; display: block;" alt="Le Sentiment même de soi">
+<!-- ══════════ RESSOURCE CITÉE (toggle) ══════════ -->
+<div style="background: #F5EDE3; border-radius: 18px; overflow: hidden; margin: 0 0 16px;">
+  <div onclick="mbRsrcToggle(this)" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 22px; cursor: pointer; user-select: none; gap: 12px;">
+    <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0;">
+      <span style="font-size: 18px; flex-shrink: 0; line-height: 1.2;">📖</span>
+      <div style="min-width: 0;">
+        <div style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #dc143c; margin-bottom: 4px;">Ressource citée</div>
+        <div style="font-family: 'Lora',serif; font-size: 14px; font-weight: 600; color: #450100; line-height: 1.4;">Le Sentiment même de soi<span style="font-family: 'Raleway',sans-serif; font-weight: 500; color: #8a6a5a; font-size: 12.5px;"> — Antonio Damasio</span></div>
+      </div>
+    </div>
+    <span class="mb-rsrc-arrow" style="display: inline-block; font-size: 22px; color: #dc143c; transition: transform .3s; line-height: 1; flex-shrink: 0;">&#8964;</span>
+  </div>
+  <div class="mb-rsrc-body" style="max-height: 0; overflow: hidden; transition: max-height .5s ease, opacity .35s ease; opacity: 0;">
+    <div style="padding: 4px 24px 22px; border-top: 1px solid #E0D0BB;">
+      <p style="font-family: 'Lora',serif; font-size: 15px; font-weight: 600; color: #450100; margin: 14px 0 3px;">Le Sentiment même de soi</p>
+      <p style="font-size: 12px; color: #8a6a5a; margin: 0 0 14px;">Antonio Damasio</p>
+      <img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/site/2148843478/products/c7a784b-7ca2-0e-5f3-0eee4d63b70e_image_7_.png" width="200" height="293" style="border-radius: 8px; display: block;" alt="Le Sentiment même de soi">
+    </div>
+  </div>
 </div>
 
 <script>
+function mbRsrcToggle(head) {
+  var body = head.nextElementSibling;
+  var arrow = head.querySelector('.mb-rsrc-arrow');
+  var open = body.style.maxHeight && body.style.maxHeight !== '0px';
+  body.style.maxHeight = open ? '0px' : body.scrollHeight + 'px';
+  body.style.opacity = open ? '0' : '1';
+  arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+  if (typeof window.post === 'function') setTimeout(window.post, 500);
+}
+
 /* ── Custom audio players ─── */
 (function () {
   function fmt(sec) {
