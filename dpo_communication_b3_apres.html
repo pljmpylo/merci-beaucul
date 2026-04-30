@@ -37,7 +37,14 @@
     letter-spacing: 2.5px;
     text-transform: uppercase;
     color: #DC143C;
-    margin: 28px 0 14px;
+    margin: 0 0 14px;
+  }
+
+  /* ── DIVIDER ─────────────────── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #E8D5D5 20%, #E8D5D5 80%, transparent 100%);
+    margin: 36px 0;
   }
 
   /* ── Questions clés ──── */
@@ -79,7 +86,7 @@
     border: 1px solid #F5E6B8;
     border-radius: 16px;
     padding: 16px 20px;
-    margin: 24px 0;
+    margin: 18px 0 0;
     display: flex;
     align-items: flex-start;
     gap: 12px;
@@ -209,12 +216,76 @@
     color: #2b1212;
   }
 
+  /* ── EXERCICE block (rose gradient + bord rouge) ──── */
+  .exo-block {
+    background: linear-gradient(135deg, #FFFAFD 0%, #FFF5F5 100%);
+    border: 1.5px solid #E8D5D5;
+    border-left: 4px solid #DC143C;
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin: 0 0 18px;
+  }
+  .exo-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .exo-text-wrap {
+    flex: 1 1 240px;
+    min-width: 0;
+  }
+  .exo-tag {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin: 0 0 6px;
+  }
+  .exo-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.35;
+    margin: 0;
+  }
+  .exo-sub {
+    font-size: 13.5px;
+    color: #6a4545;
+    line-height: 1.55;
+    margin: 6px 0 0;
+  }
+  .notion-cta {
+    margin-left: auto;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    border: 1.5px solid #DC143C;
+    color: #8A1B1A;
+    font-family: 'Raleway', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    padding: 7px 13px;
+    border-radius: 999px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+  .notion-cta:hover {
+    background: #DC143C;
+    color: #fff;
+  }
+
   /* ── Fiche envies ──── */
   .envies-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 12px;
-    margin-top: 14px;
   }
   @media (min-width: 640px) {
     .envies-grid { grid-template-columns: 1fr 1fr 1fr; }
@@ -304,6 +375,12 @@
     <div class="stat-text"><strong>X %</strong> des abonné·es sont plus à l'aise de parler <em>avant / pendant / après</em> un rapport.</div>
   </div>
 </div>
+
+<!-- ── DIVIDER ────────────────── -->
+<div class="divider"></div>
+
+<!-- ── SUBHEAD : OUTILS ─── -->
+<div class="subhead">🧰 Si tu galères à parler</div>
 
 <!-- ── TOGGLE 1 · Comment poser la conversation ─────── -->
 <div class="toggle">
@@ -516,43 +593,7 @@
   </div>
 </div>
 
-<!-- ── TOGGLE 2 · Fiche envies ─────── -->
-<div class="toggle">
-  <div class="toggle-head" onclick="var n=this.nextElementSibling; var o=n.style.maxHeight&&n.style.maxHeight!=='0px'; n.style.maxHeight=o?'0px':n.scrollHeight+'px'; n.style.opacity=o?'0':'1'; var a=this.querySelector('.toggle-arrow'); if(a) a.style.transform=o?'rotate(0deg)':'rotate(180deg)';">
-    <div class="toggle-title">
-      <span style="font-size:18px;">✍️</span>
-      <span>Fiche à remplir · « Mes envies du moment »</span>
-    </div>
-    <span class="toggle-arrow">&#8964;</span>
-  </div>
-  <div class="toggle-body">
-    <div class="toggle-body-inner">
-      <p style="font-size:13.5px; line-height:1.65; color:#2b1212; margin-top:10px;">À remplir chacun·e de son côté puis à partager ensemble.</p>
-      <div class="envies-grid">
-        <div class="envie-col envies">
-          <div class="envie-title">💚 3 choses que j'ai envie d'explorer</div>
-          <div class="envie-line">1.</div>
-          <div class="envie-line">2.</div>
-          <div class="envie-line">3.</div>
-        </div>
-        <div class="envie-col limites">
-          <div class="envie-title">🛑 3 limites hard</div>
-          <div class="envie-line">1.</div>
-          <div class="envie-line">2.</div>
-          <div class="envie-line">3.</div>
-        </div>
-        <div class="envie-col redecouvrir">
-          <div class="envie-title">🔍 3 zones à redécouvrir</div>
-          <div class="envie-line">1.</div>
-          <div class="envie-line">2.</div>
-          <div class="envie-line">3.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ── TOGGLE 3 · Comment communiquer quand gênant ─── -->
+<!-- ── TOGGLE · Alternatives quand gênant ─── -->
 <div class="toggle">
   <div class="toggle-head" onclick="var n=this.nextElementSibling; var o=n.style.maxHeight&&n.style.maxHeight!=='0px'; n.style.maxHeight=o?'0px':n.scrollHeight+'px'; n.style.opacity=o?'0':'1'; var a=this.querySelector('.toggle-arrow'); if(a) a.style.transform=o?'rotate(0deg)':'rotate(180deg)';">
     <div class="toggle-title">
@@ -570,6 +611,44 @@
       </ul>
     </div>
   </div>
+</div>
+
+<!-- ── DIVIDER ────────────────── -->
+<div class="divider"></div>
+
+<!-- ── EXERCICE · Fiche envies du moment ─────── -->
+<div class="exo-block">
+
+  <div class="exo-header">
+    <div class="exo-text-wrap">
+      <p class="exo-tag">✏️ Exercice</p>
+      <p class="exo-title">Fiche « Mes envies du moment »</p>
+      <p class="exo-sub">À remplir chacun·e de son côté puis à partager ensemble.</p>
+    </div>
+    <a href="https://even-balloon-f23.notion.site/Mon-journal-DPO-Tableaux-remplir-34b72e4fbd7781ecbabedd11c61be2da?source=copy_link" target="_blank" rel="noopener noreferrer" class="notion-cta">📝 Remplir sur Notion</a>
+  </div>
+
+  <div class="envies-grid">
+    <div class="envie-col envies">
+      <div class="envie-title">💚 3 choses que j'ai envie d'explorer</div>
+      <div class="envie-line">1.</div>
+      <div class="envie-line">2.</div>
+      <div class="envie-line">3.</div>
+    </div>
+    <div class="envie-col limites">
+      <div class="envie-title">🛑 3 limites hard</div>
+      <div class="envie-line">1.</div>
+      <div class="envie-line">2.</div>
+      <div class="envie-line">3.</div>
+    </div>
+    <div class="envie-col redecouvrir">
+      <div class="envie-title">🔍 3 zones à redécouvrir</div>
+      <div class="envie-line">1.</div>
+      <div class="envie-line">2.</div>
+      <div class="envie-line">3.</div>
+    </div>
+  </div>
+
 </div>
 
 <script>
