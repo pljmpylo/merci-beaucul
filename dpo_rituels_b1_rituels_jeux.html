@@ -11,19 +11,6 @@
   body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
 
   .section-title { margin-bottom: 20px; }
-  .section-tag {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: #8A1B1A;
-    background: #FFFAFD;
-    padding: 6px 14px;
-    border-radius: 999px;
-    border: 1px solid #E8D5D5;
-    margin-bottom: 10px;
-  }
   .section-heading {
     font-size: 22px;
     font-weight: 800;
@@ -31,9 +18,7 @@
     line-height: 1.3;
   }
 
-  .subsection {
-    margin-top: 32px;
-  }
+  .subsection { margin-top: 0; }
   .subsection-num {
     display: inline-block;
     font-size: 11px;
@@ -49,6 +34,13 @@
     color: #450100;
     line-height: 1.3;
     margin-bottom: 12px;
+  }
+
+  /* ── DIVIDER ─────────────────── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #E8D5D5 20%, #E8D5D5 80%, transparent 100%);
+    margin: 36px 0;
   }
 
   .lead {
@@ -89,12 +81,83 @@
     line-height: 1.6;
   }
 
-  /* ── Toggle ──── */
+  /* ── EXERCICE block (rose gradient + bord rouge) ──── */
+  .exo-block {
+    background: linear-gradient(135deg, #FFFAFD 0%, #FFF5F5 100%);
+    border: 1.5px solid #E8D5D5;
+    border-left: 4px solid #DC143C;
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin: 18px 0 0;
+  }
+  .exo-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .exo-text-wrap {
+    flex: 1 1 240px;
+    min-width: 0;
+  }
+  .exo-tag {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #DC143C;
+    margin: 0 0 6px;
+  }
+  .exo-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #450100;
+    line-height: 1.35;
+    margin: 0;
+  }
+  .exo-sub {
+    font-size: 13.5px;
+    color: #6a4545;
+    line-height: 1.55;
+    margin: 6px 0 0;
+  }
+  .notion-cta {
+    margin-left: auto;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    border: 1.5px solid #DC143C;
+    color: #8A1B1A;
+    font-family: 'Raleway', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    padding: 7px 13px;
+    border-radius: 999px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+  .notion-cta:hover { background: #DC143C; color: #fff; }
+
+  /* ── Toggle (yellow) ──── */
   .toggle {
     border: 1.5px solid #E8D5D5;
     border-radius: 18px;
     overflow: hidden;
     margin-bottom: 14px;
+    background: #fff;
+  }
+  .toggle.yellow {
+    border-color: #FFDE59;
+  }
+  .toggle.yellow .toggle-head {
+    background: #FFFBEA;
+  }
+  .toggle.yellow .toggle-body-inner {
     background: #fff;
   }
   .toggle-head {
@@ -116,6 +179,7 @@
     color: #450100;
     line-height: 1.35;
   }
+  .toggle.yellow .toggle-title { color: #8A1B1A; }
   .toggle-arrow {
     font-size: 22px;
     color: #DC143C;
@@ -133,6 +197,7 @@
     padding: 6px 22px 22px;
     border-top: 1px solid #F0E0E0;
   }
+  .toggle.yellow .toggle-body-inner { border-top-color: #F5E5A0; }
 
   /* ── Filters (sexto modèles) ──── */
   .filter-row {
@@ -326,12 +391,11 @@
 
 <!-- ── HEADER ─────────────────── -->
 <div class="section-title">
-  <div class="section-tag">🎲 Bloc 1</div>
   <div class="section-heading">Rituels & jeux</div>
 </div>
 
 <!-- ════════════════════════════════ -->
-<!-- 3.1 ÉCRIRE DES SEXTO             -->
+<!-- 1 · ÉCRIRE DES SEXTOS            -->
 <!-- ════════════════════════════════ -->
 <div class="subsection">
   <div class="subsection-num">1 · Sextos</div>
@@ -359,122 +423,138 @@
   <div class="piste-ex">« Rien que d'y penser, je sens mon ventre / ma chatte qui chauffe. »</div>
 </div>
 
-<!-- TOGGLE Fiche modèles de sexto -->
-<div class="toggle" style="margin-top:18px;">
-  <div class="toggle-head" onclick="var n=this.nextElementSibling; var o=n.style.maxHeight&&n.style.maxHeight!=='0px'; n.style.maxHeight=o?'0px':n.scrollHeight+'px'; n.style.opacity=o?'0':'1'; var a=this.querySelector('.toggle-arrow'); if(a) a.style.transform=o?'rotate(0deg)':'rotate(180deg)';">
-    <div class="toggle-title">
-      <span style="font-size:18px;">📝</span>
-      <span>Fiche « modèles de sexto » à compléter</span>
+<!-- ── EXERCICE · Modèles de sexto à compléter ─────── -->
+<div class="exo-block">
+
+  <div class="exo-header">
+    <div class="exo-text-wrap">
+      <p class="exo-tag">✏️ Exercice</p>
+      <p class="exo-title">Modèles de sexto à compléter</p>
+      <p class="exo-sub">10 modèles prêts à personnaliser, triés par intensité (🟢 doux → 🔴 intense).</p>
     </div>
-    <span class="toggle-arrow">&#8964;</span>
+    <a href="https://even-balloon-f23.notion.site/Mon-journal-DPO-Tableaux-remplir-34b72e4fbd7781ecbabedd11c61be2da?source=copy_link" target="_blank" rel="noopener noreferrer" class="notion-cta">📝 Remplir sur Notion</a>
   </div>
-  <div class="toggle-body">
-    <div class="toggle-body-inner">
-      <p style="font-size:13.5px; line-height:1.65; color:#2b1212; margin-top:10px;">10 modèles prêts à personnaliser. Clique sur les filtres pour choisir l'intensité.</p>
 
-      <div class="filter-row">
-        <button class="filter-pill active" data-filter="all">Tout voir</button>
-        <button class="filter-pill" data-filter="doux">🟢 Doux</button>
-        <button class="filter-pill" data-filter="moyen">🟠 Moyen</button>
-        <button class="filter-pill" data-filter="intense">🔴 Intense</button>
+  <!-- Toggle jaune avec les 10 modèles -->
+  <div class="toggle yellow" style="margin-bottom: 0;">
+    <div class="toggle-head" onclick="var n=this.nextElementSibling; var o=n.style.maxHeight&&n.style.maxHeight!=='0px'; n.style.maxHeight=o?'0px':n.scrollHeight+'px'; n.style.opacity=o?'0':'1'; var a=this.querySelector('.toggle-arrow'); if(a) a.style.transform=o?'rotate(0deg)':'rotate(180deg)';">
+      <div class="toggle-title">
+        <span style="font-size:18px;">📝</span>
+        <span>Voir les 10 modèles</span>
       </div>
+      <span class="toggle-arrow">&#8964;</span>
+    </div>
+    <div class="toggle-body">
+      <div class="toggle-body-inner">
 
-      <div class="sexto-card" data-intensity="moyen">
-        <div class="sexto-head">
-          <span class="sexto-num">01</span>
-          <span class="sexto-type">Envies simples</span>
-          <span class="intensity-tag intensity-moyen">Moyen</span>
+        <div class="filter-row">
+          <button class="filter-pill active" data-filter="all">Tout voir</button>
+          <button class="filter-pill" data-filter="doux">🟢 Doux</button>
+          <button class="filter-pill" data-filter="moyen">🟠 Moyen</button>
+          <button class="filter-pill" data-filter="intense">🔴 Intense</button>
         </div>
-        <div class="sexto-text">« J'ai envie que tu ________ sur mon·ma ________, puis que tu ________ plus ________. »</div>
-      </div>
 
-      <div class="sexto-card" data-intensity="doux">
-        <div class="sexto-head">
-          <span class="sexto-num">02</span>
-          <span class="sexto-type">Moment ensemble</span>
-          <span class="intensity-tag intensity-doux">Doux</span>
+        <div class="sexto-card" data-intensity="moyen">
+          <div class="sexto-head">
+            <span class="sexto-num">01</span>
+            <span class="sexto-type">Envies simples</span>
+            <span class="intensity-tag intensity-moyen">Moyen</span>
+          </div>
+          <div class="sexto-text">« J'ai envie que tu ________ sur mon·ma ________, puis que tu ________ plus ________. »</div>
         </div>
-        <div class="sexto-text">« Ce soir, j'aimerais qu'on prenne le temps de ________ ensemble, sans se presser. J'ai très envie de ________ et de te sentir ________. »</div>
-      </div>
 
-      <div class="sexto-card" data-intensity="moyen">
-        <div class="sexto-head">
-          <span class="sexto-num">03</span>
-          <span class="sexto-type">Ressenti</span>
-          <span class="intensity-tag intensity-moyen">Moyen</span>
+        <div class="sexto-card" data-intensity="doux">
+          <div class="sexto-head">
+            <span class="sexto-num">02</span>
+            <span class="sexto-type">Moment ensemble</span>
+            <span class="intensity-tag intensity-doux">Doux</span>
+          </div>
+          <div class="sexto-text">« Ce soir, j'aimerais qu'on prenne le temps de ________ ensemble, sans se presser. J'ai très envie de ________ et de te sentir ________. »</div>
         </div>
-        <div class="sexto-text">« Quand tu ________ mon·ma ________, ça me rend complètement ________. J'adore quand tu fais ça ________. »</div>
-      </div>
 
-      <div class="sexto-card" data-intensity="moyen">
-        <div class="sexto-head">
-          <span class="sexto-num">04</span>
-          <span class="sexto-type">Nouveau à proposer</span>
-          <span class="intensity-tag intensity-moyen">Moyen</span>
+        <div class="sexto-card" data-intensity="moyen">
+          <div class="sexto-head">
+            <span class="sexto-num">03</span>
+            <span class="sexto-type">Ressenti</span>
+            <span class="intensity-tag intensity-moyen">Moyen</span>
+          </div>
+          <div class="sexto-text">« Quand tu ________ mon·ma ________, ça me rend complètement ________. J'adore quand tu fais ça ________. »</div>
         </div>
-        <div class="sexto-text">« Ça te dirait qu'on essaye ________ ? J'ai envie de ________ pendant que tu ________. On peut tester tranquille, sans pression. »</div>
-      </div>
 
-      <div class="sexto-card" data-intensity="moyen">
-        <div class="sexto-head">
-          <span class="sexto-num">05</span>
-          <span class="sexto-type">Souvenir érotique</span>
-          <span class="intensity-tag intensity-moyen">Moyen</span>
+        <div class="sexto-card" data-intensity="moyen">
+          <div class="sexto-head">
+            <span class="sexto-num">04</span>
+            <span class="sexto-type">Nouveau à proposer</span>
+            <span class="intensity-tag intensity-moyen">Moyen</span>
+          </div>
+          <div class="sexto-text">« Ça te dirait qu'on essaye ________ ? J'ai envie de ________ pendant que tu ________. On peut tester tranquille, sans pression. »</div>
         </div>
-        <div class="sexto-text">« Je repense à la fois où tu ________ et où j'ai ________. J'ai trop envie qu'on refasse ça, mais en ________ encore plus. »</div>
-      </div>
 
-      <div class="sexto-card" data-intensity="intense">
-        <div class="sexto-head">
-          <span class="sexto-num">06</span>
-          <span class="sexto-type">Dirty talk doux</span>
-          <span class="intensity-tag intensity-intense">Intense · adaptable</span>
+        <div class="sexto-card" data-intensity="moyen">
+          <div class="sexto-head">
+            <span class="sexto-num">05</span>
+            <span class="sexto-type">Souvenir érotique</span>
+            <span class="intensity-tag intensity-moyen">Moyen</span>
+          </div>
+          <div class="sexto-text">« Je repense à la fois où tu ________ et où j'ai ________. J'ai trop envie qu'on refasse ça, mais en ________ encore plus. »</div>
         </div>
-        <div class="sexto-text">« J'ai envie de ________ ton·ta ________ jusqu'à ce que tu ________. Dis-moi si ça te plaît. »</div>
-      </div>
 
-      <div class="sexto-card" data-intensity="moyen">
-        <div class="sexto-head">
-          <span class="sexto-num">07</span>
-          <span class="sexto-type">Anticipation</span>
-          <span class="intensity-tag intensity-moyen">Moyen</span>
+        <div class="sexto-card" data-intensity="intense">
+          <div class="sexto-head">
+            <span class="sexto-num">06</span>
+            <span class="sexto-type">Dirty talk doux</span>
+            <span class="intensity-tag intensity-intense">Intense · adaptable</span>
+          </div>
+          <div class="sexto-text">« J'ai envie de ________ ton·ta ________ jusqu'à ce que tu ________. Dis-moi si ça te plaît. »</div>
         </div>
-        <div class="sexto-text">« Plus tard, je vais ________ et ensuite ________. Tu vas adorer. Prépare-toi. »</div>
-      </div>
 
-      <div class="sexto-card" data-intensity="doux">
-        <div class="sexto-head">
-          <span class="sexto-num">08</span>
-          <span class="sexto-type">Demander ce qu'iel veut</span>
-          <span class="intensity-tag intensity-doux">Doux</span>
+        <div class="sexto-card" data-intensity="moyen">
+          <div class="sexto-head">
+            <span class="sexto-num">07</span>
+            <span class="sexto-type">Anticipation</span>
+            <span class="intensity-tag intensity-moyen">Moyen</span>
+          </div>
+          <div class="sexto-text">« Plus tard, je vais ________ et ensuite ________. Tu vas adorer. Prépare-toi. »</div>
         </div>
-        <div class="sexto-text">« Dis-moi exactement ce que tu veux que je fasse. Tu veux que je ________ ton·ta ________ comment ? ________ ou ________ ? »</div>
-      </div>
 
-      <div class="sexto-card" data-intensity="intense">
-        <div class="sexto-head">
-          <span class="sexto-num">09</span>
-          <span class="sexto-type">Instructions · pouvoir doux</span>
-          <span class="intensity-tag intensity-intense">Intense</span>
+        <div class="sexto-card" data-intensity="doux">
+          <div class="sexto-head">
+            <span class="sexto-num">08</span>
+            <span class="sexto-type">Demander ce qu'iel veut</span>
+            <span class="intensity-tag intensity-doux">Doux</span>
+          </div>
+          <div class="sexto-text">« Dis-moi exactement ce que tu veux que je fasse. Tu veux que je ________ ton·ta ________ comment ? ________ ou ________ ? »</div>
         </div>
-        <div class="sexto-text">« Ce soir, tu vas ________ exactement comme je te dis. D'abord tu ________, puis tu ________, et tu ne ________ que quand je te le permets. »</div>
-      </div>
 
-      <div class="sexto-card" data-intensity="doux">
-        <div class="sexto-head">
-          <span class="sexto-num">10</span>
-          <span class="sexto-type">Ultra-doux · début</span>
-          <span class="intensity-tag intensity-doux">Doux</span>
+        <div class="sexto-card" data-intensity="intense">
+          <div class="sexto-head">
+            <span class="sexto-num">09</span>
+            <span class="sexto-type">Instructions · pouvoir doux</span>
+            <span class="intensity-tag intensity-intense">Intense</span>
+          </div>
+          <div class="sexto-text">« Ce soir, tu vas ________ exactement comme je te dis. D'abord tu ________, puis tu ________, et tu ne ________ que quand je te le permets. »</div>
         </div>
-        <div class="sexto-text">« J'ai envie qu'on se ________ en prenant vraiment notre temps. J'aimerais sentir tes ________ sur mon·ma ________ et qu'on se ________ ensemble. »</div>
-      </div>
 
+        <div class="sexto-card" data-intensity="doux">
+          <div class="sexto-head">
+            <span class="sexto-num">10</span>
+            <span class="sexto-type">Ultra-doux · début</span>
+            <span class="intensity-tag intensity-doux">Doux</span>
+          </div>
+          <div class="sexto-text">« J'ai envie qu'on se ________ en prenant vraiment notre temps. J'aimerais sentir tes ________ sur mon·ma ________ et qu'on se ________ ensemble. »</div>
+        </div>
+
+      </div>
     </div>
   </div>
+
 </div>
 
+<!-- ── DIVIDER ─────────────── -->
+<div class="divider"></div>
+
 <!-- ════════════════════════════════ -->
-<!-- 3.2 LES RITUELS                  -->
+<!-- 2 · LES RITUELS                  -->
 <!-- ════════════════════════════════ -->
 <div class="subsection">
   <div class="subsection-num">2 · Les rituels</div>
@@ -540,8 +620,11 @@
   <div class="rituel-cta">📆 Planifier le rdv sur iCal</div>
 </div>
 
+<!-- ── DIVIDER ─────────────── -->
+<div class="divider"></div>
+
 <!-- ════════════════════════════════ -->
-<!-- 3.3 LES JEUX                     -->
+<!-- 3 · LES JEUX                     -->
 <!-- ════════════════════════════════ -->
 <div class="subsection">
   <div class="subsection-num">3 · Les jeux</div>
