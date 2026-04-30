@@ -10,6 +10,24 @@
   html, body { background: transparent; overflow-x: hidden; }
   body { padding: 6px 8px; font-family: 'Raleway', sans-serif; color: #1a0505; line-height: 1.55; }
 
+  /* ── STEP TITLES ─────────────── */
+  .step-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1a0505;
+    line-height: 1.35;
+    text-align: center;
+    margin: 0 0 18px;
+  }
+
+  /* ── 2-col layout (audio ↔ callout) ── */
+  .mb-2col { display: flex; gap: 20px; align-items: stretch; }
+  .mb-2col > .mb-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; }
+  .mb-2col > .mb-col > * { flex: 1; }
+  @media (max-width: 720px) {
+    .mb-2col { flex-direction: column; gap: 16px; }
+  }
+
   /* ── Custom audio player ───────── */
   .mb-player { display: flex; flex-direction: column; gap: 0; }
   .mb-player-row { display: flex; align-items: center; gap: 14px; }
@@ -34,143 +52,122 @@
   .mb-play-btn.playing .mb-icon-play { display: none; }
   .mb-play-btn:not(.playing) .mb-icon-pause { display: none; }
   .mb-meter { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
-  .mb-progress {
-    height: 6px;
-    background: #F0E0E0;
-    border-radius: 999px;
-    cursor: pointer;
-  }
-  .mb-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #8A1B1A, #DC143C);
-    border-radius: 999px;
-    width: 0%;
-    transition: width 0.1s linear;
-    pointer-events: none;
-  }
-  .mb-times {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    font-weight: 600;
-    color: #6a4545;
-    font-variant-numeric: tabular-nums;
-    line-height: 1;
-  }
+  .mb-progress { height: 6px; background: #F0E0E0; border-radius: 999px; cursor: pointer; }
+  .mb-progress-fill { height: 100%; background: linear-gradient(90deg, #8A1B1A, #DC143C); border-radius: 999px; width: 0%; transition: width 0.1s linear; pointer-events: none; }
+  .mb-times { display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: #6a4545; font-variant-numeric: tabular-nums; line-height: 1; }
   .mb-cur { color: #8A1B1A; font-weight: 700; }
-  .mb-speeds {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #F0E0E0;
-  }
-  .mb-speed {
-    font-family: 'Raleway', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    color: #8A1B1A;
-    background: #fff;
-    border: 1.5px solid #E8D5D5;
-    padding: 4px 10px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: all .2s;
-  }
+  .mb-speeds { display: flex; justify-content: center; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #F0E0E0; }
+  .mb-speed { font-family: 'Raleway',sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; color: #8A1B1A; background: #fff; border: 1.5px solid #E8D5D5; padding: 4px 10px; border-radius: 999px; cursor: pointer; transition: all .2s; }
   .mb-speed:hover { border-color: #8A1B1A; }
   .mb-speed.active { background: #8A1B1A; color: #fff; border-color: #8A1B1A; }
 </style>
 </head>
 <body>
 
-<!-- ══════════ AUDIO GUIDE ══════════ -->
-<div style="background: #fff; border: 1.5px solid #E8D5D5; border-radius: 18px; padding: 20px 22px; margin-bottom: 16px; border-top: 4px solid #8A1B1A;">
-  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #F0E0E0;">
-    <span style="font-size: 22px; flex-shrink: 0;">🎧</span>
-    <div>
-      <div style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #dc143c; margin-bottom: 3px;">Guide audio</div>
-      <div style="font-size: 15px; font-weight: 800; color: #450100; line-height: 1.35;">Audio Périnée + Respiration</div>
-    </div>
-  </div>
-  <div class="mb-player">
-    <div class="mb-player-row">
-      <button class="mb-play-btn" data-play aria-label="Lecture">
-        <svg class="mb-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        <svg class="mb-icon-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
-      </button>
-      <div class="mb-meter">
-        <div class="mb-progress" data-progress><div class="mb-progress-fill" data-fill></div></div>
-        <div class="mb-times"><span class="mb-cur" data-cur>0:00</span><span data-tot>--:--</span></div>
-      </div>
-    </div>
-    <div class="mb-speeds">
-      <button class="mb-speed" data-speed="0.75">0.75&times;</button>
-      <button class="mb-speed active" data-speed="1">1&times;</button>
-      <button class="mb-speed" data-speed="1.25">1.25&times;</button>
-      <button class="mb-speed" data-speed="1.5">1.5&times;</button>
-    </div>
-    <audio data-audio preload="metadata">
-      <source src="https://pljmpylo.github.io/merci-beaucul/dpo_audio_respiration.mp3" type="audio/mpeg">
-    </audio>
-  </div>
-</div>
+<!-- ══════════ ÉTAPE 1 : NERF VAGUE ══════════ -->
+<p class="step-title">Étape 1 : rencontrer son nerf vague</p>
 
-<!-- ══════════ CALLOUT BORDEAUX ══════════ -->
-<div style="background: #450100; border-radius: 18px; padding: 20px 24px; margin: 0 0 20px;">
-  <p style="font-size: 15px; font-weight: bold; color: #ffde59; line-height: 1.65; margin: 0;">Contractions périnée = afflux de sang, d'oxygénation = + de sensations !<br>Irrigue ton périnée et ton clito babyluv 🌹</p>
-</div>
-
-<!-- ── DIVIDER ───────── -->
-<div style="height: 1px; background: linear-gradient(90deg, transparent 0%, #E8D5D5 20%, #E8D5D5 80%, transparent 100%); margin: 36px 0;">&nbsp;</div>
-
-<!-- ══════════ EXERCICE ══════════ -->
+<!-- ══════════ EXERCICE OXYGÉNATION + NERF VAGUE ══════════ -->
 <div style="background: linear-gradient(135deg, #FFFAFD 0%, #FFF5F5 100%); border: 1.5px solid #E8D5D5; border-left: 4px solid #DC143C; border-radius: 14px; padding: 20px 22px; margin: 0 0 20px;">
 
-<p style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #dc143c; margin: 0 0 6px;">&#9999;&#65039; Exercice</p>
-<p style="font-size: 16px; font-weight: 800; color: #450100; margin: 0; line-height: 1.35;">Oxyg&eacute;nation + activation du nerf vague</p>
-<p style="font-size: 13.5px; color: #6a4545; line-height: 1.55; margin: 6px 0 14px;">Active le nerf vague pendant la masturbation &mdash; en solo ou &agrave; deux.</p>
+  <p style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #DC143C; margin: 0 0 6px;">&#9999;&#65039; Exercice</p>
+  <p style="font-size: 16px; font-weight: 800; color: #450100; margin: 0; line-height: 1.35;">Oxyg&eacute;nation + activation du nerf vague</p>
+  <p style="font-size: 13.5px; color: #6a4545; line-height: 1.55; margin: 6px 0 14px;">Active le nerf vague pendant la masturbation &mdash; en solo ou &agrave; deux.</p>
 
-<!-- ══════════ TABLEAU EXERCICE ══════════ -->
-<div style="overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 14px;">
-  <div style="border: 1.5px solid #E8D5D5; border-radius: 14px; overflow: hidden; min-width: 460px; background: #fff;">
-    <div style="display: grid; grid-template-columns: 1.2fr 1.4fr 1.8fr; background: #FFFAFD;">
-      <div style="padding: 13px 16px; font-size: 12px; font-weight: bold; color: #450100; border-right: 1px solid #E8D5D5; line-height: 1.4;">Exercice</div>
-      <div style="padding: 13px 16px; font-size: 12px; font-weight: bold; color: #450100; border-right: 1px solid #E8D5D5; line-height: 1.4;">Solo</div>
-      <div style="padding: 13px 16px; font-size: 12px; font-weight: bold; color: #450100; line-height: 1.4;">À deux</div>
-    </div>
-    <div style="height: 1px; background: #E8D5D5;">&nbsp;</div>
-    <div style="display: grid; grid-template-columns: 1.2fr 1.4fr 1.8fr; background: #fff;">
-      <div style="padding: 14px 16px; font-size: 13px; font-weight: 600; color: #450100; line-height: 1.5; border-right: 1px solid #E8D5D5;">Oxygénation + activation du nerf vague</div>
-      <div style="padding: 14px 16px; font-size: 13px; color: #444; line-height: 1.65; border-right: 1px solid #E8D5D5;">Faire du bruit pendant la masturbation</div>
-      <div style="padding: 14px 16px; font-size: 13px; color: #444; line-height: 1.65;">Respirer profondément par le ventre dès que les sensations se bloquent. Synchroniser la respiration avec son/sa partenaire.</div>
+  <!-- ── TABLEAU ─────────────── -->
+  <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 14px;">
+    <div style="border: 1.5px solid #E8D5D5; border-radius: 14px; overflow: hidden; min-width: 460px; background: #fff;">
+      <div style="display: grid; grid-template-columns: 1.2fr 1.4fr 1.8fr; background: #FFFAFD;">
+        <div style="padding: 13px 16px; font-size: 12px; font-weight: bold; color: #450100; border-right: 1px solid #E8D5D5; line-height: 1.4;">Exercice</div>
+        <div style="padding: 13px 16px; font-size: 12px; font-weight: bold; color: #450100; border-right: 1px solid #E8D5D5; line-height: 1.4;">Solo</div>
+        <div style="padding: 13px 16px; font-size: 12px; font-weight: bold; color: #450100; line-height: 1.4;">À deux</div>
+      </div>
+      <div style="height: 1px; background: #E8D5D5;">&nbsp;</div>
+      <div style="display: grid; grid-template-columns: 1.2fr 1.4fr 1.8fr; background: #fff;">
+        <div style="padding: 14px 16px; font-size: 13px; font-weight: 600; color: #450100; line-height: 1.5; border-right: 1px solid #E8D5D5;">Oxygénation + activation du nerf vague</div>
+        <div style="padding: 14px 16px; font-size: 13px; color: #444; line-height: 1.65; border-right: 1px solid #E8D5D5;">Faire du bruit pendant la masturbation</div>
+        <div style="padding: 14px 16px; font-size: 13px; color: #444; line-height: 1.65;">Respirer profondément par le ventre dès que les sensations se bloquent. Synchroniser la respiration avec son/sa partenaire.</div>
+      </div>
     </div>
   </div>
-</div>
 
 </div>
 
 <!-- ── DIVIDER ───────── -->
 <div style="height: 1px; background: linear-gradient(90deg, transparent 0%, #E8D5D5 20%, #E8D5D5 80%, transparent 100%); margin: 36px 0;">&nbsp;</div>
 
-<!-- ══════════ RESSOURCE CITÉE (toggle) ══════════ -->
-<div style="background: #F5EDE3; border-radius: 18px; overflow: hidden; margin: 0 0 16px;">
+<!-- ══════════ ÉTAPE 2 : NERF PUDENDAL ══════════ -->
+<p class="step-title">Étape 2 : renforcer son nerf pudendal</p>
+
+<div class="mb-2col" style="margin-bottom: 20px;">
+
+  <!-- LEFT — AUDIO PÉRINÉE -->
+  <div class="mb-col">
+    <div style="background: #fff; border: 1.5px solid #E8D5D5; border-radius: 18px; padding: 20px 22px; border-top: 4px solid #8A1B1A;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #F0E0E0;">
+        <span style="font-size: 22px; flex-shrink: 0;">🎧</span>
+        <div>
+          <div style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #DC143C; margin-bottom: 3px;">Guide audio</div>
+          <div style="font-size: 15px; font-weight: 800; color: #450100; line-height: 1.35;">Audio Périnée + Respiration</div>
+        </div>
+      </div>
+      <div class="mb-player">
+        <div class="mb-player-row">
+          <button class="mb-play-btn" data-play aria-label="Lecture">
+            <svg class="mb-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="mb-icon-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+          </button>
+          <div class="mb-meter">
+            <div class="mb-progress" data-progress><div class="mb-progress-fill" data-fill></div></div>
+            <div class="mb-times"><span class="mb-cur" data-cur>0:00</span><span data-tot>--:--</span></div>
+          </div>
+        </div>
+        <div class="mb-speeds">
+          <button class="mb-speed" data-speed="0.75">0.75&times;</button>
+          <button class="mb-speed active" data-speed="1">1&times;</button>
+          <button class="mb-speed" data-speed="1.25">1.25&times;</button>
+          <button class="mb-speed" data-speed="1.5">1.5&times;</button>
+        </div>
+        <audio data-audio preload="metadata">
+          <source src="https://pljmpylo.github.io/merci-beaucul/dpo_audio_respiration.mp3" type="audio/mpeg">
+        </audio>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT — CALLOUT BORDEAUX -->
+  <div class="mb-col">
+    <div style="background: #8A1B1A; border-radius: 18px; padding: 24px 28px; height: 100%; display: flex; align-items: center; justify-content: center;">
+      <p style="font-size: 15px; color: #fff; line-height: 1.7; margin: 0; text-align: center;">Contractions du périnée<br>= afflux de sang, d'oxygénation<br><strong style="color: #FFDE59;">= + de sensations !</strong><br><br>Irrigue ton périnée et ton clito babyluv 🌹</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── DIVIDER ───────── -->
+<div style="height: 1px; background: linear-gradient(90deg, transparent 0%, #E8D5D5 20%, #E8D5D5 80%, transparent 100%); margin: 36px 0;">&nbsp;</div>
+
+<!-- ══════════ RESSOURCE CITÉE (toggle beige) ══════════ -->
+<div style="background: #F5EDE3; border-radius: 18px; overflow: hidden; margin: 0 0 16px; font-family: 'Raleway',sans-serif;">
   <div onclick="mbRsrcToggle(this)" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 22px; cursor: pointer; user-select: none; gap: 12px;">
     <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0;">
       <span style="font-size: 18px; flex-shrink: 0; line-height: 1.2;">📖</span>
       <div style="min-width: 0;">
-        <div style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #dc143c; margin-bottom: 4px;">Ressource citée</div>
-        <div style="font-family: 'Lora',serif; font-size: 14px; font-weight: 600; color: #450100; line-height: 1.4;">Le Sentiment même de soi<span style="font-family: 'Raleway',sans-serif; font-weight: 500; color: #8a6a5a; font-size: 12.5px;"> — Antonio Damasio</span></div>
+        <div style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #DC143C; margin-bottom: 4px;">Ressource citée</div>
+        <div style="font-family: 'Lora',serif; font-size: 14px; font-weight: 600; color: #450100; line-height: 1.4;">Le Sentiment même de soi<span style="font-family: 'Raleway',sans-serif; font-weight: 500; color: #8a6a5a; font-size: 12.5px;"> &mdash; Antonio Damasio</span></div>
       </div>
     </div>
-    <span class="mb-rsrc-arrow" style="display: inline-block; font-size: 22px; color: #dc143c; transition: transform .3s; line-height: 1; flex-shrink: 0;">&#8964;</span>
+    <span class="mb-rsrc-arrow" style="display: inline-block; font-size: 22px; color: #DC143C; transition: transform .3s; line-height: 1; flex-shrink: 0;">&#8964;</span>
   </div>
   <div class="mb-rsrc-body" style="max-height: 0; overflow: hidden; transition: max-height .5s ease, opacity .35s ease; opacity: 0;">
     <div style="padding: 4px 24px 22px; border-top: 1px solid #E0D0BB;">
-      <p style="font-family: 'Lora',serif; font-size: 15px; font-weight: 600; color: #450100; margin: 14px 0 3px;">Le Sentiment même de soi</p>
-      <p style="font-size: 12px; color: #8a6a5a; margin: 0 0 14px;">Antonio Damasio</p>
-      <img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/site/2148843478/products/c7a784b-7ca2-0e-5f3-0eee4d63b70e_image_7_.png" width="200" height="293" style="border-radius: 8px; display: block;" alt="Le Sentiment même de soi">
+      <div style="background: #fff; border: 1px solid #E0D0BB; border-radius: 12px; padding: 16px 18px; margin-top: 14px; display: flex; gap: 16px; align-items: flex-start;">
+        <img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/site/2148843478/products/c7a784b-7ca2-0e-5f3-0eee4d63b70e_image_7_.png" width="120" height="176" style="border-radius: 8px; display: block; flex-shrink: 0;" alt="Le Sentiment même de soi">
+        <div style="min-width: 0;">
+          <p style="font-family: 'Lora',serif; font-size: 15px; font-weight: 600; color: #450100; margin: 0 0 3px;">Le Sentiment même de soi</p>
+          <p style="font-size: 12px; color: #8a6a5a; margin: 0;">Antonio Damasio</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -249,6 +246,7 @@ function mbRsrcToggle(head) {
       try { if (window.top && window.top !== window) window.top.postMessage(msg, '*'); } catch (e) {}
     } catch (e) {}
   }
+  window.post = post;
   if (typeof ResizeObserver !== 'undefined') {
     try { new ResizeObserver(post).observe(document.body); } catch (e) {}
   }
