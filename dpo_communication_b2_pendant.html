@@ -106,6 +106,74 @@
     line-height: 1.6;
     margin-top: 4px;
   }
+
+  /* ── Toggle rose (fond plein) ─── */
+  .toggle-pink {
+    background: #FFEDED;
+    border: 1.5px solid #F4D5D5;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: 28px;
+  }
+  .toggle-pink-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 22px;
+    cursor: pointer;
+    user-select: none;
+    gap: 12px;
+  }
+  .toggle-pink-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #1a0505;
+    line-height: 1.35;
+  }
+  .toggle-pink-arrow {
+    font-size: 22px;
+    color: #DC143C;
+    line-height: 1;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+  .toggle-pink-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s ease, opacity 0.35s ease;
+    opacity: 0;
+  }
+  .toggle-pink-body-inner {
+    padding: 4px 22px 22px;
+    border-top: 1px solid #F4D5D5;
+  }
+  .toggle-pink-intro {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: #6a4545;
+    line-height: 1.65;
+    margin: 14px 0 16px;
+  }
+  .toggle-pink-reason {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #2b1212;
+    margin: 0 0 14px;
+    padding-left: 0;
+  }
+  .toggle-pink-reason strong {
+    color: #450100;
+    font-weight: 800;
+  }
+  .toggle-pink-outro {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #2b1212;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed #F4D5D5;
+  }
 </style>
 </head>
 <body>
@@ -263,6 +331,29 @@
     <div class="axis-examples">Sourires · yeux fermés · grimaces · air gêné ou absent → à remarquer et à questionner si besoin.</div>
   </div>
 
+</div>
+
+<!-- ── TOGGLE ROSE — NE PAS SIMULER ─ -->
+<div class="toggle-pink">
+  <div class="toggle-pink-head" onclick="var t=this.parentElement; var n=this.nextElementSibling; var o=n.style.maxHeight&&n.style.maxHeight!=='0px'; n.style.maxHeight=o?'0px':n.scrollHeight+'px'; n.style.opacity=o?'0':'1'; var a=this.querySelector('.toggle-pink-arrow'); if(a) a.style.transform=o?'rotate(0deg)':'rotate(180deg)';">
+    <div class="toggle-pink-title">Quatre raisons de ne PAS simuler l'orgasme</div>
+    <span class="toggle-pink-arrow">&#8964;</span>
+  </div>
+  <div class="toggle-pink-body">
+    <div class="toggle-pink-body-inner">
+      <p class="toggle-pink-intro">Même si simuler peut être un moyen de se sortir de certaines situations parfois, il y a d'autres solutions pour les autres.</p>
+
+      <p class="toggle-pink-reason">🗣 <strong>Tu ne te rends pas service !</strong> Ton·ta partenaire ne reconnaîtra pas tes vraies réactions et n'apprendra pas à lire ton corps et tes expressions. On est d'accord, c'est un peu ce qu'on veut à la base ? En simulant, c'est comme si tu court-circuitais l'expression naturelle de ton corps <em>(une poète)</em>.</p>
+
+      <p class="toggle-pink-reason">🗣 <strong>Tu ne lui rends pas service !</strong> Le cul c'est aussi de la communication, de l'apprentissage et du partage. Et y'a aucun problème à pas faire jouir son·sa partenaire : on a déjà vu que c'est une histoire qui se joue à deux, et s'iel n'a pas l'occasion de savoir quand ça n'arrive pas, iel n'aura pas l'occasion de comprendre ni comment ni quand ça fonctionne !</p>
+
+      <p class="toggle-pink-reason">🗣 <strong>Ça induit encore l'idée que l'orgasme est non seulement le but mais qu'il marque aussi la fin du rapport sexuel.</strong> Prendre du plaisir sans forcément jouir, c'est carrément cool aussi.</p>
+
+      <p class="toggle-pink-reason">🗣 <strong>Ça décrédibilise ton plaisir.</strong> Ton plaisir est important, qu'il soit accompagné ou non d'un orgasme. Si quelqu'un te fait te sentir mal parce que tu n'as pas joui, c'est qu'iel n'a aucune idée de comment fonctionne ton corps et ça… c'est pas sexy.</p>
+
+      <p class="toggle-pink-outro">Maintenant on est d'accord que le bruit c'est hyper excitant et que ça fait mega plaiz de s'entendre ou d'entendre son·sa partenaire, alors kiffe à gorge déployée baby <em>(ta·ton voisin·e va me remercier)</em>. Et si t'as pas envie de faire de bruit, n'en fais pas. En fait, fais ce que tu veux, je te kiffe dans tous les cas.</p>
+    </div>
+  </div>
 </div>
 
 <script>
