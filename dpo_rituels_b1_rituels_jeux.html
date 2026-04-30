@@ -385,6 +385,37 @@
     color: #2b1212;
   }
   .jeu-desc em { color: #DC143C; font-style: italic; }
+  .jeu-note {
+    display: block;
+    margin-top: 8px;
+    font-size: 11.5px;
+    font-style: italic;
+    color: #6a4545;
+    line-height: 1.5;
+  }
+  .jeu-link-wrap {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+  }
+  .jeu-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    border: 1.5px solid #DC143C;
+    color: #8A1B1A;
+    font-family: 'Raleway', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+  .jeu-link:hover { background: #DC143C; color: #fff; }
 </style>
 </head>
 <body>
@@ -633,8 +664,8 @@
 
 <div class="jeu-grid">
   <div class="jeu-card">
-    <div class="jeu-title">🎴 Tirage « type de guidage »</div>
-    <div class="jeu-desc">Chacun·e tire une carte : ce soir, je guide uniquement par <em>compliments</em>, par <em>ordres</em>, ou par <em>tuto</em>.</div>
+    <div class="jeu-title">🎴 Tirage « petits papiers »</div>
+    <div class="jeu-desc">Sur des petits papiers, écrivez des <em>parties du corps</em>, des <em>verbes</em>, des <em>adverbes</em> (1 mot par papier). Réunissez-les en 3 tas distincts par catégorie. Chacun·e tire un papier de chaque tas, et fait l'action décrite (si consenti·e).<span class="jeu-note">⚠️ Délimitez vos limites <strong>soft</strong> et <strong>hard</strong> au préalable.</span></div>
   </div>
 
   <div class="jeu-card">
@@ -648,8 +679,11 @@
   </div>
 
   <div class="jeu-card">
-    <div class="jeu-title">🎉 Édition spéciale « Actions »</div>
-    <div class="jeu-desc">De <strong>Discultons</strong> — le jeu de cartes pour passer à la pratique.</div>
+    <div class="jeu-title">🎉 Une partie de mon jeu Discultons</div>
+    <div class="jeu-desc">Le jeu de cartes pour <em>passer à la pratique</em>. Dix cartes gratuites à découvrir.</div>
+    <div class="jeu-link-wrap">
+      <a class="jeu-link" href="https://mercibeaucul.fr/parler-q" target="_blank" rel="noopener noreferrer">🃏 Récupérer les cartes</a>
+    </div>
   </div>
 </div>
 
