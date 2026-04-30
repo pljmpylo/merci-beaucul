@@ -134,6 +134,15 @@
     margin-bottom: 20px;
   }
 
+  /* ── 2-col layout (respiration ↔ audio) ── */
+  .mb-2col { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px; }
+  .mb-2col > .mb-col { flex: 1 1 0; min-width: 0; }
+  .mb-2col .external-iframe-wrap,
+  .mb-2col > .mb-col > div:last-child { margin-bottom: 0; }
+  @media (max-width: 720px) {
+    .mb-2col { flex-direction: column; gap: 24px; }
+  }
+
   /* ── Custom audio player ───────── */
   .mb-player { display: flex; flex-direction: column; gap: 0; }
   .mb-player-row { display: flex; align-items: center; gap: 14px; }
@@ -380,43 +389,52 @@
 <!-- ── DIVIDER ───────── -->
 <div style="height: 1px; background: linear-gradient(90deg, transparent 0%, #E8D5D5 20%, #E8D5D5 80%, transparent 100%); margin: 36px 0;">&nbsp;</div>
 
-<!-- ══════════ RESPIRATION CARRÉE ══════════ -->
-<p style="font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #1a0505; margin: 0 0 12px; text-decoration: underline;">🫁 Exercice — Respiration carrée</p>
+<!-- ══════════ ROW : RESPIRATION CARRÉE ↔ AUDIO GUIDÉ ══════════ -->
+<div class="mb-2col">
 
-<div class="external-iframe-wrap">
-  <iframe width="100%" height="670" style="border: none; display: block;" src="https://pljmpylo.github.io/merci-beaucul/kajabi_respiration_carree.html"></iframe>
-</div>
-
-<!-- ══════════ AUDIO GUIDE ══════════ -->
-<div style="background: #fff; border: 1.5px solid #E8D5D5; border-radius: 18px; padding: 20px 22px; margin-bottom: 20px; border-top: 4px solid #8A1B1A;">
-  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #F0E0E0;">
-    <span style="font-size: 22px; flex-shrink: 0;">🎧</span>
-    <div>
-      <div style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #dc143c; margin-bottom: 3px;">Guide audio</div>
-      <div style="font-size: 15px; font-weight: 800; color: #450100; line-height: 1.35;">Exercice de respiration guidée</div>
+  <!-- LEFT — Respiration carrée -->
+  <div class="mb-col">
+    <p style="font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #1a0505; margin: 0 0 12px; text-decoration: underline;">🫁 Exercice — Respiration carrée</p>
+    <div class="external-iframe-wrap">
+      <iframe width="100%" height="670" style="border: none; display: block;" src="https://pljmpylo.github.io/merci-beaucul/kajabi_respiration_carree.html"></iframe>
     </div>
   </div>
-  <div class="mb-player">
-    <div class="mb-player-row">
-      <button class="mb-play-btn" data-play aria-label="Lecture">
-        <svg class="mb-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        <svg class="mb-icon-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
-      </button>
-      <div class="mb-meter">
-        <div class="mb-progress" data-progress><div class="mb-progress-fill" data-fill></div></div>
-        <div class="mb-times"><span class="mb-cur" data-cur>0:00</span><span data-tot>--:--</span></div>
+
+  <!-- RIGHT — Audio guidé -->
+  <div class="mb-col">
+    <p style="font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #1a0505; margin: 0 0 12px; text-decoration: underline;">🎧 Exercice — Respiration guidée</p>
+    <div style="background: #fff; border: 1.5px solid #E8D5D5; border-radius: 18px; padding: 20px 22px; margin-bottom: 20px; border-top: 4px solid #8A1B1A;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #F0E0E0;">
+        <span style="font-size: 22px; flex-shrink: 0;">🎧</span>
+        <div>
+          <div style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #dc143c; margin-bottom: 3px;">Guide audio</div>
+          <div style="font-size: 15px; font-weight: 800; color: #450100; line-height: 1.35;">Exercice de respiration guidée</div>
+        </div>
+      </div>
+      <div class="mb-player">
+        <div class="mb-player-row">
+          <button class="mb-play-btn" data-play aria-label="Lecture">
+            <svg class="mb-icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="mb-icon-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+          </button>
+          <div class="mb-meter">
+            <div class="mb-progress" data-progress><div class="mb-progress-fill" data-fill></div></div>
+            <div class="mb-times"><span class="mb-cur" data-cur>0:00</span><span data-tot>--:--</span></div>
+          </div>
+        </div>
+        <div class="mb-speeds">
+          <button class="mb-speed" data-speed="0.75">0.75&times;</button>
+          <button class="mb-speed active" data-speed="1">1&times;</button>
+          <button class="mb-speed" data-speed="1.25">1.25&times;</button>
+          <button class="mb-speed" data-speed="1.5">1.5&times;</button>
+        </div>
+        <audio data-audio preload="metadata">
+          <source src="https://pljmpylo.github.io/merci-beaucul/dpo_audio_respiration.mp3" type="audio/mpeg">
+        </audio>
       </div>
     </div>
-    <div class="mb-speeds">
-      <button class="mb-speed" data-speed="0.75">0.75&times;</button>
-      <button class="mb-speed active" data-speed="1">1&times;</button>
-      <button class="mb-speed" data-speed="1.25">1.25&times;</button>
-      <button class="mb-speed" data-speed="1.5">1.5&times;</button>
-    </div>
-    <audio data-audio preload="metadata">
-      <source src="https://pljmpylo.github.io/merci-beaucul/dpo_audio_respiration.mp3" type="audio/mpeg">
-    </audio>
   </div>
+
 </div>
 
 <!-- ══════════ RESSOURCE CITÉE (toggle) ══════════ -->
