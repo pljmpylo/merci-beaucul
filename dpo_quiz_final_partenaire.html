@@ -49,9 +49,11 @@
     margin-bottom: 6px;
   }
   .quiz-sub {
-    font-size: 13px;
+    font-size: 13.5px;
     color: #6a4545;
-    font-style: italic;
+    line-height: 1.6;
+    max-width: 580px;
+    margin: 0 auto;
   }
 
   /* ── Progress ─────────────────────── */
@@ -373,8 +375,8 @@
   <!-- ── Header ─────────────────────── -->
   <div class="quiz-header">
     <div class="quiz-tag">💞 Quiz final</div>
-    <div class="quiz-title">Est-ce que tu connais ta partenaire&nbsp;?</div>
-    <div class="quiz-sub">26 questions pour vérifier — et ouvrir la discussion</div>
+    <div class="quiz-title">Quiz final (pour le&bull;la partenaire)</div>
+    <div class="quiz-sub">Ce quiz est pour ta ou ton partenaire, pour voir comment iel se situe sur tous les sujets qu'on a abordé lors du programme. Ça permettra de poser des mots sur tout ce que tu as appris, ce que tu ressens et ce dont tu as besoin.</div>
   </div>
 
   <!-- ── Progress ───────────────────── -->
@@ -428,15 +430,9 @@ const QUESTIONS = [
   },
   {
     section: "Module 1 · Sécurité",
-    type: "multi",
+    type: "text",
     intro: "Q3 — Qu'est-ce qui, venant de toi, la rassure le plus pendant le sexe ?",
-    hint: "Coche tout ce qui s'applique.",
-    options: [
-      { l: "A", t: "Le contact physique (câlins, tenir la main, enlacer)" },
-      { l: "B", t: "Les mots (rassurer, dire que c'est ok de prendre du temps)" },
-      { l: "C", t: "Le regard (la regarder avec admiration)" },
-      { l: "D", t: "Le silence + présence" }
-    ]
+    hint: "Par ex. : le contact physique (câlins, tenir la main, enlacer), les mots (rassurer, dire que c'est ok de prendre du temps), le regard (la regarder avec admiration), le silence + présence…"
   },
   {
     section: "Module 1 · Sécurité",
@@ -466,16 +462,9 @@ const QUESTIONS = [
   },
   {
     section: "Module 2 · Lâcher prise",
-    type: "multi",
-    intro: "Q8 — Parmi ces options, lesquelles penses-tu qu'elle préfère pour entrer dans le moment ?",
-    hint: "Coche tout ce qui s'applique.",
-    options: [
-      { l: "A", t: "Excitation qui monte sur la durée" },
-      { l: "B", t: "Plutôt direct dans la stimulation génitale" },
-      { l: "C", t: "Massage / câlin d'abord" },
-      { l: "D", t: "Discussion / dirty talk avant de se toucher" },
-      { l: "E", t: "Jeu / scénario (blague, défi, rôle…)" }
-    ]
+    type: "text",
+    intro: "Q8 — Comment penses-tu qu'elle préfère entrer dans le moment ?",
+    hint: "Par ex. : excitation qui monte sur la durée, plutôt direct dans la stimulation génitale, massage / câlin d'abord, discussion / dirty talk avant de se toucher, jeu / scénario (blague, défi, rôle…)…"
   },
   {
     section: "Module 2 · Lâcher prise",
@@ -505,18 +494,9 @@ const QUESTIONS = [
   },
   {
     section: "Module 1 · Zones érogènes",
-    type: "multi",
+    type: "text",
     intro: "Q13 — Sur la vulve, quelles sont les zones qu'elle aime le plus qu'on touche ?",
-    hint: "Coche tout ce qui s'applique.",
-    options: [
-      { l: "A", t: "Gland du clito direct" },
-      { l: "B", t: "Capuchon du clito" },
-      { l: "C", t: "Hampe / zone juste au-dessus du gland" },
-      { l: "D", t: "Petites lèvres" },
-      { l: "E", t: "Grandes lèvres" },
-      { l: "F", t: "Entrée du vagin" },
-      { l: "G", t: "Périnée" }
-    ]
+    hint: "Par ex. : gland du clito direct, capuchon du clito, hampe (zone juste au-dessus du gland), petites lèvres, grandes lèvres, entrée du vagin, périnée…"
   },
   {
     section: "Module 1 · Zones érogènes",
@@ -534,59 +514,33 @@ const QUESTIONS = [
   // ── D. Stimulations (Module 3) ──
   {
     section: "Module 3 · Stimulations",
-    type: "single",
-    intro: "Q16 — Si tu devais choisir : elle est plutôt…",
-    options: [
-      { l: "A", t: "Touchers <strong>lents</strong> et réguliers" },
-      { l: "B", t: "Touchers <strong>rapides</strong> et toniques" },
-      { l: "C", t: "Un mélange, mais avec une préférence" }
-    ]
+    type: "text",
+    intro: "Q16 — Est-ce qu'elle est plutôt touchers lents et réguliers, rapides et toniques, ou un mélange ?",
+    hint: "Précise sa préférence si elle en a une."
   },
   {
     section: "Module 3 · Stimulations",
-    type: "multi",
+    type: "text",
     intro: "Q17 — Avec les doigts sur sa vulve, qu'est-ce qu'elle préfère selon toi ?",
-    hint: "Coche tout ce qui s'applique.",
-    options: [
-      { l: "A", t: "Mouvements de haut en bas" },
-      { l: "B", t: "Cercles" },
-      { l: "C", t: "Tapoter" },
-      { l: "D", t: "Vibrer" },
-      { l: "E", t: "Encercler" },
-      { l: "F", t: "Appuyer / pousser" },
-      { l: "G", t: "Massage « global » de toute la vulve" }
-    ]
+    hint: "Par ex. : mouvements de haut en bas, cercles, tapoter, vibrer, encercler, appuyer / pousser, massage « global » de toute la vulve…"
   },
   {
     section: "Module 3 · Stimulations",
-    type: "multi",
+    type: "text",
     intro: "Q18 — En interne (avec doigts, sextoy, pénis), qu'est-ce qu'elle semble aimer le plus ?",
-    hint: "Coche tout ce qui s'applique.",
-    options: [
-      { l: "A", t: "Entrée du vagin peu profonde" },
-      { l: "B", t: "Crochet zone G" },
-      { l: "C", t: "Va-et-vient profonds" },
-      { l: "D", t: "Pression statique + elle bouge son bassin" },
-      { l: "E", t: "Multistimulation (interne + clito externe en même temps)" }
-    ]
+    hint: "Par ex. : entrée du vagin peu profonde, crochet zone G, va-et-vient profonds, pression statique pendant qu'elle bouge son bassin, multistimulation (interne + clito externe en même temps)…"
   },
   {
     section: "Module 3 · Stimulations",
-    type: "single",
-    intro: "Q19 — Est-ce qu'elle préfère, la plupart du temps…",
-    options: [
-      { l: "A", t: "Contact <strong>direct</strong> sur le clito" },
-      { l: "B", t: "Contact <strong>indirect</strong> (au-dessus, autour, à travers un tissu, via la vulve entière)" }
-    ]
+    type: "text",
+    intro: "Q19 — Est-ce qu'elle préfère, la plupart du temps, un contact <strong>direct</strong> sur le clito, ou un contact <strong>indirect</strong> (au-dessus, autour, à travers un tissu, via la vulve entière) ?",
+    hint: ""
   },
   {
     section: "Module 3 · Stimulations",
-    type: "single",
-    intro: "Q20 — Sais-tu si elle aime…",
-    options: [
-      { l: "A", t: "Qu'on <strong>change souvent</strong> de rythme et de geste" },
-      { l: "B", t: "Ou au contraire qu'on <strong>garde le même</strong> geste quand ça commence à monter" }
-    ]
+    type: "text",
+    intro: "Q20 — Est-ce qu'elle aime qu'on <strong>change souvent</strong> de rythme et de geste, ou au contraire qu'on <strong>garde le même</strong> geste quand ça commence à monter ?",
+    hint: ""
   },
   {
     section: "Module 3 · Stimulations",
@@ -616,15 +570,9 @@ const QUESTIONS = [
   },
   {
     section: "Module 4 · Communication",
-    type: "multi",
-    intro: "Q25 — Est-ce que tu sais ce qui l'aide le plus à parler pendant le sexe ?",
-    hint: "Coche tout ce qui s'applique.",
-    options: [
-      { l: "A", t: "Que tu poses des questions précises" },
-      { l: "B", t: "Que tu lui proposes 2 options (« comme ça ou comme ça ? »)" },
-      { l: "C", t: "Que tu laisses du silence et du temps" },
-      { l: "D", t: "Que tu la rassures sur le fait qu'elle ne te « casse pas ton délire »" }
-    ]
+    type: "text",
+    intro: "Q25 — Qu'est-ce qui l'aide le plus à parler pendant le sexe ?",
+    hint: "Par ex. : que tu poses des questions précises, que tu lui proposes 2 options (« comme ça ou comme ça ? »), que tu laisses du silence et du temps, que tu la rassures sur le fait qu'elle ne te « casse pas ton délire »…"
   },
   {
     section: "Module 4 · Communication",
