@@ -252,7 +252,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-size: 12px;
   }
   .score-row:last-child { margin-bottom: 0; }
@@ -269,6 +269,18 @@
     background: #fff;
     border: 1.5px solid #E8D5D5;
     color: #8A1B1A;
+  }
+  .score-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6a4545;
+    flex-shrink: 0;
+    width: 110px;
+    line-height: 1.3;
+  }
+  .score-row.dominant .score-label {
+    color: #450100;
+    font-weight: 700;
   }
   .score-row.dominant .score-letter {
     background: #8A1B1A;
@@ -403,6 +415,8 @@
     .btn { font-size: 12px; padding: 11px 18px; }
     .profile-name { font-size: 16px; }
     .profile-desc { font-size: 13.5px; }
+    .score-label { width: 80px; font-size: 11px; }
+    .score-row { gap: 8px; }
   }
 </style>
 </head>
@@ -591,28 +605,28 @@ const QUESTIONS = [
 // ── Profils (TODO : remplacer X par les vraies stats communauté MBCL) ──
 const PROFILES = {
   A: {
-    name: "Profil A",
+    name: "Profil A — Peur / insécurité",
     desc: "Ton frein principal tourne autour de la <strong>peur / insécurité</strong> : peur d'être jugé·e, pas assez, pas safe, pas désirable. Ton corps se met en retrait parce qu'il cherche à te protéger du regard de l'autre.",
     stat: "34 % des personnes interrogées sur MBCL (sur 6 088 réponses) ont ce frein principal.",
     cta: "Voir les propositions d'exercices pour le Profil A",
     link: "https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755849"
   },
   B: {
-    name: "Profil B",
+    name: "Profil B — Charge mentale",
     desc: "Ton frein vient surtout de la <strong>charge mentale</strong> : ta tête tourne à plein régime et tu as du mal à en sortir, même pendant le sexe. Ton corps attend, mais ton cerveau ne lâche pas.",
     stat: "32 % des personnes interrogées sur MBCL (sur 6 088 réponses) ont ce frein principal.",
     cta: "Voir les propositions d'exercices pour le Profil B",
     link: "https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755851"
   },
   C: {
-    name: "Profil C",
+    name: "Profil C — Injonctions",
     desc: "Ton frein est lié aux <strong>conditionnements et injonctions</strong> : les \"il faut\", la performance, le modèle de sexualité \"comme il faut\". Tu joues un rôle plus que tu ne ressens.",
     stat: "23 % des personnes interrogées sur MBCL (sur 6 088 réponses) ont ce frein principal.",
     cta: "Voir les propositions d'exercices pour le Profil C",
     link: "https://app.mercibeaucul.fr/products/developper-son-potentiel-orgasmique/categories/2159907000/posts/2196755855"
   },
   D: {
-    name: "Profil D",
+    name: "Profil D — Trauma / Sécurité",
     desc: "Ton frein est du côté des <strong>traumas / système nerveux en mode protection</strong> : freeze, coupure, alerte, malaise fort. Ton corps a appris à se protéger et continue de le faire, même quand le contexte est safe.",
     stat: "11 % des personnes interrogées sur MBCL (sur 6 088 réponses) ont ce frein principal.",
     cta: "Voir les propositions d'exercices pour le Profil D",
@@ -742,6 +756,13 @@ function showResults() {
   // Build score bars
   const scoreBars = document.getElementById('scoreBars');
   scoreBars.innerHTML = '';
+  const SCORE_LABELS = {
+    A: 'Peur / insécurité',
+    B: 'Charge mentale',
+    C: 'Injonctions',
+    D: 'Trauma / Sécurité',
+    E: 'Lâcher prise'
+  };
   ['A', 'B', 'C', 'D', 'E'].forEach(l => {
     const isDom = dominant.includes(l);
     const pct = Math.round((scores[l] / QUESTIONS.length) * 100);
@@ -749,6 +770,7 @@ function showResults() {
     row.className = 'score-row' + (isDom ? ' dominant' : '');
     row.innerHTML =
       '<div class="score-letter">' + l + '</div>' +
+      '<div class="score-label">' + SCORE_LABELS[l] + '</div>' +
       '<div class="score-bar-bg"><div class="score-bar-fill" style="width:0%"></div></div>' +
       '<div class="score-num">' + scores[l] + '</div>';
     scoreBars.appendChild(row);
