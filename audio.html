@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petit chemin vers ta sexualité — Audio · Merci Beaucul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bordeaux: #8A1B1A;
+    --rouge: #DC143C;
+    --noir-rouge: #450100;
+    --blanc-rose: #FFFAFD;
+    --rose-voile: #F6E7EC;
+    --rose-pale: #FBF0F3;
+    --texte: #450100;
+    --texte-doux: #7A4A4A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: 'Raleway', system-ui, sans-serif;
+    background:
+      radial-gradient(120% 80% at 50% -10%, #FFFFFF 0%, var(--blanc-rose) 45%, var(--rose-pale) 100%);
+    color: var(--texte);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 18px 44px;
+    line-height: 1.5;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 460px;
+  }
+
+  /* ---- En-tête ---- */
+  .brand {
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--bordeaux);
+    font-weight: 600;
+    margin-bottom: 26px;
+    opacity: 0.85;
+  }
+
+  /* ---- Onglets pistes ---- */
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    justify-content: center;
+    margin-bottom: 26px;
+  }
+  .tab {
+    font-family: inherit;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+    color: var(--bordeaux);
+    background: transparent;
+    border: 1px solid rgba(138, 27, 26, 0.28);
+    border-radius: 999px;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  }
+  .tab:hover { background: var(--rose-voile); }
+  .tab[aria-current="true"] {
+    background: var(--bordeaux);
+    border-color: var(--bordeaux);
+    color: #fff;
+  }
+  .tab:focus-visible {
+    outline: 2px solid var(--rouge);
+    outline-offset: 2px;
+  }
+
+  /* ---- Carte ---- */
+  .card {
+    background: #fff;
+    border-radius: 26px;
+    padding: 38px 30px 34px;
+    box-shadow: 0 24px 60px -28px rgba(69, 1, 0, 0.4),
+                0 2px 0 rgba(255, 255, 255, 0.6) inset;
+    border: 1px solid rgba(138, 27, 26, 0.08);
+    text-align: center;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--rouge);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .title {
+    font-family: 'Lora', Georgia, serif;
+    font-size: clamp(24px, 6.5vw, 30px);
+    line-height: 1.18;
+    color: var(--bordeaux);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .meta {
+    font-size: 13px;
+    color: var(--texte-doux);
+    letter-spacing: 0.02em;
+    min-height: 18px;
+  }
+
+  /* ---- Bouton play ---- */
+  .play-wrap { margin: 28px 0 22px; }
+  .play {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: radial-gradient(120% 120% at 30% 25%, var(--rouge) 0%, var(--bordeaux) 70%);
+    box-shadow: 0 14px 34px -10px rgba(138, 27, 26, 0.6);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .play:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -10px rgba(138, 27, 26, 0.7); }
+  .play:active { transform: translateY(0); }
+  .play:focus-visible { outline: 3px solid var(--rouge); outline-offset: 4px; }
+  .play svg { width: 32px; height: 32px; display: block; }
+  .play .ico-pause { display: none; }
+  .play[data-playing="true"] .ico-play { display: none; }
+  .play[data-playing="true"] .ico-pause { display: block; }
+
+  /* ---- Barre de progression ---- */
+  .progress {
+    height: 8px;
+    border-radius: 999px;
+    background: var(--rose-voile);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0%;
+    background: linear-gradient(90deg, var(--bordeaux), var(--rouge));
+    border-radius: 999px;
+    transition: width 0.08s linear;
+  }
+
+  .times {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--texte-doux);
+    margin-top: 9px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.03em;
+  }
+
+  /* ---- Vitesse ---- */
+  .speeds {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 26px;
+  }
+  .speed {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--texte-doux);
+    background: var(--rose-pale);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .speed:hover { background: var(--rose-voile); }
+  .speed[aria-pressed="true"] {
+    color: var(--bordeaux);
+    background: #fff;
+    border-color: rgba(138, 27, 26, 0.35);
+  }
+  .speed:focus-visible { outline: 2px solid var(--rouge); outline-offset: 2px; }
+
+  /* ---- Note ---- */
+  .note {
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--texte-doux);
+    margin-top: 24px;
+    line-height: 1.6;
+    padding: 0 6px;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--bordeaux);
+    opacity: 0.55;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">Petit chemin vers ta sexualité</div>
+
+    <nav class="tabs" id="tabs" aria-label="Choisir une piste audio"></nav>
+
+    <section class="card" aria-live="polite">
+      <div class="eyebrow" id="eyebrow">Level I</div>
+      <h1 class="title" id="title">Retrouver la sécurité dans ton corps</h1>
+      <div class="meta" id="meta">Durée : 7 minutes</div>
+
+      <div class="play-wrap">
+        <button class="play" id="play" data-playing="false" aria-label="Lecture">
+          <svg class="ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l10.5-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14Z"/></svg>
+          <svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg>
+        </button>
+      </div>
+
+      <div class="progress" id="progress" role="slider" aria-label="Position de lecture" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+        <div class="progress-fill" id="fill"></div>
+      </div>
+      <div class="times">
+        <span id="current">0:00</span>
+        <span id="duration">0:00</span>
+      </div>
+
+      <div class="speeds" id="speeds" aria-label="Vitesse de lecture">
+        <button class="speed" data-rate="0.75" aria-pressed="false">0.75×</button>
+        <button class="speed" data-rate="1" aria-pressed="true">1×</button>
+        <button class="speed" data-rate="1.25" aria-pressed="false">1.25×</button>
+        <button class="speed" data-rate="1.5" aria-pressed="false">1.5×</button>
+      </div>
+
+      <p class="note">Installe-toi au calme, chez toi, sans interruption. Tu peux l'écouter autant de fois que tu en as besoin.</p>
+    </section>
+
+    <div class="footer">Merci Beaucul</div>
+  </div>
+
+  <audio id="audio" preload="metadata"></audio>
+
+  <script>
+    // ====== À PERSONNALISER ======
+    // Dossier où sont hébergés tes MP3 (même repo GitHub Pages)
+    const MP3_BASE = "https://pljmpylo.github.io/merci-beaucul/";
+
+    // Les pistes. La clé (level1, level2…) = ce qui passe dans l'URL : audio.html?track=level1
+    const TRACKS = {
+      level1: { eyebrow: "Level I",  title: "Retrouver la sécurité dans ton corps", meta: "Durée : 7 minutes", file: "dpo_audio_securite.mp3", tab: "Level I" },
+      level2: { eyebrow: "Level II", title: "Regard sur toi-même",                  meta: "Durée : 7 minutes", file: "QuickieMasturbation_Jour05_Regard.mp3", tab: "Level II" },
+      level3: { eyebrow: "Level III", title: "Pussy massage",                       meta: "Durée : 7 minutes", file: "pussymassage.mp3", tab: "Level III" },
+    };
+    const ORDER = ["level1", "level2", "level3"];
+    // ==============================
+
+    const audio    = document.getElementById("audio");
+    const playBtn  = document.getElementById("play");
+    const progress = document.getElementById("progress");
+    const fill     = document.getElementById("fill");
+    const curEl    = document.getElementById("current");
+    const durEl    = document.getElementById("duration");
+    const eyebrow  = document.getElementById("eyebrow");
+    const titleEl  = document.getElementById("title");
+    const metaEl   = document.getElementById("meta");
+    const tabsEl   = document.getElementById("tabs");
+    const speedsEl = document.getElementById("speeds");
+
+    let currentKey = null;
+
+    function fmt(s) {
+      if (!isFinite(s)) return "0:00";
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return m + ":" + String(sec).padStart(2, "0");
+    }
+
+    function getTrackFromURL() {
+      const k = new URLSearchParams(location.search).get("track");
+      return TRACKS[k] ? k : ORDER[0];
+    }
+
+    function buildTabs() {
+      ORDER.forEach(key => {
+        const b = document.createElement("button");
+        b.className = "tab";
+        b.textContent = TRACKS[key].tab;
+        b.addEventListener("click", () => loadTrack(key, true));
+        b.dataset.key = key;
+        tabsEl.appendChild(b);
+      });
+    }
+
+    function loadTrack(key, userAction) {
+      if (key === currentKey) return;
+      currentKey = key;
+      const t = TRACKS[key];
+
+      // Met à jour l'URL pour que la page reste partageable / rechargeable sur la bonne piste
+      const url = new URL(location.href);
+      url.searchParams.set("track", key);
+      history.replaceState(null, "", url);
+
+      eyebrow.textContent = t.eyebrow;
+      titleEl.textContent = t.title;
+      metaEl.textContent  = t.meta;
+
+      audio.src = MP3_BASE + t.file;
+      audio.load();
+
+      // reset UI
+      fill.style.width = "0%";
+      curEl.textContent = "0:00";
+      durEl.textContent = "0:00";
+      setPlaying(false);
+
+      // onglet actif
+      [...tabsEl.children].forEach(b =>
+        b.setAttribute("aria-current", b.dataset.key === key ? "true" : "false")
+      );
+
+      // Si l'utilisateur a cliqué un onglet sur la page, on lance la lecture (geste = autorisé)
+      if (userAction) audio.play().catch(() => {});
+    }
+
+    function setPlaying(on) {
+      playBtn.dataset.playing = on ? "true" : "false";
+      playBtn.setAttribute("aria-label", on ? "Pause" : "Lecture");
+    }
+
+    // --- Lecture / pause ---
+    playBtn.addEventListener("click", () => {
+      if (audio.paused) audio.play().catch(() => {});
+      else audio.pause();
+    });
+    audio.addEventListener("play", () => setPlaying(true));
+    audio.addEventListener("pause", () => setPlaying(false));
+    audio.addEventListener("ended", () => { setPlaying(false); fill.style.width = "0%"; });
+
+    audio.addEventListener("loadedmetadata", () => durEl.textContent = fmt(audio.duration));
+    audio.addEventListener("timeupdate", () => {
+      const r = audio.duration ? (audio.currentTime / audio.duration) : 0;
+      fill.style.width = (r * 100) + "%";
+      curEl.textContent = fmt(audio.currentTime);
+      progress.setAttribute("aria-valuenow", Math.round(r * 100));
+    });
+
+    // --- Seek (clic sur la barre) ---
+    function seekFromEvent(e) {
+      const rect = progress.getBoundingClientRect();
+      const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+      const ratio = Math.min(1, Math.max(0, x / rect.width));
+      if (audio.duration) audio.currentTime = ratio * audio.duration;
+    }
+    progress.addEventListener("click", seekFromEvent);
+    progress.addEventListener("keydown", (e) => {
+      if (!audio.duration) return;
+      if (e.key === "ArrowRight") { audio.currentTime = Math.min(audio.duration, audio.currentTime + 5); e.preventDefault(); }
+      if (e.key === "ArrowLeft")  { audio.currentTime = Math.max(0, audio.currentTime - 5); e.preventDefault(); }
+    });
+
+    // --- Vitesse ---
+    speedsEl.addEventListener("click", (e) => {
+      const btn = e.target.closest(".speed");
+      if (!btn) return;
+      audio.playbackRate = parseFloat(btn.dataset.rate);
+      [...speedsEl.children].forEach(b => b.setAttribute("aria-pressed", b === btn ? "true" : "false"));
+    });
+
+    // --- Init ---
+    buildTabs();
+    loadTrack(getTrackFromURL(), false);
+  </script>
+</body>
+</html>
