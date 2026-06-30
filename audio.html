@@ -171,13 +171,13 @@
     // Pistes "level" = un seul audio. Clé = ce qui passe dans l'URL (?track=level1).
     // Piste "vocaux" = plusieurs messages -> on liste un "messages" array.
     const TRACKS = {
-      level1: { eyebrow: "Level I",  title: "Retrouver la sécurité dans ton corps", meta: "Durée : 7 minutes", file: "dpo_audio_securite.mp3", tab: "Level I" },
-      level2: { eyebrow: "Level II", title: "Regard sur toi-même",                  meta: "Durée : 7 minutes", file: "QuickieMasturbation_Jour05_Regard.mp3", tab: "Level II" },
-      level3: { eyebrow: "Level III", title: "Pussy massage",                       meta: "Durée : 7 minutes", file: "pussymassage.mp3", tab: "Level III" },
+      level1: { eyebrow: "Level I",  title: "Retrouver la sécurité dans ton corps", meta: "", file: "dpo_audio_securite.mp3", tab: "Level I" },
+      level2: { eyebrow: "Level II", title: "Regard sur toi-même",                  meta: "", file: "QuickieMasturbation_Jour05_Regard.mp3", tab: "Level II" },
+      level3: { eyebrow: "Level III", title: "Pussy massage",                       meta: "", file: "pussymassage.mp3", tab: "Level III" },
       vocaux: {
-        eyebrow: "Entre nous", title: "Petits messages de Tata Léa",
-        meta: "Trois douceurs à écouter quand tu en as besoin", tab: "Vocaux",
-        note: "Tu peux les écouter dans l'ordre que tu veux, autant de fois que tu veux.",
+        eyebrow: "Vocaux", title: "Petits vocaux entre nous",
+        meta: "", tab: "Vocaux",
+        note: "Tu peux en écouter de temps en temps pour reprogrammer en douceur ta vision de la sexualité.",
         messages: [
           // Titres modifiables librement ci-dessous
           { title: "Non, oui",               file: "NONOUI.m4a" },
@@ -349,7 +349,10 @@
       }
     });
     audio.addEventListener("loadedmetadata", () => {
-      if (mode === "single") durEl.textContent = fmt(audio.duration);
+      if (mode === "single") {
+        durEl.textContent = fmt(audio.duration);
+        metaEl.textContent = "Durée : " + Math.round(audio.duration / 60) + " min";
+      }
     });
     audio.addEventListener("timeupdate", () => {
       const r = audio.duration ? (audio.currentTime / audio.duration) : 0;
