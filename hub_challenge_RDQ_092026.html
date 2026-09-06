@@ -96,8 +96,8 @@
     padding: 20px 22px; transition: all 0.15s ease; position: relative;
   }
   .step-date-corner {
-    position: absolute; top: 16px; right: 20px; font-size: 11px; font-weight: 800;
-    color: var(--rose); letter-spacing: 0.3px; text-align: right;
+    font-size: 11px; font-weight: 800;
+    color: var(--rose); letter-spacing: 0.3px; margin: 4px 0 10px;
   }
   .step.unlocked .step-card { cursor: pointer; }
   .step.unlocked .step-card:hover {
@@ -114,13 +114,19 @@
   .step.today .sticker { background: var(--jaune-fonce); border-color: var(--jaune-fonce); color: var(--noir); }
 
   /* ── Étape exceptionnelle (masterclass) ─────── */
-  .step-highlight .step-node { background: var(--rose); border-color: var(--rose); }
+  .step-highlight .step-node { background: var(--rose); border-color: var(--rose); opacity: 1; color: var(--beige); }
   .step-highlight .step-card { border-color: var(--rose); border-width: 2px; }
   .step-highlight.unlocked .step-card:hover { box-shadow: 4px 4px 0 var(--rose); }
   .step-highlight .sticker {
     background: var(--rose); border-color: var(--rose); color: var(--beige);
   }
   .step-highlight.locked .sticker { background: var(--rose); border-color: var(--rose); color: var(--beige); opacity: 0.6; }
+  .step-highlight.locked .step-card { border-color: var(--rose); opacity: 0.85; }
+  .step-highlight.locked .step-title { color: var(--noir); }
+  .step-highlight.locked .step-desc { color: #4a4a4a; }
+
+  .step.locked .locked-hide { display: none; }
+  .step.unlocked .locked-only { display: none; }
 
   .step-title {
     font-family: 'Raleway', sans-serif; font-size: 17px; font-weight: 700; letter-spacing: -0.3px;
@@ -372,9 +378,9 @@
       <!-- Toujours déverrouillée : c'est un save-the-date, pas du contenu à débloquer. Ne pas remettre de vraie date ici. -->
       <div class="step-node">4</div>
       <div class="step-card">
-        <div class="step-date-corner">13/09<br>20h00</div>
         <span class="sticker">Étape 4 · La masterclass gratuite</span>
         <div class="step-title">Comment apprendre à mieux (faire) jouir</div>
+        <div class="step-date-corner">📅 13/09 · 20h00</div>
         <div class="step-desc">Masterclass en direct avec Léa, dimanche 20h · pour clore le challenge.</div>
         <a href="https://addcal.io/e/u9yvvh9dk9mk" target="_blank" class="step-cta" onclick="event.stopPropagation();">🗓️ Ajouter à mon agenda</a>
       </div>
@@ -412,12 +418,12 @@
 
   <div class="j1-divider"></div>
 
-  <div class="j1-embed">
-    <iframe height="1700" src="https://pljmpylo.github.io/merci-beaucul/challenge_092026_jour1_quiz_plaisir.html?v=1" scrolling="no" data-mbc-iframe></iframe>
+  <div class="j1-bridge">
+    <div class="j1-bridge-title">Fais une capture d'écran de ton résultat.<br>On s'en resservira toute la semaine.</div>
   </div>
 
-  <div class="j1-bridge">
-    <div class="j1-bridge-title">Garde ton résultat de côté.<br>On s'en resservira toute la semaine.</div>
+  <div class="j1-embed">
+    <iframe height="1700" src="https://pljmpylo.github.io/merci-beaucul/challenge_092026_jour1_quiz_plaisir.html?v=1" scrolling="no" data-mbc-iframe></iframe>
   </div>
 
   <div class="footer"></div>
@@ -595,6 +601,7 @@
 
   var now = new Date();
   var steps = document.querySelectorAll('.step');
+  var contentSteps = document.querySelectorAll('.step:not(.step-highlight)');
   var unlockedCount = 0;
   var todayAssigned = false;
 
@@ -618,6 +625,19 @@
   }
 
   steps.forEach(function(step) {
+    if (step.classList.contains('step-highlight')) {
+      // Étape 4 : jamais "débloquée" au sens contenu, mais son CTA reste cliquable en permanence
+      step.classList.add('locked');
+      var hlCard = step.querySelector('.step-card');
+      hlCard.style.cursor = 'pointer';
+      hlCard.addEventListener('click', function(e) {
+        if (e.target.closest('a')) return; // laisse le lien "Ajouter à mon agenda" faire son travail
+        var viewId = viewMap[step.dataset.href];
+        if (viewId) { showView(viewId); }
+      });
+      return;
+    }
+
     var unlockDate = new Date(step.dataset.unlock);
     var isUnlocked = preview || now >= unlockDate;
 
@@ -640,8 +660,8 @@
     btn.addEventListener('click', showHub);
   });
 
-  document.getElementById('progressText').textContent = unlockedCount + ' / ' + steps.length + ' étapes débloquées';
-  var pct = Math.round((unlockedCount / steps.length) * 100);
+  document.getElementById('progressText').textContent = unlockedCount + ' / ' + contentSteps.length + ' étapes débloquées';
+  var pct = Math.round((unlockedCount / contentSteps.length) * 100);
   document.getElementById('progressPct').textContent = pct + ' %';
   document.getElementById('progressFill').style.width = pct + '%';
 
