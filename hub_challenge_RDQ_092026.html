@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La rentrée du Q · Ton parcours</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;1,600&family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rouge-fonce: #8A1B1A;
+    --rose: #DC143C;
+    --beige: #FFFAFD;
+    --jaune: #F7FF59;
+    --jaune-fonce: #FFDE59;
+    --rose-fonce: #561930;
+    --noir: #101010;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--beige);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    color: var(--noir);
+    line-height: 1.5;
+  }
+  .wrap { max-width: 620px; margin: 0 auto; padding: 0 20px 90px; }
+
+  .topbar {
+    display: flex; justify-content: center; align-items: center;
+    padding: 26px 0; border-bottom: 1px solid #eee;
+  }
+  .wordmark {
+    font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 14px;
+    letter-spacing: -0.5px; text-transform: lowercase; color: var(--noir);
+  }
+
+  .hero { text-align: center; padding: 40px 0 6px; }
+  .eyebrow {
+    display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--rouge-fonce); background: var(--beige);
+    padding: 5px 16px; border-radius: 10rem; border: 1px solid var(--rouge-fonce);
+    margin-bottom: 20px;
+  }
+  .hero-heading {
+    font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 34px;
+    letter-spacing: -1.5px; line-height: 1.08; color: var(--noir);
+  }
+  .hero-heading .light { font-family: "Raleway", sans-serif; font-weight: 400; }
+  .span-jaune {
+    font-family: 'Lora', serif; font-weight: 600; font-style: italic;
+    color: var(--jaune); -webkit-text-stroke: 1.3px var(--rouge-fonce);
+  }
+  .hero-sub {
+    font-size: 15px; font-weight: 400; color: #4a4a4a; margin-top: 16px;
+    max-width: 380px; margin-left: auto; margin-right: auto;
+  }
+  .hero-sub-note {
+    display: inline-block;
+    margin-top: 10px;
+    color: #a09090;
+  }
+
+  .progress-wrap { margin: 32px 0 6px; }
+  .progress-label {
+    display: flex; justify-content: space-between; font-size: 11px; font-weight: 700;
+    color: var(--rouge-fonce); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .progress-bar { height: 6px; background: #F0E5E5; border-radius: 10rem; overflow: hidden; }
+  .progress-fill {
+    height: 100%; background: var(--rose); border-radius: 10rem;
+    width: 0%; transition: width 0.5s ease;
+  }
+
+  .timeline { margin-top: 44px; position: relative; }
+  .timeline::before {
+    content: ''; position: absolute; left: 25px; top: 6px; bottom: 6px;
+    width: 2px; background: var(--noir); opacity: 0.12;
+  }
+
+  .step { position: relative; display: flex; gap: 18px; padding-bottom: 22px; }
+  .step:last-child { padding-bottom: 0; }
+
+  .step-node {
+    flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Raleway', sans-serif; font-size: 18px; font-weight: 800; z-index: 1; position: relative;
+    border: 2px solid var(--noir); background: var(--beige); color: var(--noir); opacity: 0.35;
+  }
+  .step.unlocked .step-node {
+    background: var(--rouge-fonce); border-color: var(--rouge-fonce); color: var(--beige); opacity: 1;
+  }
+  .step.today .step-node { background: var(--rose); border-color: var(--rose); }
+
+  .step-card {
+    flex: 1; background: var(--beige); border: 1.5px solid var(--noir); border-radius: 2rem;
+    padding: 20px 22px; transition: all 0.15s ease; position: relative;
+  }
+  .step-date-corner {
+    position: absolute; top: 16px; right: 20px; font-size: 11px; font-weight: 800;
+    color: var(--rose); letter-spacing: 0.3px; text-align: right;
+  }
+  .step.unlocked .step-card { cursor: pointer; }
+  .step.unlocked .step-card:hover {
+    background: #FFF7F7; box-shadow: 4px 4px 0 var(--noir); transform: translate(-2px, -2px);
+  }
+  .step.locked .step-card { border-color: #d8d0d0; opacity: 0.55; }
+
+  .sticker {
+    display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px;
+    text-transform: uppercase; padding: 4px 13px; border-radius: 10rem; margin-bottom: 10px;
+    background: var(--beige); color: var(--rouge-fonce); border: 1px solid var(--rouge-fonce);
+  }
+  .step.locked .sticker { color: #a09090; border-color: #d8c8c8; }
+  .step.today .sticker { background: var(--jaune-fonce); border-color: var(--jaune-fonce); color: var(--noir); }
+
+  /* ── Étape exceptionnelle (masterclass) ─────── */
+  .step-highlight .step-node { background: var(--rose); border-color: var(--rose); }
+  .step-highlight .step-card { border-color: var(--rose); border-width: 2px; }
+  .step-highlight.unlocked .step-card:hover { box-shadow: 4px 4px 0 var(--rose); }
+  .step-highlight .sticker {
+    background: var(--rose); border-color: var(--rose); color: var(--beige);
+  }
+  .step-highlight.locked .sticker { background: var(--rose); border-color: var(--rose); color: var(--beige); opacity: 0.6; }
+
+  .step-title {
+    font-family: 'Raleway', sans-serif; font-size: 17px; font-weight: 700; letter-spacing: -0.3px;
+    color: var(--noir); margin-bottom: 6px; line-height: 1.3;
+  }
+  .step.locked .step-title { color: #a89898; }
+
+  .step-desc { font-size: 13.5px; font-weight: 400; color: #4a4a4a; margin-bottom: 12px; }
+  .step.locked .step-desc { color: #c0b0b0; }
+
+  .step-cta {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700;
+    letter-spacing: 0.3px; text-transform: uppercase; color: var(--rouge-fonce); text-decoration: none;
+    border: 1.5px solid var(--rouge-fonce); border-radius: 10rem; padding: 8px 16px;
+  }
+  .step-highlight .step-cta { border-color: var(--rose); color: var(--rose); }
+  .step-lock {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #b09090;
+  }
+
+  .final-cta {
+    margin-top: 46px; border: 1.5px solid var(--noir); border-radius: 2rem;
+    padding: 34px 28px; text-align: center; background: var(--rouge-fonce); color: var(--beige); display: none;
+  }
+  .final-cta.show { display: block; }
+  .final-cta-title {
+    font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 21px;
+    letter-spacing: -0.5px; line-height: 1.3; margin-bottom: 20px;
+  }
+  .final-cta-btn {
+    display: inline-block; background: var(--beige); color: var(--rouge-fonce); font-weight: 700;
+    font-size: 13px; letter-spacing: 0.3px; text-transform: uppercase; padding: 13px 32px;
+    border-radius: 10rem; text-decoration: none; border: 1px solid var(--beige);
+  }
+
+  .footer {
+    text-align: center; margin-top: 44px; padding-top: 24px; border-top: 1px solid #eee;
+    font-size: 11px; font-weight: 500; color: #b0a0a0; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  /* ── JOUR 1 (vue intégrée) ─────────── */
+  #hubView, #jour1View { display: block; }
+  #jour1View { display: none; }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.3px; text-transform: uppercase; color: var(--rouge-fonce);
+    background: none; border: none; cursor: pointer; padding: 24px 0 0; font-family: 'Raleway', sans-serif;
+  }
+  .j1-hero { text-align: center; padding: 24px 0 8px; }
+  .j1-heading {
+    font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 28px; letter-spacing: -1px;
+    color: var(--noir); max-width: 440px; margin: 14px auto 0; line-height: 1.2;
+  }
+  .j1-quote {
+    background: #FFF5F5; border: 1.5px solid var(--noir); border-radius: 1.5rem;
+    padding: 30px 28px; margin: 28px 0 0; text-align: center;
+  }
+  .j1-quote-mark { font-family: 'Lora', serif; font-size: 40px; line-height: 1; color: var(--rose); opacity: 0.5; display: block; }
+  .j1-quote-text { font-family: 'Lora', serif; font-size: 18px; font-style: italic; color: var(--noir); max-width: 420px; margin: 0 auto; }
+  .j1-quote-oneline { max-width: none; font-size: 16px; white-space: nowrap; }
+  .j1-criteria { margin: 30px 0 0; }
+  .j1-criteria-title { font-weight: 700; font-size: 14px; margin-bottom: 12px; text-align: center; }
+  .j1-criteria-item {
+    display: flex; align-items: flex-start; gap: 12px; background: var(--beige);
+    border: 1.5px solid var(--noir); border-radius: 1rem; padding: 13px 16px; margin-bottom: 9px;
+    font-size: 14px; font-weight: 500;
+  }
+  .j1-criteria-item-plain {
+    display: flex; align-items: flex-start; gap: 10px; padding: 8px 2px;
+    font-size: 14px; font-weight: 500; color: var(--noir);
+  }
+  .j1-arrow { color: var(--rose); font-weight: 800; flex-shrink: 0; }
+  .j1-divider { height: 1px; background: #eee; margin: 34px 0; }
+  .j1-subhead { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--rose); margin: 0 0 14px; text-align: center; }
+  .j1-embed iframe { width: 100%; border: none; display: block; border-radius: 1.2rem; }
+  .j1-note { text-align: center; font-size: 12px; color: #a09090; font-style: italic; margin-top: 30px; }
+  .j1-bridge {
+    margin-top: 34px; background: var(--rouge-fonce); border: 1.5px solid var(--noir); border-radius: 1.5rem;
+    padding: 28px 24px; text-align: center; color: var(--beige);
+  }
+  .j1-bridge-title { font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 17px; line-height: 1.4; margin-bottom: 8px; }
+  .j1-bridge-sub { font-size: 12.5px; opacity: 0.85; }
+
+  .stat-row { margin-bottom: 16px; }
+  .stat-row:last-child { margin-bottom: 0; }
+
+  .vote-buttons { display: flex; gap: 10px; margin-bottom: 4px; }
+  .vote-btn {
+    flex: 1; background: var(--beige); border: 1.5px solid var(--noir); border-radius: 1rem;
+    padding: 14px 10px; font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 13.5px;
+    cursor: pointer; text-align: center; transition: all 0.15s ease;
+  }
+  .vote-btn:hover { background: #FFF5F5; }
+  .vote-buttons.voted .vote-btn { cursor: default; opacity: 0.55; }
+  .vote-buttons.voted .vote-btn:hover { background: var(--beige); }
+  .vote-note { font-size: 12px; color: #a09090; text-align: center; margin-top: 8px; }
+  .stat-results { display: none; margin-top: 14px; }
+  .stat-results.show { display: block; }
+
+  .reminder-card {
+    background: var(--jaune-fonce); border: 1.5px solid var(--noir); border-radius: 1.5rem;
+    padding: 22px 24px; margin-top: 20px; text-align: center;
+  }
+  .reminder-title { font-weight: 800; font-size: 14px; letter-spacing: 0.3px; margin-bottom: 6px; }
+  .reminder-sub { font-size: 13.5px; margin-bottom: 16px; }
+  .reminder-btn {
+    display: inline-flex; align-items: center; gap: 8px; background: var(--noir); color: var(--beige);
+    font-weight: 700; font-size: 12.5px; letter-spacing: 0.3px; text-transform: uppercase;
+    padding: 12px 26px; border-radius: 10rem; text-decoration: none;
+  }
+  .reminder-btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .reminder-btn-small {
+    display: inline-flex; align-items: center; gap: 6px; background: var(--noir); color: var(--beige);
+    font-weight: 700; font-size: 12px; letter-spacing: 0.2px; text-transform: uppercase;
+    padding: 11px 18px; border-radius: 10rem; text-decoration: none;
+  }
+  .stat-label { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .stat-bar-bg { height: 10px; background: #F0E5E5; border-radius: 10rem; overflow: hidden; }
+  .stat-bar-fill { height: 100%; border-radius: 10rem; }
+  .tech-card {
+    background: var(--beige); border: 1.5px solid var(--noir); border-radius: 1.5rem;
+    padding: 22px; margin-top: 16px;
+  }
+  .tech-card-title { font-weight: 800; font-size: 15px; margin-bottom: 8px; }
+  .tech-name-badge {
+    display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--beige); background: var(--rouge-fonce);
+    padding: 5px 14px; border-radius: 10rem; margin-bottom: 12px;
+  }
+  .tech-card-desc { font-size: 14.5px; color: #2b1212; margin-bottom: 14px; line-height: 1.55; }
+  .tech-bullets { display: flex; flex-direction: column; gap: 8px; margin: 12px 0 14px; }
+  .tech-bullet { display: flex; align-items: flex-start; gap: 9px; font-size: 14.5px; color: #2b1212; line-height: 1.5; }
+  .tech-bullet .j1-arrow { flex-shrink: 0; }
+  .tech-card-example { font-size: 13px; font-weight: 700; color: #8A1B1A; margin-bottom: 10px; }
+
+  .move-tip {
+    background: #FFF5F5; border: 1.5px solid var(--noir); border-radius: 1.2rem;
+    padding: 16px 20px; margin-top: 18px; display: flex; align-items: flex-start; gap: 12px;
+  }
+  .move-tip-icon { font-size: 20px; flex-shrink: 0; }
+  .move-tip-text { font-size: 14.5px; color: #2b1212; line-height: 1.55; }
+  .move-tip-text strong { color: #8A1B1A; }
+  .tech-video {
+    width: 100%; border-radius: 1rem; border: 1.5px solid var(--noir); display: block;
+    background: #000;
+  }
+  .audio-player {
+    background: var(--rouge-fonce); border: 1.5px solid var(--noir); border-radius: 1.5rem;
+    padding: 24px 26px; display: flex; align-items: center; gap: 16px; margin-top: 8px;
+  }
+  .audio-play-btn {
+    flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; background: var(--beige);
+    display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--rouge-fonce);
+  }
+  .audio-info { color: var(--beige); }
+  .audio-title { font-weight: 700; font-size: 14px; }
+  .audio-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+  .live-info-row {
+    display: flex; align-items: center; gap: 12px; background: var(--beige);
+    border: 1.5px solid var(--noir); border-radius: 1rem; padding: 14px 18px; margin-top: 12px; font-size: 14px; font-weight: 600;
+  }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px; background: var(--beige); color: var(--rouge-fonce);
+    font-weight: 700; font-size: 13px; letter-spacing: 0.3px; text-transform: uppercase; padding: 13px 28px;
+    border-radius: 10rem; border: 1.5px solid var(--noir); text-decoration: none; cursor: pointer;
+  }
+  .btn-disabled {
+    display: inline-flex; align-items: center; gap: 8px; background: #F0E5E5; color: #b09090;
+    font-weight: 700; font-size: 13px; letter-spacing: 0.3px; text-transform: uppercase; padding: 13px 28px;
+    border-radius: 10rem; border: 1.5px solid #d8c8c8; margin-top: 10px;
+  }
+  .live-cta-note { font-size: 11.5px; color: #b09090; margin-top: 10px; }
+
+  .preview-banner {
+    display: none; background: var(--noir); color: var(--jaune); text-align: center;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.5px; padding: 8px;
+  }
+  .preview-banner.show { display: block; }
+
+  @media (max-width: 480px) {
+    .hero-heading { font-size: 27px; }
+    .span-jaune { -webkit-text-stroke-width: 1px; }
+    .step { gap: 12px; }
+    .step-node { width: 42px; height: 42px; font-size: 15px; }
+    .timeline::before { left: 21px; }
+    .j1-quote-oneline { font-size: 12.5px; white-space: normal; }
+  }
+</style>
+</head>
+<body>
+
+<div class="preview-banner" id="previewBanner">🔓 MODE PREVIEW · toutes les étapes affichées déverrouillées</div>
+
+<div class="wrap">
+
+<div id="hubView">
+
+  <div class="hero">
+    <span class="eyebrow">Ton parcours</span>
+    <div class="hero-heading">La rentrée du <span class="span-jaune">Q</span><br><span class="light">7 jours pour réveiller ton plaisir</span></div>
+    <div class="hero-sub">Une semaine, 4 étapes qui se débloquent au fur et à mesure. Reviens ici quand tu veux, rien ne disparaît.<br><span class="hero-sub-note">Pssttt. On se retrouve dimanche 13 à 20h00 pour l'étape 4, je fais une masterclass gratuite.</span></div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progressText">0 / 4 étapes débloquées</span>
+      <span id="progressPct">0 %</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div class="timeline" id="timeline">
+
+    <div class="step" data-unlock="2026-08-01T00:00:00+02:00" data-href="jour1_plaisir.html">
+      <div class="step-node">1</div>
+      <div class="step-card">
+        <span class="sticker">Étape 1 · Le Quiz</span>
+        <div class="step-title">Comprendre la place du plaisir dans ta vie</div>
+        <div class="step-desc">Un sondage communauté + un quiz de 4 questions pour poser un premier diagnostic.</div>
+        <span class="step-cta locked-hide">Découvrir →</span>
+        <span class="step-lock locked-only">🔒 Débloque lundi 7 septembre</span>
+      </div>
+    </div>
+
+    <div class="step" data-unlock="2026-09-09T06:00:00+02:00" data-href="jour3_audio.html">
+      <div class="step-node">2</div>
+      <div class="step-card">
+        <span class="sticker">Étape 2 · L'audio guidée</span>
+        <div class="step-title">La méditation orgasmique</div>
+        <div class="step-desc">Une nouvelle manière d'aborder ton plaisir · à écouter au calme, casque sur les oreilles.</div>
+        <span class="step-cta locked-hide">Écouter →</span>
+        <span class="step-lock locked-only">🔒 Débloque mercredi 9 septembre</span>
+      </div>
+    </div>
+
+    <div class="step" data-unlock="2026-09-11T06:00:00+02:00" data-href="jour5_technique.html">
+      <div class="step-node">3</div>
+      <div class="step-card">
+        <span class="sticker">Étape 3 · Techniques pour se toucher autrement</span>
+        <div class="step-title">Se toucher autrement</div>
+        <div class="step-desc">Deux techniques pour les clito sensible ou pas, à tester seul·e ou à deux.</div>
+        <span class="step-cta locked-hide">Voir les techniques →</span>
+        <span class="step-lock locked-only">🔒 Débloque vendredi 11 septembre</span>
+      </div>
+    </div>
+
+    <div class="step step-highlight" data-unlock="2020-01-01T00:00:00+02:00" data-href="masterclass.html">
+      <!-- Toujours déverrouillée : c'est un save-the-date, pas du contenu à débloquer. Ne pas remettre de vraie date ici. -->
+      <div class="step-node">4</div>
+      <div class="step-card">
+        <div class="step-date-corner">13/09<br>20h00</div>
+        <span class="sticker">Étape 4 · La masterclass gratuite</span>
+        <div class="step-title">Comment apprendre à mieux (faire) jouir</div>
+        <div class="step-desc">Masterclass en direct avec Léa, dimanche 20h · pour clore le challenge.</div>
+        <a href="https://addcal.io/e/u9yvvh9dk9mk" target="_blank" class="step-cta" onclick="event.stopPropagation();">🗓️ Ajouter à mon agenda</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="final-cta" id="finalCta">
+    <div class="final-cta-title" id="finalCtaTitle">Toutes les étapes sont débloquées.<br>Prête pour la suite ?</div>
+    <a href="#" class="final-cta-btn" id="finalCtaBtn" style="display:none;">Save the date</a>
+    <div class="reminder-btn-row" id="finalCtaCalRow" style="margin-top:12px;">
+      <a href="https://addcal.io/e/u9yvvh9dk9mk" target="_blank" class="reminder-btn-small">🗓️ Ajouter à mon agenda</a>
+    </div>
+  </div>
+
+  <div class="footer"></div>
+
+</div><!-- /hubView -->
+
+<div id="jour1View">
+
+  <button class="back-btn" id="backBtn">← Retour au parcours</button>
+
+  <div class="j1-hero">
+    <span class="eyebrow">La rentrée du Q</span>
+    <div class="j1-heading">Étape 1 · Comprendre la place du plaisir dans ta vie</div>
+  </div>
+
+  <div class="j1-criteria">
+    <div class="j1-criteria-title">Cette étape est faite pour toi si :</div>
+    <div class="j1-criteria-item"><span class="j1-arrow">→</span> Tu ne ressens pas énormément de plaisir pendant le sexe</div>
+    <div class="j1-criteria-item"><span class="j1-arrow">→</span> Tu culpabilises de juste recevoir du plaisir pendant un rapport à deux</div>
+    <div class="j1-criteria-item"><span class="j1-arrow">→</span> Tu sais que tu peux ressentir + que ça, mais tu sais pas comment</div>
+  </div>
+
+  <div class="j1-divider"></div>
+
+  <div class="j1-embed">
+    <iframe height="1700" src="https://pljmpylo.github.io/merci-beaucul/challenge_092026_jour1_quiz_plaisir.html?v=1" scrolling="no" data-mbc-iframe></iframe>
+  </div>
+
+  <div class="j1-bridge">
+    <div class="j1-bridge-title">Garde ton résultat de côté.<br>On s'en resservira toute la semaine.</div>
+  </div>
+
+  <div class="footer"></div>
+
+</div><!-- /jour1View -->
+
+<div id="jour3View" style="display:none;">
+
+  <button class="back-btn back-btn-jour3">← Retour au parcours</button>
+
+  <div class="j1-hero">
+    <span class="eyebrow">Étape 2 · La rentrée du Q</span>
+    <div class="j1-heading">Aujourd'hui, on arrête de réfléchir. On ressent.</div>
+  </div>
+
+  <p class="j1-note">Allume une bougie, coupe ton tel, mets-toi à l'aise. On y va.</p>
+
+  <div class="j1-subhead" style="margin-top:16px;">🎧 Ton audio du jour</div>
+  <div class="audio-player" id="audioPlayerCard">
+    <div class="audio-play-btn" id="audioPlayBtn">▶</div>
+    <div class="audio-info">
+      <div class="audio-title">Méditation orgasmique</div>
+      <div class="audio-sub" id="audioSub">clique pour écouter</div>
+    </div>
+  </div>
+  <audio id="audioEl" src="https://pljmpylo.github.io/merci-beaucul/dpo_audio_meditation_orgasmique.mp3" preload="none"></audio>
+
+  <p style="font-size:13.5px; color:#4a2a2a; text-align:center; margin-top:14px;">Tu as testé la méditation orgasmique ? Maintenant essaie de le faire sur une des musiques de <a href="https://open.spotify.com/playlist/1F4ZzFtZey3Q0NgmzpK87Y?si=f566d292af184f86" target="_blank" style="color:var(--rouge-fonce); font-weight:700;">🎵 cette playlist</a>.</p>
+
+  <div class="j1-divider"></div>
+
+  <div class="j1-quote">
+    <span class="j1-quote-mark">"</span>
+    <div class="j1-quote-text">Orgasmique dans deux sens : pour te connecter à ton corps, et parce que tu peux la faire… en te touchant.</div>
+  </div>
+
+  <div class="j1-criteria">
+    <div class="j1-criteria-title">Ce que ça peut t'apporter :</div>
+    <div class="j1-criteria-item"><span class="j1-arrow">→</span> T'ancrer dans ton corps, le célébrer</div>
+    <div class="j1-criteria-item"><span class="j1-arrow">→</span> Être à l'écoute de tes sensations, dans le moment présent</div>
+    <div class="j1-criteria-item"><span class="j1-arrow">→</span> Intégrer que tu as le droit et mérites du plaisir</div>
+  </div>
+
+  <div class="j1-bridge">
+    <div class="j1-bridge-title">Réécoute cet audio autant de fois que tu veux d'ici là.</div>
+  </div>
+
+  <div class="footer"></div>
+
+</div><!-- /jour3View -->
+
+<div id="jour5View" style="display:none;">
+
+  <button class="back-btn back-btn-jour5">← Retour au parcours</button>
+
+  <div class="j1-hero">
+    <span class="eyebrow">Étape 3 · La rentrée du Q</span>
+    <div class="j1-heading">Se toucher autrement</div>
+  </div>
+
+  <p class="j1-note" style="font-style:normal; text-align:left;">En écrivant le programme développer son potentiel orgasmique, on a demandé à la communauté à propos de leur clito : plutôt "team plume" (un frôlement suffit) ou "team marteau-piqueur" (faut appuyer, sinon tu sens rien) ?</p>
+
+  <div class="j1-subhead" style="margin-top:18px;">📊 Vote et découvre les résultats</div>
+  <div class="j1-quote" style="text-align:left;">
+    <div class="vote-buttons" id="voteButtons">
+      <button class="vote-btn" data-vote="plume">🪶 Team plume</button>
+      <button class="vote-btn" data-vote="marteau">🔨 Team marteau-piqueur</button>
+    </div>
+    <div class="vote-note" id="voteNote">Clique pour voir ce qu'a répondu la communauté</div>
+
+    <div class="stat-results" id="statResults">
+      <div class="stat-row">
+        <div class="stat-label"><span>🪶 Clito sensible</span><span>48%</span></div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill" id="fillPlume" style="width:0%; background: var(--rose);"></div></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label"><span>🔨 Team marteau-piqueur</span><span>52%</span></div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill" id="fillMarteau" style="width:0%; background: var(--noir);"></div></div>
+      </div>
+      <p style="font-size:12.5px; font-style:italic; color:#8a6a6a; margin-top:14px;">Presque à égalité. Y'a pas une pression universelle. Y'a la tienne, à toi de la trouver.</p>
+    </div>
+  </div>
+
+  <div class="j1-divider"></div>
+
+  <p style="font-size:15px; color:#2b1212; text-align:left; line-height:1.55; margin-top:18px;">Alors aujourd'hui, je te donne deux techniques, une par team, et on teste la technique qui te ressemble (ou les deux, on juge pas) :</p>
+
+  <div class="tech-card">
+    <div class="tech-name-badge">🥁 Tapoter</div>
+    <div class="tech-card-title">🪶 Team plume → le contact indirect</div>
+    <div class="tech-card-desc">Tu passes par le capuchon, pas directement sur le gland du clito.</div>
+    <div class="tech-bullets">
+      <div class="tech-bullet"><span class="j1-arrow">→</span> Caresse à travers un tissu</div>
+      <div class="tech-bullet"><span class="j1-arrow">→</span> Pose toute la main sur la vulve plutôt que viser un point de 3mm² avec le bout du doigt</div>
+      <div class="tech-bullet"><span class="j1-arrow">→</span> Ça rassure la zone, ça évite la saturation</div>
+    </div>
+    <div class="tech-card-example">De petits impacts légers et répétés, comme un tapotement du bout des doigts. En vidéo :</div>
+    <video class="tech-video" src="https://pljmpylo.github.io/merci-beaucul/dpo-mano-indirect-tapoter.mp4" autoplay muted loop playsinline></video>
+  </div>
+
+  <div class="tech-card">
+    <div class="tech-name-badge">🥁 Tapoter</div>
+    <div class="tech-card-title">🔨 Team marteau-piqueur → le contact direct</div>
+    <div class="tech-card-desc">Là tu vas pile sur le gland, sans filtre.</div>
+    <div class="tech-bullets">
+      <div class="tech-bullet"><span class="j1-arrow">→</span> Frôle</div>
+      <div class="tech-bullet"><span class="j1-arrow">→</span> Touche</div>
+      <div class="tech-bullet"><span class="j1-arrow">→</span> Appuie</div>
+      <div class="tech-bullet"><span class="j1-arrow">→</span> Masse</div>
+    </div>
+    <div class="tech-card-desc" style="margin-bottom:8px;">Le jeu, c'est de trouver où et à quel rythme, pas juste "plus fort".</div>
+    <div class="tech-card-example">Le même principe, mais en direct. En vidéo :</div>
+    <video class="tech-video" src="https://pljmpylo.github.io/merci-beaucul/dpo-mano-tapoter.mp4" autoplay muted loop playsinline></video>
+  </div>
+
+  <div class="move-tip">
+    <span class="move-tip-icon">💡</span>
+    <div class="move-tip-text"><strong>Le move le plus malin</strong>, celui que peu de gens font : commencer indirect, monter vers du direct au milieu, puis revenir à de l'indirect quand ça devient trop intense. Un peu comme une vague, plutôt qu'une ligne droite.</div>
+  </div>
+
+  <div class="j1-bridge">
+    <div class="j1-bridge-title">Dans le programme développer son potentiel orgasmique, on filme absolument toutes les variantes (clito sensible et pas sensible) des différentes techniques pour apprendre à se toucher mieux ou autrement.</div>
+    <div class="j1-bridge-sub">Des vidéos sur des vraies vulves, parce que montrer c'est important !! Mais aussi des gifs et des schémas pour chaque technique si tu préfères aux vidéos.</div>
+  </div>
+
+  <div class="reminder-card">
+    <div class="reminder-title">🔔 RAPPEL !</div>
+    <div class="reminder-sub">Dimanche je fais une masterclass gratuite en live sur "Comment apprendre à mieux (faire) jouir" ! Garde ton créneau de dimanche à 20h00.</div>
+    <div class="reminder-btn-row">
+      <a href="https://addcal.io/e/u9yvvh9dk9mk" target="_blank" class="reminder-btn-small">🗓️ Ajouter à mon agenda</a>
+    </div>
+  </div>
+
+  <div class="footer"></div>
+
+</div><!-- /jour5View -->
+
+<div id="masterclassView" style="display:none;">
+
+  <button class="back-btn back-btn-masterclass">← Retour au parcours</button>
+
+  <div class="j1-hero">
+    <span class="eyebrow">Étape 4 · La rentrée du Q</span>
+    <div class="j1-heading">Comment apprendre à mieux (faire) jouir</div>
+  </div>
+
+  <p style="font-size:15px; color:#2b1212; text-align:center; margin-top:10px;">On referme la semaine ensemble, en direct.</p>
+
+  <div class="live-info-row">📅 Dimanche 13 septembre</div>
+  <div class="live-info-row">🕗 20h00 · en direct avec Léa</div>
+
+  <div class="j1-divider"></div>
+
+  <p class="j1-note" style="font-style:normal; font-size:13.5px; color:#4a4a4a; text-align:left;">On rassemble tout ce qu'on a vu cette semaine, le quiz, l'audio, la technique, et on répond à la vraie question : comment apprendre à mieux (faire) jouir.</p>
+
+  <div class="j1-bridge" id="liveBridge">
+    <div class="final-cta-title" style="margin-bottom:16px;">Mets un rappel pour être sûr de ne pas rater ça</div>
+    <div class="reminder-btn-row" style="margin-top:4px;">
+      <a href="https://addcal.io/e/u9yvvh9dk9mk" target="_blank" class="btn-secondary">🗓️ Ajouter à mon agenda</a>
+    </div>
+    <div class="live-cta-note">Le bouton "Participer" s'active le jour du live et tu recevras aussi le lien par mail. Il sera dans ton calendrier si tu cliques au-dessus.</div>
+  </div>
+
+  <div class="footer"></div>
+
+</div><!-- /masterclassView -->
+
+</div>
+
+<script>
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var preview = params.get('preview') === 'true';
+  if (preview) document.getElementById('previewBanner').classList.add('show');
+
+  var now = new Date();
+  var steps = document.querySelectorAll('.step');
+  var unlockedCount = 0;
+  var todayAssigned = false;
+
+  var viewMap = {
+    'jour1_plaisir.html': 'jour1View',
+    'jour3_audio.html': 'jour3View',
+    'jour5_technique.html': 'jour5View',
+    'masterclass.html': 'masterclassView'
+  };
+
+  function showView(viewId) {
+    document.getElementById('hubView').style.display = 'none';
+    Object.values(viewMap).forEach(function(id) { document.getElementById(id).style.display = 'none'; });
+    document.getElementById(viewId).style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+  function showHub() {
+    Object.values(viewMap).forEach(function(id) { document.getElementById(id).style.display = 'none'; });
+    document.getElementById('hubView').style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+
+  steps.forEach(function(step) {
+    var unlockDate = new Date(step.dataset.unlock);
+    var isUnlocked = preview || now >= unlockDate;
+
+    if (isUnlocked) {
+      unlockedCount++;
+      step.classList.add('unlocked');
+      var sameDay = now.toDateString() === unlockDate.toDateString();
+      if (sameDay && !todayAssigned) { step.classList.add('today'); todayAssigned = true; }
+      var card = step.querySelector('.step-card');
+      card.addEventListener('click', function() {
+        var viewId = viewMap[step.dataset.href];
+        if (viewId) { showView(viewId); } else { window.location.href = step.dataset.href; }
+      });
+    } else {
+      step.classList.add('locked');
+    }
+  });
+
+  document.querySelectorAll('.back-btn').forEach(function(btn) {
+    btn.addEventListener('click', showHub);
+  });
+
+  document.getElementById('progressText').textContent = unlockedCount + ' / ' + steps.length + ' étapes débloquées';
+  var pct = Math.round((unlockedCount / steps.length) * 100);
+  document.getElementById('progressPct').textContent = pct + ' %';
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  document.getElementById('finalCta').classList.add('show');
+
+  // CTA final : masterclass gratuite (au lieu de 20€) avant le 13/09 20h, promo après
+  var promoUnlockDate = new Date('2026-09-13T20:00:00+02:00');
+  var finalCtaTitle = document.getElementById('finalCtaTitle');
+  var finalCtaBtn = document.getElementById('finalCtaBtn');
+  var finalCtaCalRow = document.getElementById('finalCtaCalRow');
+  if (finalCtaBtn) {
+    if (now >= promoUnlockDate) {
+      finalCtaTitle.innerHTML = 'Le programme à 49€ pendant 48h seulement.';
+      finalCtaBtn.textContent = 'J\'en profite';
+      finalCtaBtn.href = '#'; // ⚠️ lien promo -20% à intégrer, PL doit le fournir
+      finalCtaBtn.style.display = '';
+      finalCtaCalRow.style.display = 'none';
+    } else {
+      finalCtaTitle.innerHTML = 'La masterclass du 13/09 à 20h00, gratuite (au lieu de 20€ normalement), pour apprendre à mieux (faire) jouir.';
+      finalCtaBtn.textContent = 'Save the Date';
+      finalCtaBtn.href = '#'; // ⚠️ lien save-the-date à intégrer, PL doit le fournir
+    }
+  }
+
+  // Live day check : le jour même du live (13/09), on montre "Participer" au lieu de "Me rappeler"
+  var liveDate = new Date('2026-09-13T00:00:00+02:00');
+  var isLiveDay = now.toDateString() === liveDate.toDateString();
+  var liveBridge = document.getElementById('liveBridge');
+  if (isLiveDay) {
+    liveBridge.innerHTML = '<div class="final-cta-title" style="margin-bottom:16px;">C\'est aujourd\'hui, 20h</div><a href="https://us06web.zoom.us/j/88250211211" target="_blank" class="final-cta-btn">Je participe au live →</a>';
+  }
+
+  // Vote interactif étape 3 : révèle les vrais % déjà enregistrés au clic
+  var voteButtons = document.getElementById('voteButtons');
+  if (voteButtons) {
+    voteButtons.querySelectorAll('.vote-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (voteButtons.classList.contains('voted')) return;
+        voteButtons.classList.add('voted');
+        document.getElementById('voteNote').textContent = 'Merci, voici ce qu\'a répondu la communauté :';
+        document.getElementById('statResults').classList.add('show');
+        setTimeout(function() {
+          document.getElementById('fillPlume').style.width = '48%';
+          document.getElementById('fillMarteau').style.width = '52%';
+        }, 50);
+      });
+    });
+  }
+
+  // Lecteur audio étape 2
+  var audioEl = document.getElementById('audioEl');
+  var audioPlayBtn = document.getElementById('audioPlayBtn');
+  var audioSub = document.getElementById('audioSub');
+  if (audioEl && audioPlayBtn) {
+    function formatTime(s) {
+      if (!isFinite(s)) return '';
+      var m = Math.floor(s / 60), sec = Math.floor(s % 60);
+      return m + ':' + (sec < 10 ? '0' : '') + sec;
+    }
+    audioPlayBtn.addEventListener('click', function() {
+      if (audioEl.paused) { audioEl.play(); } else { audioEl.pause(); }
+    });
+    audioEl.addEventListener('play', function() { audioPlayBtn.textContent = '❚❚'; });
+    audioEl.addEventListener('pause', function() { audioPlayBtn.textContent = '▶'; });
+    audioEl.addEventListener('loadedmetadata', function() {
+      audioSub.textContent = formatTime(audioEl.duration);
+    });
+    audioEl.addEventListener('timeupdate', function() {
+      audioSub.textContent = formatTime(audioEl.currentTime) + ' / ' + formatTime(audioEl.duration);
+    });
+    audioEl.addEventListener('ended', function() {
+      audioSub.textContent = 'terminé, tu peux réécouter';
+    });
+  }
+
+})();
+</script>
+
+</body>
+</html>
