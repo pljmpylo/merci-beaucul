@@ -660,8 +660,8 @@
     btn.addEventListener('click', showHub);
   });
 
-  document.getElementById('progressText').textContent = unlockedCount + ' / ' + contentSteps.length + ' étapes débloquées';
-  var pct = Math.round((unlockedCount / contentSteps.length) * 100);
+  document.getElementById('progressText').textContent = unlockedCount + ' / ' + steps.length + ' étapes débloquées';
+  var pct = Math.round((unlockedCount / steps.length) * 100);
   document.getElementById('progressPct').textContent = pct + ' %';
   document.getElementById('progressFill').style.width = pct + '%';
 
