@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz - Mon rapport au corps — Programme COME</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  * , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    --crimson: #DC143C;
+    --bordeaux: #8a1b1a;
+    --ink: #101010;
+    --cream: #FFFAFD;
+    --gold: #FFE680;
+    font-family: 'Raleway', Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a, button { cursor: pointer; font-family: inherit; }
+  .qt-wrap { min-height: 100vh; }
+  .qt-shell { max-width: 640px; margin: 0 auto; padding: 56px 24px 90px; }
+
+  /* ---------- shared bits ---------- */
+  .qt-hidden { display: none !important; }
+  .qt-eyebrow {
+    display: inline-block;
+    background: rgba(138,27,26,0.08);
+    border: 1px solid rgba(138,27,26,0.22);
+    color: var(--bordeaux);
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .qt-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--cream);
+    color: var(--ink);
+    font-weight: 400;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    padding: 0.9rem 3rem;
+    border: 1px solid var(--bordeaux);
+    border-radius: 10rem;
+    transition: color 450ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qt-btn::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    top: 102%;
+    background: var(--bordeaux);
+    transition: top 450ms ease;
+    z-index: 0;
+  }
+  .qt-btn span { position: relative; z-index: 1; }
+  .qt-btn:hover { color: var(--cream); }
+  .qt-btn:hover::before { top: 0; }
+  .qt-btn:disabled { opacity: 0.4; pointer-events: none; }
+
+  .qt-btn-outline {
+    background: transparent;
+    border: 1px solid rgba(16,16,16,0.25);
+    color: var(--ink);
+  }
+  .qt-btn-outline::before { background: var(--ink); }
+
+  /* ---------- intro ---------- */
+  .qt-screen { animation: qtFadeUp 0.45s ease both; }
+  @keyframes qtFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  #qt-intro h1 {
+    font-size: clamp(34px, 6vw, 48px);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    margin-bottom: 22px;
+  }
+  #qt-intro h1 em { font-style: normal; color: var(--crimson); }
+  .qt-intro-text {
+    font-size: 16.5px;
+    color: rgba(16,16,16,0.72);
+    max-width: 480px;
+    margin-bottom: 16px;
+  }
+  #qt-intro .qt-btn { margin-top: 28px; }
+
+  /* ---------- quiz ---------- */
+  .qt-progress-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(16,16,16,0.4);
+    margin-bottom: 10px;
+    text-align: right;
+  }
+  .qt-progress-track {
+    height: 4px;
+    background: rgba(138,27,26,0.12);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+  .qt-progress-bar {
+    height: 100%;
+    background: var(--crimson);
+    border-radius: 4px;
+    transition: width 350ms ease;
+    width: 0%;
+  }
+  .qt-q-text {
+    font-family: 'Raleway', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: clamp(21px, 3.2vw, 26px);
+    line-height: 1.3;
+    color: var(--bordeaux);
+    margin-bottom: 30px;
+  }
+  .qt-options { display: flex; flex-direction: column; gap: 12px; }
+  .qt-opt-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    text-align: left;
+    background: #fff;
+    border: 1.5px solid rgba(138,27,26,0.16);
+    border-radius: 16px;
+    padding: 16px 18px;
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: var(--ink);
+    transition: border-color 180ms ease, background 180ms ease;
+  }
+  .qt-opt-btn:hover:not(:disabled) { border-color: var(--crimson); background: rgba(220,20,60,0.03); }
+  .qt-opt-btn.qt-selected { border-color: var(--crimson); background: rgba(220,20,60,0.06); }
+  .qt-opt-letter {
+    flex: 0 0 26px;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--bordeaux);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    margin-top: 1px;
+  }
+  .qt-opt-text { flex: 1; padding-top: 2px; }
+
+  /* ---------- results ---------- */
+  .qt-result-kicker {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(16,16,16,0.4);
+    margin-bottom: 12px;
+  }
+  .qt-result-title {
+    font-family: 'Raleway', sans-serif;
+    font-style: normal;
+    font-weight: 800;
+    font-size: clamp(26px, 4.4vw, 34px);
+    color: var(--bordeaux);
+    line-height: 1.15;
+    margin-bottom: 18px;
+  }
+  .qt-result-title strong { font-weight: 700; }
+  .qt-result-desc {
+    font-size: 16px;
+    color: rgba(16,16,16,0.75);
+    margin-bottom: 12px;
+  }
+  .qt-divider {
+    border: none;
+    border-top: 1px solid rgba(138,27,26,0.15);
+    margin: 34px 0;
+  }
+  .qt-ex-label {
+    display: inline-block;
+    background: var(--crimson);
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 5px 13px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+  }
+  .qt-ex-intro {
+    font-size: 15.5px;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .qt-ex-intro u { text-decoration-color: var(--crimson); }
+
+  /* fillable field-card */
+  .qt-card {
+    background: #fff;
+    border: 1.5px solid rgba(138,27,26,0.14);
+    border-radius: 18px;
+    padding: 20px 20px 22px;
+    margin-bottom: 16px;
+  }
+  .qt-card-name {
+    font-weight: 700;
+    font-size: 14.5px;
+    color: var(--bordeaux);
+    margin-bottom: 14px;
+  }
+  .qt-field { margin-bottom: 14px; }
+  .qt-field:last-child { margin-bottom: 0; }
+  .qt-field-label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: rgba(16,16,16,0.4);
+    margin-bottom: 7px;
+  }
+  .qt-field-prompt {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic;
+    font-size: 14px;
+    color: rgba(16,16,16,0.6);
+    margin-bottom: 8px;
+  }
+  .qt-input, .qt-textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid rgba(16,16,16,0.18);
+    background: transparent;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14.5px;
+    color: var(--ink);
+    padding: 6px 2px;
+    transition: border-color 180ms ease;
+  }
+  .qt-input:focus, .qt-textarea:focus { outline: none; border-color: var(--crimson); }
+  .qt-textarea { resize: vertical; min-height: 44px; border: 1.5px solid rgba(16,16,16,0.18); border-radius: 10px; padding: 10px 12px; }
+  .qt-textarea:focus { border-color: var(--crimson); }
+  .qt-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .qt-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+  .qt-chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .qt-chip {
+    background: transparent;
+    border: 1.5px solid rgba(16,16,16,0.2);
+    border-radius: 100px;
+    padding: 7px 14px;
+    font-size: 12.5px;
+    color: var(--ink);
+    transition: all 150ms ease;
+  }
+  .qt-chip:hover { border-color: var(--crimson); }
+  .qt-chip.qt-chip-active { background: var(--crimson); border-color: var(--crimson); color: #fff; }
+  .qt-chip-other-input {
+    margin-top: 8px;
+  }
+
+  .qt-callout {
+    background: rgba(255,230,128,0.22);
+    border: 1px solid rgba(138,27,26,0.14);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+  }
+  .qt-callout-label {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .qt-callout-line {
+    font-size: 13.5px;
+    line-height: 1.7;
+    margin-bottom: 4px;
+  }
+  .qt-callout-example {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic;
+    font-size: 12.5px;
+    color: rgba(16,16,16,0.5);
+    margin-top: 8px;
+  }
+
+  .qt-callout .qt-field:last-of-type { margin-bottom: 0; }
+
+  .qt-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+
+  /* print CTA box */
+  .qt-print-box {
+    background: #fff;
+    border: 1.5px solid rgba(220,20,60,0.18);
+    border-radius: 20px;
+    padding: 26px 24px;
+    margin-top: 34px;
+    text-align: center;
+  }
+  .qt-print-title { font-size: 11px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; color: var(--crimson); margin-bottom: 8px; }
+  .qt-print-text { font-size: 13.5px; color: rgba(16,16,16,0.6); max-width: 380px; margin: 0 auto 16px; }
+
+  @media (max-width: 520px) {
+    .qt-shell { padding: 40px 18px 70px; }
+    .qt-row-2, .qt-row-3 { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    body { background: #fff; }
+    #qt-intro, #qt-quiz, .qt-print-box, .qt-actions { display: none !important; }
+    #qt-results { display: block !important; }
+    .qt-card, .qt-callout { break-inside: avoid; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="qt-wrap">
+  <div class="qt-shell">
+
+    <!-- ============ INTRO ============ -->
+    <div id="qt-intro" class="qt-screen">
+      <span class="qt-eyebrow">Semaine 1 — Comprendre</span>
+      <h1>Quiz - Mon rapport au <em>corps</em></h1>
+      <p class="qt-intro-text">Dans ce quiz on regarde comment tu es connecté à ton corps pendant le sexe (solo ou à deux).</p>
+      <p class="qt-intro-text">Ce que tu remarques, ce que tu sais nommer, comment tu sens ton excitation monter.</p>
+      <button id="qt-start-btn" class="qt-btn"><span>Commencer</span></button>
+    </div>
+
+    <!-- ============ QUIZ ============ -->
+    <div id="qt-quiz" class="qt-screen qt-hidden">
+      <div class="qt-progress-label" id="qt-progress-label"></div>
+      <div class="qt-progress-track"><div class="qt-progress-bar" id="qt-progress-bar"></div></div>
+      <div id="qt-q-container"></div>
+    </div>
+
+    <!-- ============ RESULTS ============ -->
+    <div id="qt-results" class="qt-screen qt-hidden">
+      <div id="qt-results-container"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+
+  var QUESTIONS = [
+    {
+      text: "Quand tu te masturbes, à quoi tu fais le plus attention ?",
+      opts: [
+        { p: 1, t: "Surtout à ce que je regarde / imagine (porno, fantasmes)." },
+        { p: 2, t: "Surtout à mon pénis, à « est-ce que ça monte ou ça descend »." },
+        { p: 3, t: "Un peu à mon pénis, un peu au reste de mon corps (respiration, tension, cœur…)." },
+        { p: 4, t: "À mon corps entier : souffle, muscles, peau, tension, détente…" }
+      ]
+    },
+    {
+      text: "Si tu devais décrire ce que tu ressens dans ton corps pendant un rapport ou une masturbation, ce serait :",
+      opts: [
+        { p: 1, t: "Très difficile : à part « je sens / je sens rien », je sais pas trop quoi dire." },
+        { p: 2, t: "Possible, mais avec peu de mots : chaud, froid, tendu, détendu, excité." },
+        { p: 3, t: "Plutôt facile : je peux parler de picotements, pression, lourdeur, vagues, etc." },
+        { p: 4, t: "Assez naturel : j'ai plein de mots et j'aime observer mes sensations." }
+      ]
+    },
+    {
+      text: "Les signes physiques qui t'indiquent que l'excitation monte (pulsations, contractions du périnée, rythme cardiaque qui accélère, respiration qui change), tu dirais que :",
+      opts: [
+        { p: 1, t: "Je les remarque quasiment pas." },
+        { p: 2, t: "Je les remarque juste avant l'éjaculation." },
+        { p: 3, t: "Je les remarque quand l'excitation est déjà bien montée." },
+        { p: 4, t: "Je les repère assez tôt et je vois à peu près « où j'en suis »." }
+      ]
+    },
+    {
+      text: "Quand tu es avec quelqu'un, pendant le sexe :",
+      opts: [
+        { p: 1, t: "Je suis surtout dans ma tête (pensées, angoisses, performance)." },
+        { p: 2, t: "J'alterne en permanence entre mental et corps, sans vraiment me poser." },
+        { p: 3, t: "Je pars parfois dans ma tête, mais j'arrive à revenir à mon corps." },
+        { p: 4, t: "Je me sens souvent bien dans mon corps, même s'il y a quelques pensées." }
+      ]
+    }
+  ];
+
+  var currentQ = 0;
+  var score = 0;
+  var answering = false;
+
+  var elIntro = document.getElementById('qt-intro');
+  var elQuiz = document.getElementById('qt-quiz');
+  var elResults = document.getElementById('qt-results');
+
+  document.getElementById('qt-start-btn').addEventListener('click', startQuiz);
+
+  function startQuiz() {
+    elIntro.classList.add('qt-hidden');
+    elQuiz.classList.remove('qt-hidden');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    var q = QUESTIONS[currentQ];
+    var total = QUESTIONS.length;
+    answering = false;
+    document.getElementById('qt-progress-label').textContent = 'Question ' + (currentQ + 1) + ' / ' + total;
+    document.getElementById('qt-progress-bar').style.width = (((currentQ + 1) / total) * 100) + '%';
+    var container = document.getElementById('qt-q-container');
+    var letters = ['A', 'B', 'C', 'D'];
+    var html = '';
+    html += '<p class="qt-q-text">' + q.text + '</p>';
+    html += '<div class="qt-options">';
+    q.opts.forEach(function (opt, i) {
+      html += '<button class="qt-opt-btn" data-points="' + opt.p + '">'
+        + '<span class="qt-opt-letter">' + letters[i] + '</span>'
+        + '<span class="qt-opt-text">' + opt.t + '</span>'
+        + '</button>';
+    });
+    html += '</div>';
+    container.innerHTML = html;
+    container.addEventListener('click', onOptionClick);
+  }
+
+  function onOptionClick(e) {
+    var btn = e.target.closest('.qt-opt-btn');
+    if (!btn || answering) return;
+    answering = true;
+    var container = document.getElementById('qt-q-container');
+    container.removeEventListener('click', onOptionClick);
+    container.querySelectorAll('.qt-opt-btn').forEach(function (b) { b.disabled = true; });
+    btn.classList.add('qt-selected');
+    score += parseInt(btn.dataset.points, 10);
+    setTimeout(function () {
+      currentQ++;
+      if (currentQ < QUESTIONS.length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }, 350);
+  }
+
+  function getBand() {
+    if (score <= 7) return 'a';
+    if (score <= 11) return 'b';
+    return 'c';
+  }
+
+  function chipGroup(name, options) {
+    var html = '<div class="qt-chip-group" data-chip-group="' + name + '">';
+    options.forEach(function (o) {
+      html += '<button type="button" class="qt-chip" data-value="' + o + '">' + o + '</button>';
+    });
+    html += '</div><input type="text" class="qt-input qt-chip-other-input qt-hidden" placeholder="précise ici…" data-chip-other="' + name + '">';
+    return html;
+  }
+
+  function cycleStressPointer() {
+    var html = '<div class="qt-ex-label">Exercice 1</div>';
+    html += '<p class="qt-ex-intro">Remplis le tableau « Cycle du stress » : note, pour 1 ou 2 situations (masturbation, pénétration, sexe oral…), les émotions et sensations qui apparaissent, même si c\'est un peu flou.</p>';
+    return html;
+  }
+
+  function observerChecklist() {
+    return '<div class="qt-callout">'
+      + '<div class="qt-callout-label">Ce que tu peux observer :</div>'
+      + '<div class="qt-field"><span class="qt-field-label">Respiration</span>' + chipGroup('a2-obs-respiration', ['Rapide', 'Bloquée', 'Profonde', 'Irrégulière', 'Calme']) + '</div>'
+      + '<div class="qt-field"><span class="qt-field-label">Muscles</span>' + chipGroup('a2-obs-muscles', ['Épaules serrées', 'Mâchoire contractée', 'Ventre tendu', 'Cuisses raides', 'Bassin mobile']) + '</div>'
+      + '<div class="qt-field"><span class="qt-field-label">Périnée</span>' + chipGroup('a2-obs-perinee', ['Détendu', 'Serré', 'Qui pulse', 'Difficile à sentir']) + '</div>'
+      + '<div class="qt-field"><span class="qt-field-label">Excitation</span>' + chipGroup('a2-obs-excitation', ['Monte doucement', 'Monte d\'un coup', 'Reste stable', 'Redescend', 'Varie']) + '</div>'
+      + '<p class="qt-callout-example">Mes pensées, par exemple : « il faut que je finisse », « ça va trop vite », « j\'aime bien », « je m\'ennuie », « je peux prendre mon temps »…</p>'
+      + '</div>';
+  }
+
+  function showResults() {
+    elQuiz.classList.add('qt-hidden');
+    elResults.classList.remove('qt-hidden');
+    var band = getBand();
+    var container = document.getElementById('qt-results-container');
+    var html = '';
+
+    html += '<div class="qt-result-kicker">Ton résultat</div>';
+
+    if (band === 'a') {
+      html += '<h2 class="qt-result-title">Ton rapport au corps : <strong>« Je suis surtout dans ma tête »</strong></h2>';
+      html += '<p class="qt-result-desc">Tu vis beaucoup ta sexualité dans le mental : images, scénarios, performance, et ton corps reste un peu en arrière-plan.</p>';
+      html += '<p class="qt-result-desc">Du coup, les signaux d\'excitation (pulsations, périnée, respiration, rythme cardiaque) sont peu repérés, ce qui rend plus difficile d\'anticiper et de jouer avec l\'éjaculation.</p>';
+      html += '<hr class="qt-divider">';
+
+      html += cycleStressPointer();
+
+      html += '<div class="qt-ex-label">Exercice 2</div>';
+      html += '<p class="qt-ex-intro">Explore la masturbation sans but d\'éjaculation, juste pour t\'entraîner à rester avec les sensations sans viser le climax.</p>';
+      html += observerChecklist();
+
+      html += '<div class="qt-callout">'
+        + '<div class="qt-callout-label">🎯 Micro-défi corps pour la semaine</div>'
+        + '<p class="qt-ex-intro" style="margin-bottom:14px;">Pendant une masturbation, prends 30 secondes pour scanner ton corps de la tête aux pieds et nommer au moins 3 sensations (ex : chaleur, tension, fourmillements).</p>'
+        + '<div class="qt-row-3">'
+        + '<div class="qt-field"><span class="qt-field-label">Sensation 1</span><input type="text" class="qt-input"></div>'
+        + '<div class="qt-field"><span class="qt-field-label">Sensation 2</span><input type="text" class="qt-input"></div>'
+        + '<div class="qt-field"><span class="qt-field-label">Sensation 3</span><input type="text" class="qt-input"></div>'
+        + '</div>'
+        + '</div>';
+    }
+
+    if (band === 'b') {
+      html += '<h2 class="qt-result-title">Ton rapport au corps : <strong>« Entre deux »</strong></h2>';
+      html += '<p class="qt-result-desc">T\'as déjà accès à certaines sensations, tu remarques parfois les signaux d\'excitation, mais c\'est pas vraiment un réflexe de t\'y connecter.</p>';
+      html += '<p class="qt-result-desc">La tête reprend vite le lead (questions, doutes, performance), ce qui peut nourrir le cycle du stress quand l\'excitation monte.</p>';
+      html += '<hr class="qt-divider">';
+
+      html += cycleStressPointer();
+
+      html += '<div class="qt-ex-label">Exercice 2</div>';
+      html += '<p class="qt-ex-intro">Incorpore un nouvel élément (angle, vitesse, ouvrir/fermer les yeux, lubrifiant…) à ta masturbation pour rendre ton corps plus présent et curieux. Choisis <u>un seul bloc</u>. Pendant cette séance, ne cherche pas à optimiser le plaisir ni à réussir l\'exercice. Pose-toi simplement cette question : « Qu\'est-ce que ce changement fait à mon corps ? »</p>';
+
+      [
+        { name: 'Angle / position', habit: 'Toujours la même position', test: ['Dos', 'Côté', 'Assis', 'Debout', 'Jambes pliées', 'Autre'], observe: ['Confort', 'Tension', 'Bassin', 'Rythme de l\'excitation'] },
+        { name: 'Vitesse', habit: 'Même rythme du début à la fin', test: ['Plus lent', 'Alterné', 'Pauses', 'Accélérations courtes puis ralentissement'], observe: ['Montée de l\'excitation', 'Respiration', 'Envie d\'accélérer'] },
+        { name: 'Regard', habit: 'Yeux fermés / même point fixe', test: ['Yeux ouverts', 'Yeux fermés', 'Miroir', 'Regarder le corps', 'Sans écran'], observe: ['Présence', 'Gêne', 'Excitation', 'Distraction'] },
+        { name: 'Pression / geste', habit: 'Même main, même pression, même mouvement', test: ['Pression plus douce', 'Pression plus ferme', 'Caresses', 'Massage', 'Main non dominante'], observe: ['Zones agréables', 'Zones neutres', 'Zones trop intenses'] },
+        { name: 'Texture', habit: 'À sec / même lubrifiant', test: ['Lubrifiant', 'Huile adaptée au corps', 'Gel', 'Préservatif en solo'], observe: ['Glisse', 'Sensibilité', 'Rythme', 'Confort'] },
+        { name: 'Source d\'excitation', habit: 'Même type de porno ou même fantasme', test: ['Musique', 'Porno audio', 'Visualisation', 'Silence', 'Autre'], observe: ['Imaginaire', 'Corps', 'Concentration', 'Niveau d\'excitation'] },
+        { name: 'Ambiance', habit: 'Même lieu / même moment / lumière', test: ['Lumière différente', 'Musique', 'Douche', 'Lit', 'Autre'], observe: ['Détente', 'Sécurité', 'Désir', 'Curiosité'] }
+      ].forEach(function (row, i) {
+        html += '<div class="qt-card">'
+          + '<div class="qt-card-name">' + row.name + '</div>'
+          + '<div class="qt-field"><span class="qt-field-label">Mon habitude actuelle</span><input type="text" class="qt-input" placeholder="' + row.habit + '"></div>'
+          + '<div class="qt-field"><span class="qt-field-label">Ce que je teste aujourd\'hui</span>' + chipGroup('b2-test-' + i, row.test) + '</div>'
+          + '<div class="qt-field"><span class="qt-field-label">Ce que j\'observe pendant</span>' + chipGroup('b2-observe-' + i, row.observe) + '</div>'
+          + '<div class="qt-field"><span class="qt-field-label">Ce que j\'en retiens</span><textarea class="qt-textarea"></textarea></div>'
+          + '</div>';
+      });
+
+      html += '<div class="qt-callout">'
+        + '<div class="qt-callout-label">🎯 Micro-défi corps pour la semaine</div>'
+        + '<p class="qt-ex-intro" style="margin-bottom:14px;">Choisis une situation sexuelle (solo ou à deux) et, à un moment, mets ton attention sur une zone précise (périnée, poitrine, visage…) le temps de 5 respirations. Observe les sensations.</p>'
+        + '<div class="qt-field"><span class="qt-field-label">Zone choisie</span>' + chipGroup('b-defi-zone', ['Périnée', 'Poitrine', 'Visage', 'Autre']) + '</div>'
+        + '<div class="qt-field"><span class="qt-field-label">Ce que j\'observe</span><textarea class="qt-textarea"></textarea></div>'
+        + '</div>';
+    }
+
+    if (band === 'c') {
+      html += '<h2 class="qt-result-title">Ton rapport au corps : <strong>« Mon corps est un vrai allié »</strong></h2>';
+      html += '<p class="qt-result-desc">Tu as déjà une bonne connexion avec ton corps : tu remarques tes sensations, tu sais un minimum les décrire, tu repères assez tôt les signes que l\'excitation monte.</p>';
+      html += '<p class="qt-result-desc">C\'est une base précieuse pour apprendre à moduler l\'éjaculation, en jouant avec les pauses, les changements de rythme, et la variété de stimulations.</p>';
+      html += '<hr class="qt-divider">';
+      html += '<div class="qt-ex-label">Exercice 1</div>';
+      html += '<p class="qt-ex-intro">Repère tes schémas : observe ce que ton corps fait automatiquement (tension musculaire, respiration, manière de te contracter).</p>';
+
+      [
+        { name: 'Début de l\'excitation', geste: ['Je commence directement', 'Je vais doucement', 'Autre'], resp: ['Calme', 'Plus rapide', 'Retenue', 'Irrégulière'], tensions: ['Épaules', 'Mâchoire', 'Ventre', 'Cuisses'], perinee: ['Détendu', 'Serré', 'Difficile à sentir', 'Mobile'], declencheur: 'Image, pensée, contact, geste' },
+        { name: 'Excitation moyenne', geste: ['Je garde le même mouvement', 'J\'accélère', 'Je change souvent'], resp: ['Calme', 'Plus rapide', 'Retenue', 'Irrégulière'], tensions: ['Épaules', 'Mâchoire', 'Ventre', 'Cuisses'], perinee: ['Détendu', 'Serré', 'Pulsations', 'Bassin figé'], declencheur: '' },
+        { name: 'Quand ça devient intense', geste: ['J\'accélère', 'Je serre', 'Je vais au geste le plus efficace', 'Autre'], resp: ['Apnée', 'Souffle très court', 'Rapide', 'Autre'], tensions: ['Corps raide', 'Jambes serrées', 'Fessiers contractés', 'Autre'], perinee: ['Très serré', 'Pulsations fortes', 'Bassin bloqué', 'Autre'], declencheur: '' },
+        { name: 'Après une pause ou un changement', geste: ['Je reprends pareil', 'Je ralentis', 'Je change de zone', 'Autre'], resp: ['Plus profonde', 'Toujours courte', 'Autre'], tensions: ['Plus détendu', 'Pareil', 'Autre'], perinee: ['Plus détendu', 'Pareil', 'Autre'], declencheur: 'Pause, respiration, changement de rythme' }
+      ].forEach(function (row, i) {
+        html += '<div class="qt-card">'
+          + '<div class="qt-card-name">' + row.name + '</div>'
+          + '<div class="qt-field"><span class="qt-field-label">Mon geste automatique</span>' + chipGroup('c1-geste-' + i, row.geste) + '</div>'
+          + '<div class="qt-field"><span class="qt-field-label">Ma respiration</span>' + chipGroup('c1-resp-' + i, row.resp) + '</div>'
+          + '<div class="qt-field"><span class="qt-field-label">Mes tensions musculaires</span>' + chipGroup('c1-tensions-' + i, row.tensions) + '</div>'
+          + '<div class="qt-field"><span class="qt-field-label">Mon périnée / mon bassin</span>' + chipGroup('c1-perinee-' + i, row.perinee) + '</div>'
+          + '<div class="qt-field"><span class="qt-field-label">Ce qui déclenche ce schéma</span><input type="text" class="qt-input"' + (row.declencheur ? ' placeholder="' + row.declencheur + '"' : '') + '></div>'
+          + '<div class="qt-field"><span class="qt-field-label">Ce que je remarque</span><textarea class="qt-textarea"></textarea></div>'
+          + '</div>';
+      });
+
+      html += '<div class="qt-ex-label">Exercice 2</div>';
+      html += '<p class="qt-ex-intro">Explore plus loin la masturbation sans but d\'éjaculation, en élargissant les zones de stimulation (corps entier) et en allongeant progressivement la durée.</p>';
+      html += '<div class="qt-card">'
+        + '<div class="qt-field"><span class="qt-field-label">Zones que j\'explore</span>' + chipGroup('c2-zones', ['Torse', 'Cou', 'Cuisses', 'Fessiers', 'Périnée', 'Tout le corps', 'Autre']) + '</div>'
+        + '<div class="qt-field"><span class="qt-field-label">Durée visée</span><input type="text" class="qt-input" placeholder="_ min"></div>'
+        + '<div class="qt-field"><span class="qt-field-label">Ce que ça change dans mes sensations</span><textarea class="qt-textarea"></textarea></div>'
+        + '</div>';
+
+      html += '<div class="qt-callout">'
+        + '<div class="qt-callout-label">🎯 Micro-défi corps pour la semaine</div>'
+        + '<p class="qt-ex-intro" style="margin-bottom:14px;">Pendant un moment de plaisir, note mentalement quand tu repères les premiers signaux d\'excitation (pulsations, périnée, respiration) et teste une mini-pause ou un changement de rythme à ce moment-là.</p>'
+        + '<div class="qt-field"><span class="qt-field-label">Ce que j\'ai testé</span>' + chipGroup('c-defi-teste', ['Mini-pause', 'Changement de rythme', 'Les deux']) + '</div>'
+        + '<div class="qt-field"><span class="qt-field-label">Ce que ça a changé</span><textarea class="qt-textarea"></textarea></div>'
+        + '</div>';
+    }
+
+    html += '<div class="qt-print-box">'
+      + '<div class="qt-print-title">Garde tes réponses</div>'
+      + '<p class="qt-print-text">Imprime cette page ou garde-la en PDF pour retrouver tes réponses au fil du programme.</p>'
+      + '<button type="button" class="qt-btn" id="qt-print-btn"><span>🖨 Imprimer / Garder en PDF</span></button>'
+      + '</div>';
+
+    html += '<div class="qt-actions">'
+      + '<button type="button" class="qt-btn qt-btn-outline" id="qt-retry-btn"><span>↺ Recommencer le quiz</span></button>'
+      + '</div>';
+
+    container.innerHTML = html;
+    container.addEventListener('click', onResultsClick);
+    document.getElementById('qt-print-btn').addEventListener('click', function () { window.print(); });
+    document.getElementById('qt-retry-btn').addEventListener('click', restartQuiz);
+  }
+
+  function onResultsClick(e) {
+    var chip = e.target.closest('.qt-chip');
+    if (!chip) return;
+    var group = chip.closest('.qt-chip-group');
+    var groupName = group.dataset.chipGroup;
+    var wasActive = chip.classList.contains('qt-chip-active');
+    group.querySelectorAll('.qt-chip').forEach(function (c) { c.classList.remove('qt-chip-active'); });
+    var otherInput = group.parentNode.querySelector('[data-chip-other="' + groupName + '"]');
+    if (!wasActive) {
+      chip.classList.add('qt-chip-active');
+      if (chip.dataset.value === 'Autre') {
+        otherInput.classList.remove('qt-hidden');
+        otherInput.focus();
+      } else if (otherInput) {
+        otherInput.classList.add('qt-hidden');
+      }
+    } else if (otherInput) {
+      otherInput.classList.add('qt-hidden');
+    }
+  }
+
+  function restartQuiz() {
+    currentQ = 0;
+    score = 0;
+    elResults.classList.add('qt-hidden');
+    elIntro.classList.remove('qt-hidden');
+  }
+
+})();
+</script>
+</body>
+</html>
