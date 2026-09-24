@@ -14,7 +14,7 @@
     --crimson: #DC143C;
     --bordeaux: #8a1b1a;
     --ink: #101010;
-    --white: #FFFFFF;
+    --cream: #FFFAFD;
     --gold: #FFE680;
     font-family: 'Raleway', Arial, sans-serif;
     color: var(--ink);
@@ -621,6 +621,24 @@
     elIntro.classList.remove('qt-hidden');
   }
 
+})();
+</script>
+
+<!-- Notifie la page parente (embed Kajabi) de la hauteur réelle du quiz, pour un iframe sans scroll interne ni zone vide. Sans effet si la page est ouverte seule (hors iframe). -->
+<script>
+(function () {
+  function postHeight() {
+    var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    try { window.parent.postMessage({ mbcQuizTempsHeight: h }, '*'); } catch (e) {}
+  }
+  window.addEventListener('load', postHeight);
+  window.addEventListener('resize', postHeight);
+  if (window.ResizeObserver) {
+    new ResizeObserver(postHeight).observe(document.body);
+  } else {
+    setInterval(postHeight, 500);
+  }
+  postHeight();
 })();
 </script>
 </body>
