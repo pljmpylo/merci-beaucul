@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Temps — Programme COME</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  * , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    --crimson: #DC143C;
+    --bordeaux: #8a1b1a;
+    --ink: #101010;
+    --cream: #FFFAFD;
+    --gold: #FFE680;
+    font-family: 'Raleway', Arial, sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a, button { cursor: pointer; font-family: inherit; }
+  .qt-wrap { min-height: 100vh; }
+  .qt-shell { max-width: 640px; margin: 0 auto; padding: 56px 24px 90px; }
+
+  /* ---------- shared bits ---------- */
+  .qt-hidden { display: none !important; }
+  .qt-eyebrow {
+    display: inline-block;
+    background: rgba(138,27,26,0.08);
+    border: 1px solid rgba(138,27,26,0.22);
+    color: var(--bordeaux);
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .qt-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--cream);
+    color: var(--ink);
+    font-weight: 400;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    padding: 0.9rem 3rem;
+    border: 1px solid var(--bordeaux);
+    border-radius: 10rem;
+    transition: color 450ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qt-btn::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    top: 102%;
+    background: var(--bordeaux);
+    transition: top 450ms ease;
+    z-index: 0;
+  }
+  .qt-btn span { position: relative; z-index: 1; }
+  .qt-btn:hover { color: var(--cream); }
+  .qt-btn:hover::before { top: 0; }
+  .qt-btn:disabled { opacity: 0.4; pointer-events: none; }
+
+  .qt-btn-outline {
+    background: transparent;
+    border: 1px solid rgba(16,16,16,0.25);
+    color: var(--ink);
+  }
+  .qt-btn-outline::before { background: var(--ink); }
+
+  /* ---------- intro ---------- */
+  .qt-screen { animation: qtFadeUp 0.45s ease both; }
+  @keyframes qtFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  #qt-intro h1 {
+    font-size: clamp(34px, 6vw, 48px);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    margin-bottom: 22px;
+  }
+  #qt-intro h1 em { font-style: normal; color: var(--crimson); }
+  .qt-intro-text {
+    font-size: 16.5px;
+    color: rgba(16,16,16,0.72);
+    max-width: 480px;
+    margin-bottom: 16px;
+  }
+  #qt-intro .qt-btn { margin-top: 28px; }
+
+  /* ---------- quiz ---------- */
+  .qt-progress-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(16,16,16,0.4);
+    margin-bottom: 10px;
+    text-align: right;
+  }
+  .qt-progress-track {
+    height: 4px;
+    background: rgba(138,27,26,0.12);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+  .qt-progress-bar {
+    height: 100%;
+    background: var(--crimson);
+    border-radius: 4px;
+    transition: width 350ms ease;
+    width: 0%;
+  }
+  .qt-q-text {
+    font-family: 'Raleway', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: clamp(21px, 3.2vw, 26px);
+    line-height: 1.3;
+    color: var(--bordeaux);
+    margin-bottom: 30px;
+  }
+  .qt-options { display: flex; flex-direction: column; gap: 12px; }
+  .qt-opt-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    text-align: left;
+    background: #fff;
+    border: 1.5px solid rgba(138,27,26,0.16);
+    border-radius: 16px;
+    padding: 16px 18px;
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: var(--ink);
+    transition: border-color 180ms ease, background 180ms ease;
+  }
+  .qt-opt-btn:hover:not(:disabled) { border-color: var(--crimson); background: rgba(220,20,60,0.03); }
+  .qt-opt-btn.qt-selected { border-color: var(--crimson); background: rgba(220,20,60,0.06); }
+  .qt-opt-letter {
+    flex: 0 0 26px;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--bordeaux);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    margin-top: 1px;
+  }
+  .qt-opt-text { flex: 1; padding-top: 2px; }
+
+  /* ---------- results ---------- */
+  .qt-result-kicker {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(16,16,16,0.4);
+    margin-bottom: 12px;
+  }
+  .qt-result-title {
+    font-family: 'Raleway', sans-serif;
+    font-style: normal;
+    font-weight: 800;
+    font-size: clamp(26px, 4.4vw, 34px);
+    color: var(--bordeaux);
+    line-height: 1.15;
+    margin-bottom: 18px;
+  }
+  .qt-result-title strong { font-weight: 700; }
+  .qt-result-desc {
+    font-size: 16px;
+    color: rgba(16,16,16,0.75);
+    margin-bottom: 12px;
+  }
+  .qt-divider {
+    border: none;
+    border-top: 1px solid rgba(138,27,26,0.15);
+    margin: 34px 0;
+  }
+  .qt-ex-label {
+    display: inline-block;
+    background: var(--crimson);
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 5px 13px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+  }
+  .qt-ex-intro {
+    font-size: 15.5px;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .qt-ex-intro u { text-decoration-color: var(--crimson); }
+
+  /* fillable field-card */
+  .qt-card {
+    background: #fff;
+    border: 1.5px solid rgba(138,27,26,0.14);
+    border-radius: 18px;
+    padding: 20px 20px 22px;
+    margin-bottom: 16px;
+  }
+  .qt-card-name {
+    font-weight: 700;
+    font-size: 14.5px;
+    color: var(--bordeaux);
+    margin-bottom: 14px;
+  }
+  .qt-field { margin-bottom: 14px; }
+  .qt-field:last-child { margin-bottom: 0; }
+  .qt-field-label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: rgba(16,16,16,0.4);
+    margin-bottom: 7px;
+  }
+  .qt-field-prompt {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic;
+    font-size: 14px;
+    color: rgba(16,16,16,0.6);
+    margin-bottom: 8px;
+  }
+  .qt-input, .qt-textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid rgba(16,16,16,0.18);
+    background: transparent;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14.5px;
+    color: var(--ink);
+    padding: 6px 2px;
+    transition: border-color 180ms ease;
+  }
+  .qt-input:focus, .qt-textarea:focus { outline: none; border-color: var(--crimson); }
+  .qt-textarea { resize: vertical; min-height: 44px; border: 1.5px solid rgba(16,16,16,0.18); border-radius: 10px; padding: 10px 12px; }
+  .qt-textarea:focus { border-color: var(--crimson); }
+  .qt-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .qt-chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .qt-chip {
+    background: transparent;
+    border: 1.5px solid rgba(16,16,16,0.2);
+    border-radius: 100px;
+    padding: 7px 14px;
+    font-size: 12.5px;
+    color: var(--ink);
+    transition: all 150ms ease;
+  }
+  .qt-chip:hover { border-color: var(--crimson); }
+  .qt-chip.qt-chip-active { background: var(--crimson); border-color: var(--crimson); color: #fff; }
+  .qt-chip-other-input {
+    margin-top: 8px;
+  }
+
+  .qt-callout {
+    background: rgba(255,230,128,0.22);
+    border: 1px solid rgba(138,27,26,0.14);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+  }
+  .qt-callout-label {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .qt-callout-example {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic;
+    font-size: 12.5px;
+    color: rgba(16,16,16,0.5);
+    margin-top: 8px;
+  }
+
+  .qt-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+
+  /* print CTA box */
+  .qt-print-box {
+    background: #fff;
+    border: 1.5px solid rgba(220,20,60,0.18);
+    border-radius: 20px;
+    padding: 26px 24px;
+    margin-top: 34px;
+    text-align: center;
+  }
+  .qt-print-title { font-size: 11px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; color: var(--crimson); margin-bottom: 8px; }
+  .qt-print-text { font-size: 13.5px; color: rgba(16,16,16,0.6); max-width: 380px; margin: 0 auto 16px; }
+
+  @media (max-width: 520px) {
+    .qt-shell { padding: 40px 18px 70px; }
+    .qt-row-2 { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    body { background: #fff; }
+    #qt-intro, #qt-quiz, .qt-print-box, .qt-actions { display: none !important; }
+    #qt-results { display: block !important; }
+    .qt-card, .qt-callout { break-inside: avoid; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="qt-wrap">
+  <div class="qt-shell">
+
+    <!-- ============ INTRO ============ -->
+    <div id="qt-intro" class="qt-screen">
+      <span class="qt-eyebrow">Semaine 1 — Comprendre</span>
+      <h1>Quiz <em>Temps</em></h1>
+      <p class="qt-intro-text">Cette première partie va te montrer comment tu vis la temporalité dans ta sexualité.</p>
+      <p class="qt-intro-text">Pas dans le sens « combien de minutes tu tiens », mais : est-ce que ta sexualité est plutôt en mode express, fonctionnelle, ou est-ce que c'est un espace-temps que tu prends pour toi.</p>
+      <button id="qt-start-btn" class="qt-btn"><span>Commencer</span></button>
+    </div>
+
+    <!-- ============ QUIZ ============ -->
+    <div id="qt-quiz" class="qt-screen qt-hidden">
+      <div class="qt-progress-label" id="qt-progress-label"></div>
+      <div class="qt-progress-track"><div class="qt-progress-bar" id="qt-progress-bar"></div></div>
+      <div id="qt-q-container"></div>
+    </div>
+
+    <!-- ============ RESULTS ============ -->
+    <div id="qt-results" class="qt-screen qt-hidden">
+      <div id="qt-results-container"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+
+  var QUESTIONS = [
+    {
+      text: "Quand tu te masturbes en solo, à quoi ressemble le rythme la plupart du temps ?",
+      opts: [
+        { p: 1, t: "C'est plutôt « vite fait bien fait », j'essaie d'aller rapide et efficace." },
+        { p: 2, t: "Parfois je ralentis un peu pour kiffer un peu quand même mais ça reste assez droit au but." },
+        { p: 3, t: "Ça dépend vraiment de mon humeur, je peux aller vite comme prendre mon temps." },
+        { p: 4, t: "Je prends souvent mon temps, je joue avec les pauses, les changements de rythme." }
+      ]
+    },
+    {
+      text: "Dans ton emploi du temps actuel, la sexualité (solo ou à deux), c'est plutôt :",
+      opts: [
+        { p: 1, t: "Un truc qui se cale quand j'ai 5 minutes." },
+        { p: 2, t: "Un moment que j'ai le temps de prendre parfois mais qui passe après tout le reste." },
+        { p: 3, t: "Un espace auquel je pense et que j'essaie de protéger, même si ce n'est pas régulier." },
+        { p: 4, t: "Un vrai temps dédié que je planifie ou que je priorise autant que d'autres activités importantes." }
+      ]
+    },
+    {
+      text: "Quand ça commence à durer un peu (masturbation ou rapport), comment tu te sens ?",
+      opts: [
+        { p: 1, t: "Je m'ennuie vite, j'ai envie que ça se termine." },
+        { p: 2, t: "Je commence à me demander si « je fais bien » ou si ça devrait aller plus vite." },
+        { p: 3, t: "Je suis partagé : parfois ça me stresse, parfois j'arrive à apprécier que ça dure." },
+        { p: 4, t: "La lenteur me fait du bien, j'aime quand ça prend du temps." }
+      ]
+    },
+    {
+      text: "Si tu imagines une séance de plaisir qui dure 30–45 minutes rien que pour toi, tu te dis :",
+      opts: [
+        { p: 1, t: "« C'est impossible, j'ai pas le temps pour ça. »" },
+        { p: 2, t: "« Ce serait bien mais je vois pas comment le caser dans ma vie actuelle. »" },
+        { p: 3, t: "« Je pourrais si je réorganise un peu ou si je me le bloque consciemment. »" },
+        { p: 4, t: "« C'est déjà quelque chose que je fais ou que je peux facilement installer. »" }
+      ]
+    }
+  ];
+
+  var currentQ = 0;
+  var score = 0;
+  var answering = false;
+
+  var elIntro = document.getElementById('qt-intro');
+  var elQuiz = document.getElementById('qt-quiz');
+  var elResults = document.getElementById('qt-results');
+
+  document.getElementById('qt-start-btn').addEventListener('click', startQuiz);
+
+  function startQuiz() {
+    elIntro.classList.add('qt-hidden');
+    elQuiz.classList.remove('qt-hidden');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    var q = QUESTIONS[currentQ];
+    var total = QUESTIONS.length;
+    answering = false;
+    document.getElementById('qt-progress-label').textContent = 'Question ' + (currentQ + 1) + ' / ' + total;
+    document.getElementById('qt-progress-bar').style.width = (((currentQ + 1) / total) * 100) + '%';
+    var container = document.getElementById('qt-q-container');
+    var letters = ['A', 'B', 'C', 'D'];
+    var html = '';
+    html += '<p class="qt-q-text">' + q.text + '</p>';
+    html += '<div class="qt-options">';
+    q.opts.forEach(function (opt, i) {
+      html += '<button class="qt-opt-btn" data-points="' + opt.p + '">'
+        + '<span class="qt-opt-letter">' + letters[i] + '</span>'
+        + '<span class="qt-opt-text">' + opt.t + '</span>'
+        + '</button>';
+    });
+    html += '</div>';
+    container.innerHTML = html;
+    container.addEventListener('click', onOptionClick);
+  }
+
+  function onOptionClick(e) {
+    var btn = e.target.closest('.qt-opt-btn');
+    if (!btn || answering) return;
+    answering = true;
+    var container = document.getElementById('qt-q-container');
+    container.removeEventListener('click', onOptionClick);
+    container.querySelectorAll('.qt-opt-btn').forEach(function (b) { b.disabled = true; });
+    btn.classList.add('qt-selected');
+    score += parseInt(btn.dataset.points, 10);
+    setTimeout(function () {
+      currentQ++;
+      if (currentQ < QUESTIONS.length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }, 350);
+  }
+
+  function getBand() {
+    if (score <= 7) return 'a';
+    if (score <= 11) return 'b';
+    return 'c';
+  }
+
+  function chipGroup(name, options) {
+    var html = '<div class="qt-chip-group" data-chip-group="' + name + '">';
+    options.forEach(function (o) {
+      html += '<button type="button" class="qt-chip" data-value="' + o + '">' + o + '</button>';
+    });
+    html += '</div><input type="text" class="qt-input qt-chip-other-input qt-hidden" placeholder="précise ici…" data-chip-other="' + name + '">';
+    return html;
+  }
+
+  function showResults() {
+    elQuiz.classList.add('qt-hidden');
+    elResults.classList.remove('qt-hidden');
+    var band = getBand();
+    var container = document.getElementById('qt-results-container');
+    var html = '';
+
+    html += '<div class="qt-result-kicker">Ton résultat</div>';
+
+    if (band === 'a') {
+      html += '<h2 class="qt-result-title">Ton rapport au temps : <strong>« Mode expresssss / fonctionnel »</strong></h2>';
+      html += '<p class="qt-result-desc">Ta sexualité (surtout en solo) ressemble plus à un shoot rapide qu\'à un moment pour toi. C\'est pas forcément une mauvaise chose, mais ça laisse peu d\'espace à ton corps pour apprendre à ralentir, à reconnaître ses signaux d\'excitation et à retarder l\'éjaculation.</p>';
+      html += '<hr class="qt-divider">';
+      html += '<div class="qt-ex-label">Exercice 1</div>';
+      html += '<p class="qt-ex-intro">Observe tes habitudes de masturbation ou de rapport sexuel : repère ce que tu fais automatiquement (durée, contexte, vitesse).</p>';
+
+      [
+        { name: 'Masturbation n°1', ctx: 'Lieu / Heure' },
+        { name: 'Masturbation n°2', ctx: 'Lieu / Heure' },
+        { name: 'Rapport ou moment à deux', ctx: 'Contexte' }
+      ].forEach(function (row, i) {
+        html += '<div class="qt-card">'
+          + '<div class="qt-card-name">' + row.name + '</div>'
+          + '<div class="qt-row-2">'
+          + '<div class="qt-field"><span class="qt-field-label">Durée approximative</span><input type="text" class="qt-input" placeholder="_ min"></div>'
+          + '<div class="qt-field"><span class="qt-field-label">' + row.ctx + '</span><input type="text" class="qt-input"></div>'
+          + '</div>'
+          + '<div class="qt-field"><span class="qt-field-label">Vitesse / rythme</span>' + chipGroup('a1-vitesse-' + i, ['Lent', 'Moyen', 'Rapide']) + '</div>'
+          + '<div class="qt-field"><span class="qt-field-label">Qu\'est-ce que je fais automatiquement ?</span><input type="text" class="qt-input"></div>'
+          + '<div class="qt-field"><span class="qt-field-label">Est-ce que ça me convient vraiment ?</span>' + chipGroup('a1-convient-' + i, ['Oui', 'Non', 'Je ne sais pas']) + '</div>'
+          + '</div>';
+      });
+
+      html += '<div class="qt-callout">'
+        + '<div class="qt-callout-label">✍️ Complète la phrase :</div>'
+        + '<div class="qt-field"><span class="qt-field-label">L\'automatisme que je remarque le plus chez moi, c\'est :</span><input type="text" class="qt-input"></div>'
+        + '<p class="qt-callout-example">Ex : « Je vais vite dès le départ », « je garde toujours la même position », « je regarde toujours le même type de porno », « je me touche toujours de la même façon », « je coupe dès que j\'ai éjaculé ».</p>'
+        + '</div>';
+
+      html += '<div class="qt-ex-label">Exercice 2</div>';
+      html += '<p class="qt-ex-intro">Une fois sur cinq, augmente la durée de ta masturbation de cinq minutes.</p>';
+      html += '<div class="qt-card">'
+        + '<div class="qt-card-name">Une masturbation sur cinq</div>'
+        + '<div class="qt-row-2">'
+        + '<div class="qt-field"><span class="qt-field-label">Ma durée habituelle</span><input type="text" class="qt-input" placeholder="_ min"></div>'
+        + '<div class="qt-field"><span class="qt-field-label">Durée visée (+ 5 min)</span><input type="text" class="qt-input" placeholder="_ min"></div>'
+        + '</div>'
+        + '<div class="qt-field"><span class="qt-field-label">Comment je vais utiliser ce temps en plus ?</span>' + chipGroup('a2-usage', ['Ralentir', 'Faire une pause', 'Changer de rythme', 'Explorer une autre zone', 'Respirer', 'Autre']) + '</div>'
+        + '</div>';
+      html += '<div class="qt-card">'
+        + '<div class="qt-row-2" style="grid-template-columns:1fr 1fr 1fr;">'
+        + '<div class="qt-field"><span class="qt-field-label">Avant</span><p class="qt-field-prompt">« Je pensais que… »</p><textarea class="qt-textarea"></textarea></div>'
+        + '<div class="qt-field"><span class="qt-field-label">Pendant les 5 min en plus</span><p class="qt-field-prompt">« J\'ai ressenti… »</p><textarea class="qt-textarea"></textarea></div>'
+        + '<div class="qt-field"><span class="qt-field-label">Après</span><p class="qt-field-prompt">« La prochaine fois, je pourrais… »</p><textarea class="qt-textarea"></textarea></div>'
+        + '</div>'
+        + '</div>';
+    }
+
+    if (band === 'b') {
+      html += '<h2 class="qt-result-title">Ton rapport au temps : <strong>« Entre express et exploratoire »</strong></h2>';
+      html += '<p class="qt-result-desc">Tu navigues entre deux mondes : parfois t\'es en mode « go on expédie », parfois tu arrives à prendre un peu plus le temps. T\'as déjà une petite fenêtre pour la lenteur, mais c\'est pas encore un réflexe : la to-do list, le mental ou la performance reprennent vite le dessus.</p>';
+      html += '<hr class="qt-divider">';
+      html += '<div class="qt-ex-label">Exercice 1</div>';
+      html += '<p class="qt-ex-intro">Prends le temps de penser à ta sexualité, de te renseigner, de passer du temps avec toi-même : planifie consciemment 1 à 2 moments solo dans le mois.</p>';
+
+      html += '<div class="qt-ex-label">Exercice 2</div>';
+      html += '<p class="qt-ex-intro">T\'amuser à incorporer à chaque fois un nouvel élément : changer un angle, une vitesse, ouvrir/fermer les yeux, tester un lubrifiant, un préservatif en solo, etc. Pas besoin que ce soit grandiloquent, juste qu\'il y ait une intention nouvelle.</p>';
+
+      [
+        { name: 'Le rythme', field: 'Mon expérience habituelle', opts: ['Plus lent', 'Alterné', 'Pauses'] },
+        { name: 'La position ou l\'angle', opts: ['Dos', 'Côté', 'Assis', 'Jambes différentes', 'Autre'] },
+        { name: 'Le regard', opts: ['Yeux ouverts', 'Yeux fermés', 'Miroir', 'Pas d\'écran'] },
+        { name: 'La stimulation', opts: ['Main différente', 'Pression différente', 'Autre zone'] },
+        { name: 'La texture', opts: ['Lubrifiant', 'Huile adaptée au corps', 'Gel', 'Préservatif solo'] },
+        { name: 'L\'ambiance', opts: ['Musique', 'Silence', 'Lumière', 'Porno audio', 'Autre'] }
+      ].forEach(function (row, i) {
+        html += '<div class="qt-card">'
+          + '<div class="qt-card-name">' + row.name + '</div>'
+          + '<div class="qt-field"><span class="qt-field-label">Mon expérience habituelle</span><input type="text" class="qt-input"></div>'
+          + '<div class="qt-field"><span class="qt-field-label">Ce que je teste cette fois</span>' + chipGroup('b2-teste-' + i, row.opts) + '</div>'
+          + '<div class="qt-field"><span class="qt-field-label">Ce que ça change dans mes sensations</span><input type="text" class="qt-input"></div>'
+          + '</div>';
+      });
+    }
+
+    if (band === 'c') {
+      html += '<h2 class="qt-result-title">Ton rapport au temps : <strong>« Espace-temps pour le plaisir »</strong></h2>';
+      html += '<p class="qt-result-desc">T\'as déjà la capacité (ou au moins l\'élan) de faire de la sexualité un temps honoré, pas juste un truc viteuf.</p>';
+      html += '<p class="qt-result-desc">Cette base est très précieuse pour la rééducation du plaisir : elle te donne du terrain pour expérimenter la masturbation sans but d\'éjaculation et les variations de rythme.</p>';
+      html += '<hr class="qt-divider">';
+      html += '<div class="qt-ex-label">Exercice 1</div>';
+      html += '<p class="qt-ex-intro">Explore la masturbation sans but d\'éjaculation : teste des stimulations différentes, sans objectif de plaisir intense, juste d\'érotisme. L\'idée c\'est de sortir de l\'enchaînement automatique « excitation → vitesse → éjaculation ».</p>';
+
+      html += '<div class="qt-card">'
+        + '<div class="qt-field"><span class="qt-field-label">Avant de commencer</span><p class="qt-field-prompt">Aujourd\'hui, je ne cherche pas à finir. Je cherche à sentir :</p><textarea class="qt-textarea"></textarea></div>'
+        + '<div class="qt-field"><span class="qt-field-label">Pendant l\'exploration</span><p class="qt-field-prompt">Je choisis une ou deux stimulations différentes :</p><textarea class="qt-textarea"></textarea></div>'
+        + '<div class="qt-field"><span class="qt-field-label">Si l\'excitation monte trop</span>' + chipGroup('c1-excitation', ['Je ralentis', 'Je fais une pause', 'Je change de zone', 'Je respire', 'Je m\'arrête si j\'en ai envie', 'Autre']) + '</div>'
+        + '<div class="qt-field"><span class="qt-field-label">Après</span><p class="qt-field-prompt">J\'ai découvert que :</p><textarea class="qt-textarea"></textarea></div>'
+        + '</div>';
+
+      html += '<div class="qt-ex-label">Exercice 2</div>';
+      html += '<p class="qt-ex-intro">Faire une place choisie à ta sexualité, au-delà des moments où tu te masturbes « vite fait » ou uniquement pour décharger. Planifie au moins un à deux moments solo dans le mois, entre trente minutes et plusieurs heures selon ce qui te semble possible. Ce temps ne doit pas forcément être sexuel au sens « je me masturbe » : il peut aussi servir à réfléchir, apprendre, tester, écouter ou te reconnecter à toi-même.</p>';
+
+      ['Moment solo n°1', 'Moment solo n°2'].forEach(function (name, i) {
+        html += '<div class="qt-card">'
+          + '<div class="qt-card-name">' + name + '</div>'
+          + '<div class="qt-row-2">'
+          + '<div class="qt-field"><span class="qt-field-label">Date / créneau</span><input type="text" class="qt-input"></div>'
+          + '<div class="qt-field"><span class="qt-field-label">Durée réaliste</span><input type="text" class="qt-input" placeholder="_ min"></div>'
+          + '</div>'
+          + '<div class="qt-field"><span class="qt-field-label">Ce que je choisis de faire</span>' + chipGroup('c2-faire-' + i, ['Podcast', 'Lecture', 'Exercice audio', 'Masturbation exploratoire', 'Sexshop', 'Atelier', 'Consultation', 'Autre']) + '</div>'
+          + '<div class="qt-field"><span class="qt-field-label">Ce que je veux explorer ou ressentir</span><textarea class="qt-textarea"></textarea></div>'
+          + '</div>';
+      });
+    }
+
+    html += '<div class="qt-print-box">'
+      + '<div class="qt-print-title">Garde tes réponses</div>'
+      + '<p class="qt-print-text">Imprime cette page ou garde-la en PDF pour retrouver tes réponses au fil du programme.</p>'
+      + '<button type="button" class="qt-btn" id="qt-print-btn"><span>🖨 Imprimer / Garder en PDF</span></button>'
+      + '</div>';
+
+    html += '<div class="qt-actions">'
+      + '<button type="button" class="qt-btn qt-btn-outline" id="qt-retry-btn"><span>↺ Recommencer le quiz</span></button>'
+      + '</div>';
+
+    container.innerHTML = html;
+    container.addEventListener('click', onResultsClick);
+    document.getElementById('qt-print-btn').addEventListener('click', function () { window.print(); });
+    document.getElementById('qt-retry-btn').addEventListener('click', restartQuiz);
+  }
+
+  function onResultsClick(e) {
+    var chip = e.target.closest('.qt-chip');
+    if (!chip) return;
+    var group = chip.closest('.qt-chip-group');
+    var groupName = group.dataset.chipGroup;
+    var wasActive = chip.classList.contains('qt-chip-active');
+    group.querySelectorAll('.qt-chip').forEach(function (c) { c.classList.remove('qt-chip-active'); });
+    var otherInput = group.parentNode.querySelector('[data-chip-other="' + groupName + '"]');
+    if (!wasActive) {
+      chip.classList.add('qt-chip-active');
+      if (chip.dataset.value === 'Autre') {
+        otherInput.classList.remove('qt-hidden');
+        otherInput.focus();
+      } else if (otherInput) {
+        otherInput.classList.add('qt-hidden');
+      }
+    } else if (otherInput) {
+      otherInput.classList.add('qt-hidden');
+    }
+  }
+
+  function restartQuiz() {
+    currentQ = 0;
+    score = 0;
+    elResults.classList.add('qt-hidden');
+    elIntro.classList.remove('qt-hidden');
+  }
+
+})();
+</script>
+</body>
+</html>
