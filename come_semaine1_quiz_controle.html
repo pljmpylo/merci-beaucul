@@ -350,7 +350,7 @@
       <h1>Quiz - Mon rapport au <em>contrôle</em></h1>
       <p class="qt-intro-text">Ici, on regarde comment tu gères le stress et l'excitation.</p>
       <p class="qt-intro-text">Est-ce que t'as l'impression de subir, de contrôler, ou d'avoir des leviers pour jouer avec ce qui se passe.</p>
-      <button id="qt-start-btn" class="qt-btn"><span>Commencer</span></button>
+      <button id="qt-start-btn" class="qt-btn"><span>Commencer</span><span class="qt-arrow" aria-hidden="true">→</span></button>
     </div>
 
     <!-- ============ QUIZ ============ -->
@@ -576,11 +576,11 @@
     html += '<div class="qt-print-box">'
       + '<div class="qt-print-title">Garde tes réponses</div>'
       + '<p class="qt-print-text">Imprime cette page ou garde-la en PDF pour retrouver tes réponses au fil du programme.</p>'
-      + '<button type="button" class="qt-btn" id="qt-print-btn"><span>🖨 Imprimer / Garder en PDF</span></button>'
+      + '<button type="button" class="qt-btn" id="qt-print-btn"><span>Imprimer / PDF</span><span class="qt-arrow" aria-hidden="true">→</span></button>'
       + '</div>';
 
     html += '<div class="qt-actions">'
-      + '<button type="button" class="qt-btn qt-btn-outline" id="qt-retry-btn"><span>↺ Recommencer le quiz</span></button>'
+      + '<button type="button" class="qt-btn qt-btn-outline" id="qt-retry-btn"><span>Recommencer le quiz</span><span class="qt-arrow" aria-hidden="true">↺</span></button>'
       + '</div>';
 
     container.innerHTML = html;
