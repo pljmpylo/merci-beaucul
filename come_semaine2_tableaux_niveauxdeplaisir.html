@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes niveaux de plaisir — Programme C.O.M.E.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    --blue: #2F6FE4;
+    --blue-soft: rgba(47,111,228,0.18);
+    --blue-faint: rgba(47,111,228,0.06);
+    --yellow: #F7FF59;
+    --ink: #1c1c1c;
+    --muted: #5b6273;
+    font-family: 'Raleway', Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a, button { cursor: pointer; font-family: inherit; }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+  .qt-wrap { min-height: 100vh; }
+  .qt-shell { max-width: 640px; margin: 0 auto; padding: 56px 24px 70px; }
+  .qt-hidden { display: none !important; }
+
+  .qt-eyebrow {
+    display: inline-block;
+    color: var(--blue);
+    border: 1px solid var(--blue-soft);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  /* ---------- CTA façon Mimétique ---------- */
+  .qt-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    overflow: hidden;
+    background: var(--yellow);
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    padding: 0.85rem 2.2rem;
+    border: 1.5px solid var(--blue);
+    border-radius: 10rem;
+    transition: color 450ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qt-btn::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    top: 102%;
+    background: var(--blue);
+    transition: top 450ms ease;
+    z-index: 0;
+  }
+  .qt-btn span { position: relative; z-index: 1; }
+  .qt-btn .qt-arrow { display: inline-block; transition: transform 450ms ease; }
+  .qt-btn:hover { color: var(--yellow); }
+  .qt-btn:hover::before { top: 0; }
+  .qt-btn:hover .qt-arrow { transform: translateX(5px); }
+  .qt-btn:disabled { opacity: 0.4; pointer-events: none; }
+  .qt-btn-outline { background: #fff; color: var(--blue); }
+  .qt-btn-outline::before { background: var(--blue); }
+  .qt-btn-outline:hover { color: var(--yellow); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qt-btn, .qt-btn::before, .qt-btn .qt-arrow, .qt-progress-bar { transition: none; }
+    .qt-screen { animation: none; }
+  }
+
+  .qt-screen { animation: qtFadeUp 0.45s ease both; }
+  @keyframes qtFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .qt-shell h1 {
+    font-size: clamp(26px, 5vw, 34px);
+    font-weight: 800;
+    line-height: 1.18;
+    letter-spacing: -0.015em;
+    margin-bottom: 14px;
+  }
+  .qt-shell h1 em {
+    font-style: normal;
+    color: var(--blue);
+    background: linear-gradient(transparent 62%, var(--yellow) 62%);
+    padding: 0 4px;
+  }
+  .qt-intro-text { font-size: 15.5px; color: var(--muted); max-width: 480px; margin-bottom: 10px; }
+
+  /* ---------- accès direct à chaque tableau depuis l'accueil ---------- */
+  .qt-jump-title { font-size: 11.5px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--muted); margin: 36px 0 12px; }
+  .qt-jump-list { display: flex; flex-direction: column; gap: 10px; }
+  .qt-jump-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    width: 100%;
+    background: #fff;
+    border: 1.5px solid var(--blue-soft);
+    border-radius: 14px;
+    padding: 13px 16px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    text-align: left;
+    transition: border-color 150ms ease, background 150ms ease;
+  }
+  .qt-jump-item:hover { border-color: var(--blue); background: var(--blue-faint); }
+  .qt-jump-item .qt-jump-num { color: var(--blue); font-weight: 800; margin-right: 10px; }
+  .qt-jump-item .qt-arrow { color: var(--blue); flex-shrink: 0; }
+
+  /* ---------- retour au menu, visible sur chaque page ---------- */
+  .qt-menu-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: none; border: none; font-family: inherit;
+    font-size: 12.5px; font-weight: 700; letter-spacing: 0.3px;
+    color: var(--muted); padding: 0; margin-bottom: 18px;
+  }
+  .qt-menu-link:hover { color: var(--blue); }
+
+  /* ---------- progress ---------- */
+  .qt-progress-label { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; text-align: right; }
+  .qt-progress-track { height: 8px; background: #fff; border: 1.5px solid var(--blue); border-radius: 99px; overflow: hidden; margin-bottom: 34px; }
+  .qt-progress-bar { height: 100%; background: var(--yellow); border-right: 1.5px solid var(--blue); transition: width 350ms ease; width: 0%; }
+
+  /* ---------- cards (une par ligne de tableau) ---------- */
+  .qt-card {
+    background: #fff;
+    border: 1.5px solid var(--blue);
+    border-radius: 20px;
+    padding: 20px 20px 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  .qt-card-name { font-weight: 800; font-size: 15px; color: var(--blue); margin-bottom: 14px; }
+
+  .qt-field { margin-bottom: 14px; }
+  .qt-field:last-child { margin-bottom: 0; }
+  .qt-field-label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 7px;
+  }
+  .qt-input, .qt-textarea {
+    width: 100%;
+    border: 1.5px solid var(--blue-soft);
+    border-radius: 12px;
+    background: #fff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14.5px;
+    color: var(--ink);
+    padding: 10px 13px;
+    transition: border-color 180ms ease;
+  }
+  .qt-input::placeholder, .qt-textarea::placeholder { color: #9aa1b0; font-style: italic; }
+  .qt-input:focus, .qt-textarea:focus { outline: none; border-color: var(--blue); }
+  .qt-textarea { resize: vertical; min-height: 64px; }
+
+  /* ---------- chips à cocher (une seule sélection par groupe, empilées) ---------- */
+  .qt-pick-group { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+  .qt-pick {
+    display: block;
+    width: 100%;
+    background: #fff;
+    border: 1.5px solid var(--blue-soft);
+    border-radius: 10px;
+    padding: 7px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--ink);
+    font-family: inherit;
+    text-align: center;
+    white-space: normal;
+    word-break: normal;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+  }
+  .qt-pick:hover { border-color: var(--blue); color: var(--blue); }
+  .qt-pick.qt-pick-active { background: var(--yellow); border-color: var(--blue); color: var(--blue); }
+
+  .qt-divider { border: none; border-top: 1.5px solid var(--blue-soft); margin: 30px 0; }
+
+  /* ---------- tableau (reprend la structure de la page Notion, sans défilement) ---------- */
+  .qt-table-wrap {
+    border: 1.5px solid var(--blue);
+    border-radius: 18px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  .qt-table { table-layout: fixed; border-collapse: collapse; width: 100%; background: #fff; }
+  .qt-table th {
+    background: var(--blue-faint);
+    color: var(--blue);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-align: left;
+    vertical-align: top;
+    padding: 10px 8px;
+    border-bottom: 1.5px solid var(--blue);
+    border-right: 1px solid var(--blue-soft);
+    word-break: normal;
+    overflow-wrap: normal;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+  .qt-table th:last-child { border-right: none; }
+  .qt-table td { padding: 10px 8px; border-bottom: 1px solid var(--blue-soft); border-right: 1px solid var(--blue-soft); vertical-align: top; word-break: normal; overflow-wrap: normal; }
+  .qt-table td:last-child { border-right: none; }
+  .qt-table tbody tr:last-child td { border-bottom: none; }
+  .qt-table td.qt-table-rowlabel { font-weight: 700; font-size: 12.5px; color: var(--ink); -webkit-hyphens: auto; hyphens: auto; }
+  .qt-table .qt-input, .qt-table .qt-textarea { width: 100%; font-size: 12.5px; padding: 7px 8px; }
+  .qt-table .qt-textarea { min-height: 70px; }
+
+  .qt-tip { font-size: 13px; color: var(--muted); background: var(--blue-faint); border: 1px solid var(--blue-soft); border-radius: 12px; padding: 11px 15px; margin: 4px 0 4px; max-width: 480px; }
+
+  @media (max-width: 460px) {
+    .qt-table th { font-size: 10.5px; padding: 8px 6px; }
+    .qt-table td { padding: 8px 6px; }
+    .qt-table .qt-input, .qt-table .qt-textarea { font-size: 11.5px; padding: 6px 6px; }
+    .qt-table td.qt-table-rowlabel { font-size: 11.5px; }
+    .qt-pick { font-size: 10.5px; padding: 6px 5px; }
+  }
+
+  /* ---------- nav ---------- */
+  .qt-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; gap: 12px; flex-wrap: wrap; }
+  .qt-nav-left { display: flex; align-items: center; gap: 16px; }
+  .qt-btn-text { background: none; border: none; color: var(--muted); font-size: 13.5px; font-family: inherit; padding: 8px 4px; }
+  .qt-btn-text:hover { color: var(--blue); }
+
+  /* ---------- impression / récap ---------- */
+  .qt-print-box { border-top: 1.5px solid var(--blue-soft); padding-top: 32px; margin-top: 30px; text-align: center; }
+  .qt-print-title { font-weight: 800; font-size: 16px; color: var(--ink); margin-bottom: 6px; }
+  .qt-print-text { font-size: 13.5px; color: var(--muted); max-width: 400px; margin: 0 auto 18px; }
+  .qt-actions-stack { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+
+  .qt-full-recap { display: none; }
+  .qt-recap-section { margin-bottom: 26px; }
+  .qt-recap-section-title { font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
+  .qt-recap-item { margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--blue-soft); text-align: left; }
+  .qt-recap-item:last-child { border-bottom: none; }
+  .qt-recap-name { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .qt-recap-line { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 2px; }
+  .qt-recap-line strong { color: var(--ink); font-weight: 600; }
+
+  @media (max-width: 520px) {
+    .qt-shell { padding: 40px 18px 56px; }
+    .qt-card { padding: 16px 16px 18px; }
+    .qt-btn { white-space: normal; text-align: center; padding: 0.85rem 1.6rem; }
+  }
+
+  @media print {
+    .qt-progress-label, .qt-progress-track, .qt-print-box, .qt-nav, .qt-menu-link { display: none !important; }
+    .qt-full-recap { display: none; }
+    body.qt-printing-full #qt-page-content { display: none !important; }
+    body.qt-printing-full .qt-full-recap { display: block !important; }
+  }
+</style>
+</head>
+<body>
+<div class="qt-wrap">
+  <div class="qt-shell">
+    <div class="qt-progress-label" id="qt-progress-label"></div>
+    <div class="qt-progress-track" id="qt-progress-track"><div class="qt-progress-bar" id="qt-progress-bar"></div></div>
+    <div id="qt-app"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+
+  var PAGES = [
+    {
+      id: 'echelle',
+      title: 'Mon échelle de <em>plaisir</em>',
+      intro: "Une fois le guide audio suivi, complète le tableau ci-dessous.",
+      rowHeader: 'Niveau',
+      rows: [
+        { id: 'niveau1', label: 'Niveau 1', fields: [
+          { id: 'nom', label: 'Nom que tu lui donnes', type: 'input', placeholder: '(ex : je me chauffe)' },
+          { id: 'desc', label: 'À quoi ça ressemble pour toi (sensations / pensées)', type: 'textarea', placeholder: "Ex : j'ai un peu envie mais je peux arrêter à tout moment. Mon corps est plutôt détendu, mon pénis réagit à peine, je suis plus dans la curiosité que dans le besoin." }
+        ]},
+        { id: 'niveau2', label: 'Niveau 2', fields: [
+          { id: 'nom', label: 'Nom que tu lui donnes', type: 'input' },
+          { id: 'desc', label: 'À quoi ça ressemble pour toi (sensations / pensées)', type: 'textarea' }
+        ]},
+        { id: 'niveau3', label: 'Niveau 3', fields: [
+          { id: 'nom', label: 'Nom que tu lui donnes', type: 'input' },
+          { id: 'desc', label: 'À quoi ça ressemble pour toi (sensations / pensées)', type: 'textarea' }
+        ]},
+        { id: 'niveau4', label: 'Niveau 4', fields: [
+          { id: 'nom', label: 'Nom que tu lui donnes', type: 'input' },
+          { id: 'desc', label: 'À quoi ça ressemble pour toi (sensations / pensées)', type: 'textarea' }
+        ]},
+        { id: 'niveau5', label: 'Niveau 5', fields: [
+          { id: 'nom', label: 'Nom que tu lui donnes', type: 'input', placeholder: '(ex : au bord de venir)' },
+          { id: 'desc', label: 'À quoi ça ressemble pour toi (sensations / pensées)', type: 'textarea', placeholder: "Je sens que l'éjaculation peut se lancer à tout moment. Les sensations sont très intenses, j'ai l'impression que mon corps veut « lâcher ». Si je continue ne serait-ce qu'un peu, je sais que je vais éjaculer." }
+        ]}
+      ]
+    },
+    {
+      id: 'zones',
+      title: 'Zones du corps <em>(hors pénis)</em>',
+      intro: "Pendant l'exo, tu explores cuisses, pubis, périnée, testicules, tétons, buste. Note ce qui se passe, sans chercher à analyser.",
+      rowHeader: 'Zone',
+      rows: [
+        { id: 'cuisses', label: 'Intérieur des cuisses', fields: fieldsZone() },
+        { id: 'pubis', label: 'Pubis', fields: fieldsZone() },
+        { id: 'perinee', label: 'Périnée', fields: fieldsZone() },
+        { id: 'testicules', label: 'Testicules', fields: fieldsZone() },
+        { id: 'tetons', label: 'Tétons / buste', fields: fieldsZone() },
+        { id: 'autre', label: 'Autre zone (à préciser)', fields: fieldsZone() }
+      ]
+    },
+    {
+      id: 'base',
+      title: 'Base de la <em>verge</em>',
+      intro: "Tu explores plusieurs façons de toucher la base de ta verge. Note ce qui change pour toi.",
+      rowHeader: 'Stimulation',
+      rows: [
+        { id: 'caresse', label: 'Caresse du bout des doigts (tout autour)', fields: fieldsVerge(['facile', 'moyen', 'difficile'], 'Plus / moins gérable pour toi ?') },
+        { id: 'massage', label: 'Massage avec pouce dessus + doigts dessous', fields: fieldsVerge(['facile', 'moyen', 'difficile'], 'Plus / moins gérable pour toi ?') },
+        { id: 'poigne', label: 'Poigne plus ferme, vitesses et pressions variées', fields: fieldsVerge(['facile', 'moyen', 'difficile'], 'Plus / moins gérable pour toi ?') }
+      ]
+    },
+    {
+      id: 'hautverge',
+      title: 'Partie haute de la verge <em>(sous le gland)</em>',
+      rowHeader: 'Stimulation',
+      rows: [
+        { id: 'caresse', label: 'Caresse', fields: fieldsVerge(['plutôt douce', 'plutôt intense'], 'Tu la classes comment ?') },
+        { id: 'massage', label: 'Massage', fields: fieldsVerge(['plutôt douce', 'plutôt intense'], 'Tu la classes comment ?') },
+        { id: 'poigne', label: 'Poigne', fields: fieldsVerge(['plutôt douce', 'plutôt intense'], 'Tu la classes comment ?') }
+      ]
+    },
+    {
+      id: 'gland',
+      title: '<em>Gland</em>',
+      rowHeader: 'Stimulation',
+      rows: [
+        { id: 'base_frein', label: 'Base du gland + frein (va-et-vient modéré)', fields: fieldsGland() },
+        { id: 'chapeau', label: 'Caresse du chapeau avec le pouce', fields: fieldsGland() },
+        { id: 'dessous', label: "Caresse du dessous avec l'index", fields: fieldsGland() },
+        { id: 'entier', label: 'Gland entier avec paume / doigts (dessus)', fields: fieldsGland() }
+      ],
+      afterQuestion: { id: 'redescendre', label: "Quand ça monte trop, qu'est-ce qui t'a aidé à redescendre un peu (changer de zone, changer de rythme, revenir à une stimulation plus gérable, pause…) ?", type: 'textarea' }
+    },
+    {
+      id: 'bilan',
+      isBilan: true,
+      title: "Bilan : ce que j'ai compris sur mes <em>niveaux de plaisir</em>",
+      questions: [
+        { id: 'excite_vite', label: "Les zones qui m'excitent très vite :" },
+        { id: 'gerable_longtemps', label: "Les zones et les façons de toucher qui me donnent du plaisir mais restent gérables longtemps :" },
+        { id: 'descendre_pression', label: "Ce que je peux utiliser en rapport pour faire descendre la pression si ça va trop vite :" }
+      ]
+    }
+  ];
+
+  function fieldsZone() {
+    return [
+      { id: 'sensations', label: 'Sensations ressenties', type: 'textarea' },
+      { id: 'effet', label: 'Effet sur excitation', type: 'pick', options: ['↓ baisse', '= pareil', '↑ monte'] },
+      { id: 'niveau', label: 'Niveau (1–5)', type: 'input' }
+    ];
+  }
+  function fieldsVerge(pickOptions, pickLabel) {
+    return [
+      { id: 'sensations', label: 'Sensations (texture, intensité…)', type: 'textarea' },
+      { id: 'effet', label: 'Effet sur excitation', type: 'pick', options: ['↓ baisse', '= pareil', '↑ monte'] },
+      { id: 'niveau', label: 'Niveau (1–5)', type: 'input' },
+      { id: 'classe', label: pickLabel, type: 'pick', options: pickOptions }
+    ];
+  }
+  function fieldsGland() {
+    return [
+      { id: 'sensations', label: 'Sensations (plaisir / inconfort / « trop »)', type: 'textarea' },
+      { id: 'effet', label: 'Effet sur excitation', type: 'pick', options: ['↓ baisse', '= pareil', '↑ monte'] },
+      { id: 'niveau', label: 'Niveau (1–5)', type: 'input' },
+      { id: 'classe', label: 'Gérable ou trop intense ?', type: 'pick', options: ['gérable', 'trop intense', 'ça dépend'] }
+    ];
+  }
+
+  var state = { home: true, index: 0, answers: {} };
+
+  function keyFor(pageId, rowId, fieldId) {
+    return pageId + '.' + (rowId ? rowId + '.' : '') + fieldId;
+  }
+
+  function setProgress(index, total) {
+    document.getElementById('qt-progress-label').textContent = (index + 1) + ' / ' + total;
+    document.getElementById('qt-progress-bar').style.width = (((index + 1) / total) * 100) + '%';
+  }
+
+  function renderHome() {
+    document.getElementById('qt-progress-label').classList.add('qt-hidden');
+    document.getElementById('qt-progress-track').classList.add('qt-hidden');
+    var app = document.getElementById('qt-app');
+    app.innerHTML = '';
+    var wrap = document.createElement('div');
+    wrap.className = 'qt-screen';
+    var html = '';
+    html += '<span class="qt-eyebrow">Semaine 2 — Redéfinir</span>';
+    html += '<h1>Mes niveaux de <em>plaisir</em></h1>';
+    html += '<p class="qt-intro-text">Échelle d\'excitation, repérer les paliers.</p>';
+    html += '<p class="qt-tip">C\'est plus confortable à remplir sur ordinateur, les tableaux sont assez larges. Si tu es sur téléphone, pense à le passer en mode paysage.</p>';
+    html += '<div class="qt-jump-title">Choisis un tableau</div>';
+    html += '<div class="qt-jump-list">';
+    PAGES.forEach(function (p, i) {
+      var plainTitle = p.title.replace(/<[^>]+>/g, '');
+      html += '<button type="button" class="qt-jump-item" data-index="' + i + '">'
+        + '<span><span class="qt-jump-num">' + (i + 1) + '.</span>' + plainTitle + '</span>'
+        + '<span class="qt-arrow" aria-hidden="true">→</span></button>';
+    });
+    html += '</div>';
+    wrap.innerHTML = html;
+    app.appendChild(wrap);
+    function goToStep(i) {
+      state.home = false;
+      state.index = i;
+      document.getElementById('qt-progress-label').classList.remove('qt-hidden');
+      document.getElementById('qt-progress-track').classList.remove('qt-hidden');
+      render();
+    }
+    wrap.querySelectorAll('.qt-jump-item').forEach(function (btn) {
+      btn.onclick = function () { goToStep(parseInt(btn.getAttribute('data-index'), 10)); };
+    });
+  }
+
+  function goHome() {
+    state.home = true;
+    document.getElementById('qt-progress-label').classList.add('qt-hidden');
+    document.getElementById('qt-progress-track').classList.add('qt-hidden');
+    render();
+  }
+
+  function makeMenuLink() {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'qt-menu-link';
+    btn.innerHTML = '<span aria-hidden="true">←</span> Menu';
+    btn.onclick = goHome;
+    return btn;
+  }
+
+  function makeControl(pageId, rowId, field) {
+    var key = keyFor(pageId, rowId, field.id);
+
+    if (field.type === 'input') {
+      var input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'qt-input';
+      if (field.placeholder) input.placeholder = field.placeholder;
+      input.value = state.answers[key] || '';
+      input.oninput = function () { state.answers[key] = input.value; };
+      return input;
+    } else if (field.type === 'textarea') {
+      var ta = document.createElement('textarea');
+      ta.className = 'qt-textarea';
+      if (field.placeholder) ta.placeholder = field.placeholder;
+      ta.value = state.answers[key] || '';
+      ta.oninput = function () { state.answers[key] = ta.value; };
+      return ta;
+    } else if (field.type === 'pick') {
+      var group = document.createElement('div');
+      group.className = 'qt-pick-group';
+      field.options.forEach(function (opt) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'qt-pick' + (state.answers[key] === opt ? ' qt-pick-active' : '');
+        b.textContent = opt;
+        b.onclick = function () {
+          var isActive = b.classList.contains('qt-pick-active');
+          group.querySelectorAll('.qt-pick').forEach(function (c) { c.classList.remove('qt-pick-active'); });
+          if (!isActive) {
+            b.classList.add('qt-pick-active');
+            state.answers[key] = opt;
+          } else {
+            delete state.answers[key];
+          }
+        };
+        group.appendChild(b);
+      });
+      return group;
+    }
+  }
+
+  function makeField(pageId, rowId, field) {
+    var wrap = document.createElement('div');
+    wrap.className = 'qt-field';
+    var lbl = document.createElement('label');
+    lbl.className = 'qt-field-label';
+    lbl.textContent = field.label;
+    wrap.appendChild(lbl);
+    wrap.appendChild(makeControl(pageId, rowId, field));
+    return wrap;
+  }
+
+  function colWeight(kind) {
+    if (kind === 'label') return 1.15;
+    if (kind === 'textarea') return 1.9;
+    if (kind === 'pick') return 1.3;
+    return 0.8; // input
+  }
+
+  function makeTable(page) {
+    var tableWrap = document.createElement('div');
+    tableWrap.className = 'qt-table-wrap';
+    var table = document.createElement('table');
+    table.className = 'qt-table';
+
+    var weights = [colWeight('label')].concat(page.rows[0].fields.map(function (f) { return colWeight(f.type); }));
+    var totalWeight = weights.reduce(function (a, b) { return a + b; }, 0);
+    var colgroup = document.createElement('colgroup');
+    weights.forEach(function (w) {
+      var col = document.createElement('col');
+      col.style.width = ((w / totalWeight) * 100).toFixed(2) + '%';
+      colgroup.appendChild(col);
+    });
+    table.appendChild(colgroup);
+
+    var thead = document.createElement('thead');
+    var headRow = document.createElement('tr');
+    var th0 = document.createElement('th');
+    th0.textContent = page.rowHeader || '';
+    headRow.appendChild(th0);
+    page.rows[0].fields.forEach(function (f) {
+      var th = document.createElement('th');
+      th.textContent = f.label;
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    var tbody = document.createElement('tbody');
+    page.rows.forEach(function (row) {
+      var tr = document.createElement('tr');
+      var tdLabel = document.createElement('td');
+      tdLabel.className = 'qt-table-rowlabel';
+      tdLabel.textContent = row.label;
+      tr.appendChild(tdLabel);
+      row.fields.forEach(function (f) {
+        var td = document.createElement('td');
+        td.appendChild(makeControl(page.id, row.id, f));
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    tableWrap.appendChild(table);
+    return tableWrap;
+  }
+
+  function render() {
+    if (state.home) { renderHome(); return; }
+    var total = PAGES.length;
+    if (state.index >= total) { state.index = total - 1; }
+    var page = PAGES[state.index];
+    setProgress(state.index, total);
+
+    var app = document.getElementById('qt-app');
+    app.innerHTML = '';
+    var wrap = document.createElement('div');
+    wrap.className = 'qt-screen';
+
+    var content = document.createElement('div');
+    content.id = 'qt-page-content';
+    content.appendChild(makeMenuLink());
+    var header = document.createElement('div');
+    header.innerHTML = '<h1>' + page.title + '</h1>' + (page.intro ? '<p class="qt-intro-text">' + page.intro + '</p>' : '');
+    while (header.firstChild) { content.appendChild(header.firstChild); }
+
+    if (page.isBilan) {
+      page.questions.forEach(function (q) {
+        content.appendChild(makeField(page.id, null, { id: q.id, label: q.label, type: 'textarea' }));
+      });
+    } else {
+      content.appendChild(makeTable(page));
+      if (page.afterQuestion) {
+        var hr = document.createElement('hr');
+        hr.className = 'qt-divider';
+        content.appendChild(hr);
+        content.appendChild(makeField(page.id, null, page.afterQuestion));
+      }
+    }
+
+    wrap.appendChild(content);
+
+    if (page.isBilan) {
+      var full = document.createElement('div');
+      full.id = 'qt-full-recap';
+      full.className = 'qt-full-recap';
+      wrap.appendChild(full);
+
+      var printBox = document.createElement('div');
+      printBox.className = 'qt-print-box';
+      printBox.innerHTML = '<div class="qt-print-title">Garde tes réponses</div>'
+        + '<p class="qt-print-text">Imprime cette page ou garde-la en PDF pour la relire quand tu en as besoin.</p>'
+        + '<div class="qt-actions-stack">'
+        + '<button type="button" class="qt-btn" id="qt-print-btn"><span>Imprimer cette page / PDF</span><span class="qt-arrow" aria-hidden="true">→</span></button>'
+        + '<button type="button" class="qt-btn qt-btn-outline" id="qt-print-all-btn"><span>Imprimer toutes mes réponses / PDF</span><span class="qt-arrow" aria-hidden="true">→</span></button>'
+        + '<button type="button" class="qt-btn qt-btn-outline" id="qt-restart"><span>Recommencer</span><span class="qt-arrow" aria-hidden="true">↺</span></button>'
+        + '</div>';
+      wrap.appendChild(printBox);
+      app.appendChild(wrap);
+
+      wrap.querySelector('#qt-print-btn').onclick = function () {
+        document.body.classList.remove('qt-printing-full');
+        window.print();
+      };
+      wrap.querySelector('#qt-print-all-btn').onclick = function () {
+        document.getElementById('qt-full-recap').innerHTML = buildFullRecapHtml();
+        document.body.classList.add('qt-printing-full');
+        window.print();
+      };
+      wrap.querySelector('#qt-restart').onclick = function () { state = { home: false, index: 0, answers: {} }; render(); };
+
+      var nav = document.createElement('div');
+      nav.className = 'qt-nav';
+      nav.innerHTML = '<div class="qt-nav-left"><button class="qt-btn-text" id="qt-back">Retour</button></div>';
+      wrap.appendChild(nav);
+      nav.querySelector('#qt-back').onclick = function () { state.index -= 1; render(); };
+    } else {
+      app.appendChild(wrap);
+      var nav2 = document.createElement('div');
+      nav2.className = 'qt-nav';
+      var backHtml = state.index > 0 ? '<button class="qt-btn-text" id="qt-back">Retour</button>' : '';
+      nav2.innerHTML = '<div class="qt-nav-left">' + backHtml + '</div><button type="button" class="qt-btn" id="qt-next"><span>Continuer</span><span class="qt-arrow" aria-hidden="true">→</span></button>';
+      wrap.appendChild(nav2);
+      var backBtn = nav2.querySelector('#qt-back');
+      if (backBtn) backBtn.onclick = function () { state.index -= 1; render(); };
+      nav2.querySelector('#qt-next').onclick = function () { state.index += 1; render(); };
+    }
+  }
+
+  function val(key) { return state.answers[key]; }
+
+  function buildFullRecapHtml() {
+    var html = '<h1>Toutes tes <em>réponses</em></h1><hr class="qt-divider">';
+    PAGES.forEach(function (page) {
+      var plainTitle = page.title.replace(/<[^>]+>/g, '');
+      html += '<div class="qt-recap-section"><div class="qt-recap-section-title">' + plainTitle + '</div>';
+      if (page.isBilan) {
+        page.questions.forEach(function (q) {
+          var v = val(keyFor(page.id, null, q.id));
+          html += '<div class="qt-recap-item"><div class="qt-recap-name">' + q.label + '</div>'
+            + '<div class="qt-recap-line">' + (v ? v : '—') + '</div></div>';
+        });
+      } else {
+        page.rows.forEach(function (row) {
+          html += '<div class="qt-recap-item"><div class="qt-recap-name">' + row.label + '</div>';
+          row.fields.forEach(function (f) {
+            var v = val(keyFor(page.id, row.id, f.id));
+            html += '<div class="qt-recap-line"><strong>' + f.label + ' :</strong> ' + (v ? v : '—') + '</div>';
+          });
+          html += '</div>';
+        });
+        if (page.afterQuestion) {
+          var v2 = val(keyFor(page.id, null, page.afterQuestion.id));
+          html += '<div class="qt-recap-item"><div class="qt-recap-name">' + page.afterQuestion.label + '</div>'
+            + '<div class="qt-recap-line">' + (v2 ? v2 : '—') + '</div></div>';
+        }
+      }
+      html += '</div>';
+    });
+    return html;
+  }
+
+  render();
+
+  /* ---------- auto-hauteur pour intégration en iframe (Kajabi) ---------- */
+  (function () {
+    var lastHeight = 0;
+    function reportHeight() {
+      var h = document.documentElement.scrollHeight;
+      if (h !== lastHeight) {
+        lastHeight = h;
+        window.parent.postMessage({ type: 'come-quiz-height', height: h }, '*');
+      }
+    }
+    var observer = new MutationObserver(reportHeight);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+    window.addEventListener('load', reportHeight);
+    window.addEventListener('resize', reportHeight);
+    setTimeout(reportHeight, 300);
+  })();
+
+  window.addEventListener('afterprint', function () { document.body.classList.remove('qt-printing-full'); });
+})();
+</script>
+</body>
+</html>
