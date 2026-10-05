@@ -13,6 +13,7 @@
   body {
     --blue: #2F6FE4;
     --blue-soft: rgba(47,111,228,0.18);
+    --blue-line: rgba(47,111,228,0.4);
     --blue-faint: rgba(47,111,228,0.06);
     --yellow: #F7FF59;
     --ink: #1c1c1c;
@@ -105,40 +106,36 @@
   }
   .qt-intro-text { font-size: 15.5px; color: var(--muted); max-width: 480px; margin-bottom: 10px; }
 
-  /* ---------- accès direct à chaque tableau depuis l'accueil ---------- */
-  .qt-jump-title { font-size: 11.5px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--muted); margin: 36px 0 12px; }
-  .qt-jump-list { display: flex; flex-direction: column; gap: 10px; }
-  .qt-jump-item {
+  /* ---------- tableaux en toggles (façon Notion) ---------- */
+  .qt-accordion-list { margin-top: 30px; display: flex; flex-direction: column; gap: 12px; }
+  .qt-accordion {
+    border: 1.5px solid var(--blue-soft);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    transition: border-color 150ms ease;
+  }
+  .qt-accordion.qt-accordion-open { border-color: var(--blue); }
+  .qt-accordion-header {
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
     width: 100%;
     background: #fff;
-    border: 1.5px solid var(--blue-soft);
-    border-radius: 14px;
-    padding: 13px 16px;
+    border: none;
+    padding: 15px 17px;
     font-family: inherit;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 14.5px;
+    font-weight: 700;
     color: var(--ink);
     text-align: left;
-    transition: border-color 150ms ease, background 150ms ease;
   }
-  .qt-jump-item:hover { border-color: var(--blue); background: var(--blue-faint); }
-  .qt-jump-item .qt-jump-num { color: var(--blue); font-weight: 800; margin-right: 10px; }
-  .qt-jump-item .qt-arrow { color: var(--blue); flex-shrink: 0; }
-
-  /* ---------- retour au menu, visible sur chaque page ---------- */
-  .qt-menu-link {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: none; border: none; font-family: inherit;
-    font-size: 12.5px; font-weight: 700; letter-spacing: 0.3px;
-    color: var(--muted); padding: 0; margin-bottom: 18px;
-  }
-  .qt-menu-link:hover { color: var(--blue); }
-
-  /* ---------- progress ---------- */
-  .qt-progress-label { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; text-align: right; }
-  .qt-progress-track { height: 8px; background: #fff; border: 1.5px solid var(--blue); border-radius: 99px; overflow: hidden; margin-bottom: 34px; }
-  .qt-progress-bar { height: 100%; background: var(--yellow); border-right: 1.5px solid var(--blue); transition: width 350ms ease; width: 0%; }
+  .qt-accordion-header:hover { background: var(--blue-faint); }
+  .qt-accordion-header .qt-jump-num { color: var(--blue); font-weight: 800; margin-right: 10px; }
+  .qt-accordion-chevron { color: var(--blue); flex-shrink: 0; font-size: 13px; transition: transform 200ms ease; }
+  .qt-accordion.qt-accordion-open .qt-accordion-chevron { transform: rotate(180deg); }
+  .qt-accordion-panel { display: none; padding: 2px 17px 20px; border-top: 1px solid var(--blue-soft); }
+  .qt-accordion.qt-accordion-open .qt-accordion-panel { display: block; }
+  .qt-accordion-panel .qt-intro-text { margin-top: 16px; }
+  .qt-accordion-panel .qt-table-wrap { margin-top: 14px; }
 
   /* ---------- cards (une par ligne de tableau) ---------- */
   .qt-card {
@@ -222,18 +219,27 @@
     vertical-align: top;
     padding: 10px 8px;
     border-bottom: 1.5px solid var(--blue);
-    border-right: 1px solid var(--blue-soft);
+    border-right: 1px solid var(--blue-line);
     word-break: normal;
     overflow-wrap: normal;
     -webkit-hyphens: auto;
     hyphens: auto;
   }
   .qt-table th:last-child { border-right: none; }
-  .qt-table td { padding: 10px 8px; border-bottom: 1px solid var(--blue-soft); border-right: 1px solid var(--blue-soft); vertical-align: top; word-break: normal; overflow-wrap: normal; }
+  .qt-table td { padding: 10px 8px; border-bottom: 1px solid var(--blue-line); border-right: 1px solid var(--blue-line); vertical-align: top; word-break: normal; overflow-wrap: normal; }
   .qt-table td:last-child { border-right: none; }
   .qt-table tbody tr:last-child td { border-bottom: none; }
   .qt-table td.qt-table-rowlabel { font-weight: 700; font-size: 12.5px; color: var(--ink); -webkit-hyphens: auto; hyphens: auto; }
-  .qt-table .qt-input, .qt-table .qt-textarea { width: 100%; font-size: 12.5px; padding: 7px 8px; }
+  .qt-table .qt-input, .qt-table .qt-textarea {
+    width: 100%;
+    font-size: 12.5px;
+    padding: 4px 2px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    border-bottom: 1px solid var(--blue-soft);
+  }
+  .qt-table .qt-input:focus, .qt-table .qt-textarea:focus { border-bottom-color: var(--blue); }
   .qt-table .qt-textarea { min-height: 70px; }
 
   .qt-tip { font-size: 13px; color: var(--muted); background: var(--blue-faint); border: 1px solid var(--blue-soft); border-radius: 12px; padding: 11px 15px; margin: 4px 0 4px; max-width: 480px; }
@@ -258,15 +264,6 @@
   .qt-print-text { font-size: 13.5px; color: var(--muted); max-width: 400px; margin: 0 auto 18px; }
   .qt-actions-stack { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 
-  .qt-full-recap { display: none; }
-  .qt-recap-section { margin-bottom: 26px; }
-  .qt-recap-section-title { font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
-  .qt-recap-item { margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--blue-soft); text-align: left; }
-  .qt-recap-item:last-child { border-bottom: none; }
-  .qt-recap-name { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
-  .qt-recap-line { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 2px; }
-  .qt-recap-line strong { color: var(--ink); font-weight: 600; }
-
   @media (max-width: 520px) {
     .qt-shell { padding: 40px 18px 56px; }
     .qt-card { padding: 16px 16px 18px; }
@@ -274,18 +271,14 @@
   }
 
   @media print {
-    .qt-progress-label, .qt-progress-track, .qt-print-box, .qt-nav, .qt-menu-link { display: none !important; }
-    .qt-full-recap { display: none; }
-    body.qt-printing-full #qt-page-content { display: none !important; }
-    body.qt-printing-full .qt-full-recap { display: block !important; }
+    .qt-print-box, .qt-nav, .qt-accordion-chevron { display: none !important; }
+    body.qt-printing-bilan .qt-accordion-list { display: none !important; }
   }
 </style>
 </head>
 <body>
 <div class="qt-wrap">
   <div class="qt-shell">
-    <div class="qt-progress-label" id="qt-progress-label"></div>
-    <div class="qt-progress-track" id="qt-progress-track"><div class="qt-progress-bar" id="qt-progress-bar"></div></div>
     <div id="qt-app"></div>
   </div>
 </div>
@@ -301,24 +294,24 @@
       rowHeader: 'Niveau',
       rows: [
         { id: 'niveau1', label: 'Niveau 1', fields: [
-          { id: 'nom', label: 'Nom que tu lui donnes', type: 'input', placeholder: '(ex : je me chauffe)' },
-          { id: 'desc', label: 'À quoi ça ressemble pour toi (sensations / pensées)', type: 'textarea', placeholder: "Ex : j'ai un peu envie mais je peux arrêter à tout moment. Mon corps est plutôt détendu, mon pénis réagit à peine, je suis plus dans la curiosité que dans le besoin." }
+          { id: 'nom', label: 'Nom que tu lui donnes', type: 'textarea', placeholder: '(ex : je me chauffe)' },
+          { id: 'desc', label: 'À quoi ça ressemble pour toi (sensations / pensées)', type: 'textarea', placeholder: "(ex : j'ai un peu envie mais je peux arrêter à tout moment. Mon corps est plutôt détendu, mon pénis réagit à peine, je suis plus dans la curiosité que dans le besoin.)" }
         ]},
         { id: 'niveau2', label: 'Niveau 2', fields: [
-          { id: 'nom', label: 'Nom que tu lui donnes', type: 'input' },
+          { id: 'nom', label: 'Nom que tu lui donnes', type: 'textarea' },
           { id: 'desc', label: 'À quoi ça ressemble pour toi (sensations / pensées)', type: 'textarea' }
         ]},
         { id: 'niveau3', label: 'Niveau 3', fields: [
-          { id: 'nom', label: 'Nom que tu lui donnes', type: 'input' },
+          { id: 'nom', label: 'Nom que tu lui donnes', type: 'textarea' },
           { id: 'desc', label: 'À quoi ça ressemble pour toi (sensations / pensées)', type: 'textarea' }
         ]},
         { id: 'niveau4', label: 'Niveau 4', fields: [
-          { id: 'nom', label: 'Nom que tu lui donnes', type: 'input' },
+          { id: 'nom', label: 'Nom que tu lui donnes', type: 'textarea' },
           { id: 'desc', label: 'À quoi ça ressemble pour toi (sensations / pensées)', type: 'textarea' }
         ]},
         { id: 'niveau5', label: 'Niveau 5', fields: [
-          { id: 'nom', label: 'Nom que tu lui donnes', type: 'input', placeholder: '(ex : au bord de venir)' },
-          { id: 'desc', label: 'À quoi ça ressemble pour toi (sensations / pensées)', type: 'textarea', placeholder: "Je sens que l'éjaculation peut se lancer à tout moment. Les sensations sont très intenses, j'ai l'impression que mon corps veut « lâcher ». Si je continue ne serait-ce qu'un peu, je sais que je vais éjaculer." }
+          { id: 'nom', label: 'Nom que tu lui donnes', type: 'textarea', placeholder: '(ex : au bord de venir)' },
+          { id: 'desc', label: 'À quoi ça ressemble pour toi (sensations / pensées)', type: 'textarea', placeholder: "(ex : je sens que l'éjaculation peut se lancer à tout moment. Les sensations sont très intenses, j'ai l'impression que mon corps veut « lâcher ». Si je continue ne serait-ce qu'un peu, je sais que je vais éjaculer.)" }
         ]}
       ]
     },
@@ -405,66 +398,27 @@
     ];
   }
 
-  var state = { home: true, index: 0, answers: {} };
+  var state = { answers: {} };
 
   function keyFor(pageId, rowId, fieldId) {
     return pageId + '.' + (rowId ? rowId + '.' : '') + fieldId;
   }
 
-  function setProgress(index, total) {
-    document.getElementById('qt-progress-label').textContent = (index + 1) + ' / ' + total;
-    document.getElementById('qt-progress-bar').style.width = (((index + 1) / total) * 100) + '%';
+  function autosizeTextarea(ta) {
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
   }
 
-  function renderHome() {
-    document.getElementById('qt-progress-label').classList.add('qt-hidden');
-    document.getElementById('qt-progress-track').classList.add('qt-hidden');
-    var app = document.getElementById('qt-app');
-    app.innerHTML = '';
-    var wrap = document.createElement('div');
-    wrap.className = 'qt-screen';
-    var html = '';
-    html += '<span class="qt-eyebrow">Semaine 2 — Redéfinir</span>';
-    html += '<h1>Mes niveaux de <em>plaisir</em></h1>';
-    html += '<p class="qt-intro-text">Échelle d\'excitation, repérer les paliers.</p>';
-    html += '<p class="qt-tip">C\'est plus confortable à remplir sur ordinateur, les tableaux sont assez larges. Si tu es sur téléphone, pense à le passer en mode paysage.</p>';
-    html += '<div class="qt-jump-title">Choisis un tableau</div>';
-    html += '<div class="qt-jump-list">';
-    PAGES.forEach(function (p, i) {
-      var plainTitle = p.title.replace(/<[^>]+>/g, '');
-      html += '<button type="button" class="qt-jump-item" data-index="' + i + '">'
-        + '<span><span class="qt-jump-num">' + (i + 1) + '.</span>' + plainTitle + '</span>'
-        + '<span class="qt-arrow" aria-hidden="true">→</span></button>';
+  function autosizeTextareasIn(container) {
+    container.querySelectorAll('.qt-textarea').forEach(function (ta) {
+      if (ta.value) { autosizeTextarea(ta); return; }
+      if (ta.placeholder) {
+        var original = ta.value;
+        ta.value = ta.placeholder;
+        autosizeTextarea(ta);
+        ta.value = original;
+      }
     });
-    html += '</div>';
-    wrap.innerHTML = html;
-    app.appendChild(wrap);
-    function goToStep(i) {
-      state.home = false;
-      state.index = i;
-      document.getElementById('qt-progress-label').classList.remove('qt-hidden');
-      document.getElementById('qt-progress-track').classList.remove('qt-hidden');
-      render();
-    }
-    wrap.querySelectorAll('.qt-jump-item').forEach(function (btn) {
-      btn.onclick = function () { goToStep(parseInt(btn.getAttribute('data-index'), 10)); };
-    });
-  }
-
-  function goHome() {
-    state.home = true;
-    document.getElementById('qt-progress-label').classList.add('qt-hidden');
-    document.getElementById('qt-progress-track').classList.add('qt-hidden');
-    render();
-  }
-
-  function makeMenuLink() {
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'qt-menu-link';
-    btn.innerHTML = '<span aria-hidden="true">←</span> Menu';
-    btn.onclick = goHome;
-    return btn;
   }
 
   function makeControl(pageId, rowId, field) {
@@ -483,7 +437,7 @@
       ta.className = 'qt-textarea';
       if (field.placeholder) ta.placeholder = field.placeholder;
       ta.value = state.answers[key] || '';
-      ta.oninput = function () { state.answers[key] = ta.value; };
+      ta.oninput = function () { state.answers[key] = ta.value; autosizeTextarea(ta); };
       return ta;
     } else if (field.type === 'pick') {
       var group = document.createElement('div');
@@ -575,13 +529,7 @@
     return tableWrap;
   }
 
-  function render() {
-    if (state.home) { renderHome(); return; }
-    var total = PAGES.length;
-    if (state.index >= total) { state.index = total - 1; }
-    var page = PAGES[state.index];
-    setProgress(state.index, total);
-
+  function buildPage() {
     var app = document.getElementById('qt-app');
     app.innerHTML = '';
     var wrap = document.createElement('div');
@@ -589,108 +537,98 @@
 
     var content = document.createElement('div');
     content.id = 'qt-page-content';
-    content.appendChild(makeMenuLink());
+
     var header = document.createElement('div');
-    header.innerHTML = '<h1>' + page.title + '</h1>' + (page.intro ? '<p class="qt-intro-text">' + page.intro + '</p>' : '');
+    header.innerHTML = '<span class="qt-eyebrow">Semaine 2 — Redéfinir</span>'
+      + '<h1>Mes niveaux de <em>plaisir</em></h1>'
+      + '<p class="qt-intro-text">Échelle d\'excitation, repérer les paliers.</p>'
+      + '<p class="qt-tip">C\'est plus confortable à remplir sur ordinateur, les tableaux sont assez larges. Si tu es sur téléphone, pense à le passer en mode paysage.</p>';
     while (header.firstChild) { content.appendChild(header.firstChild); }
 
-    if (page.isBilan) {
-      page.questions.forEach(function (q) {
-        content.appendChild(makeField(page.id, null, { id: q.id, label: q.label, type: 'textarea' }));
-      });
-    } else {
-      content.appendChild(makeTable(page));
+    var tablePages = PAGES.filter(function (p) { return !p.isBilan; });
+    var accordionList = document.createElement('div');
+    accordionList.className = 'qt-accordion-list';
+    tablePages.forEach(function (page, i) {
+      var acc = document.createElement('div');
+      acc.className = 'qt-accordion';
+
+      var headerBtn = document.createElement('button');
+      headerBtn.type = 'button';
+      headerBtn.className = 'qt-accordion-header';
+      var plainTitle = page.title.replace(/<[^>]+>/g, '');
+      headerBtn.innerHTML = '<span><span class="qt-jump-num">' + (i + 1) + '.</span>' + plainTitle + '</span>'
+        + '<span class="qt-accordion-chevron" aria-hidden="true">⌄</span>';
+
+      var panel = document.createElement('div');
+      panel.className = 'qt-accordion-panel';
+      if (page.intro) {
+        var introP = document.createElement('p');
+        introP.className = 'qt-intro-text';
+        introP.textContent = page.intro;
+        panel.appendChild(introP);
+      }
+      panel.appendChild(makeTable(page));
       if (page.afterQuestion) {
         var hr = document.createElement('hr');
         hr.className = 'qt-divider';
-        content.appendChild(hr);
-        content.appendChild(makeField(page.id, null, page.afterQuestion));
+        panel.appendChild(hr);
+        panel.appendChild(makeField(page.id, null, page.afterQuestion));
       }
-    }
+
+      headerBtn.onclick = function () {
+        var willOpen = !acc.classList.contains('qt-accordion-open');
+        acc.classList.toggle('qt-accordion-open');
+        if (willOpen) { autosizeTextareasIn(panel); }
+      };
+      acc.appendChild(headerBtn);
+      acc.appendChild(panel);
+      accordionList.appendChild(acc);
+    });
+    content.appendChild(accordionList);
+
+    var bilanPage = PAGES.filter(function (p) { return p.isBilan; })[0];
+    var bilanSection = document.createElement('div');
+    bilanSection.style.marginTop = '36px';
+    var bHeader = document.createElement('div');
+    bHeader.innerHTML = '<h1>' + bilanPage.title + '</h1>';
+    while (bHeader.firstChild) { bilanSection.appendChild(bHeader.firstChild); }
+    bilanPage.questions.forEach(function (q) {
+      bilanSection.appendChild(makeField(bilanPage.id, null, { id: q.id, label: q.label, type: 'textarea' }));
+    });
+    content.appendChild(bilanSection);
 
     wrap.appendChild(content);
 
-    if (page.isBilan) {
-      var full = document.createElement('div');
-      full.id = 'qt-full-recap';
-      full.className = 'qt-full-recap';
-      wrap.appendChild(full);
+    var printBox = document.createElement('div');
+    printBox.className = 'qt-print-box';
+    printBox.innerHTML = '<div class="qt-print-title">Garde tes réponses</div>'
+      + '<p class="qt-print-text">Imprime ton bilan, ou l\'ensemble de tes tableaux remplis, et garde-les en PDF pour les relire quand tu veux.</p>'
+      + '<div class="qt-actions-stack">'
+      + '<button type="button" class="qt-btn" id="qt-print-btn"><span>Imprimer mon bilan / PDF</span><span class="qt-arrow" aria-hidden="true">→</span></button>'
+      + '<button type="button" class="qt-btn qt-btn-outline" id="qt-print-all-btn"><span>Imprimer toutes mes réponses / PDF</span><span class="qt-arrow" aria-hidden="true">→</span></button>'
+      + '<button type="button" class="qt-btn qt-btn-outline" id="qt-restart"><span>Recommencer</span><span class="qt-arrow" aria-hidden="true">↺</span></button>'
+      + '</div>';
+    wrap.appendChild(printBox);
+    app.appendChild(wrap);
 
-      var printBox = document.createElement('div');
-      printBox.className = 'qt-print-box';
-      printBox.innerHTML = '<div class="qt-print-title">Garde tes réponses</div>'
-        + '<p class="qt-print-text">Imprime cette page ou garde-la en PDF pour la relire quand tu en as besoin.</p>'
-        + '<div class="qt-actions-stack">'
-        + '<button type="button" class="qt-btn" id="qt-print-btn"><span>Imprimer cette page / PDF</span><span class="qt-arrow" aria-hidden="true">→</span></button>'
-        + '<button type="button" class="qt-btn qt-btn-outline" id="qt-print-all-btn"><span>Imprimer toutes mes réponses / PDF</span><span class="qt-arrow" aria-hidden="true">→</span></button>'
-        + '<button type="button" class="qt-btn qt-btn-outline" id="qt-restart"><span>Recommencer</span><span class="qt-arrow" aria-hidden="true">↺</span></button>'
-        + '</div>';
-      wrap.appendChild(printBox);
-      app.appendChild(wrap);
-
-      wrap.querySelector('#qt-print-btn').onclick = function () {
-        document.body.classList.remove('qt-printing-full');
-        window.print();
-      };
-      wrap.querySelector('#qt-print-all-btn').onclick = function () {
-        document.getElementById('qt-full-recap').innerHTML = buildFullRecapHtml();
-        document.body.classList.add('qt-printing-full');
-        window.print();
-      };
-      wrap.querySelector('#qt-restart').onclick = function () { state = { home: false, index: 0, answers: {} }; render(); };
-
-      var nav = document.createElement('div');
-      nav.className = 'qt-nav';
-      nav.innerHTML = '<div class="qt-nav-left"><button class="qt-btn-text" id="qt-back">Retour</button></div>';
-      wrap.appendChild(nav);
-      nav.querySelector('#qt-back').onclick = function () { state.index -= 1; render(); };
-    } else {
-      app.appendChild(wrap);
-      var nav2 = document.createElement('div');
-      nav2.className = 'qt-nav';
-      var backHtml = state.index > 0 ? '<button class="qt-btn-text" id="qt-back">Retour</button>' : '';
-      nav2.innerHTML = '<div class="qt-nav-left">' + backHtml + '</div><button type="button" class="qt-btn" id="qt-next"><span>Continuer</span><span class="qt-arrow" aria-hidden="true">→</span></button>';
-      wrap.appendChild(nav2);
-      var backBtn = nav2.querySelector('#qt-back');
-      if (backBtn) backBtn.onclick = function () { state.index -= 1; render(); };
-      nav2.querySelector('#qt-next').onclick = function () { state.index += 1; render(); };
-    }
-  }
-
-  function val(key) { return state.answers[key]; }
-
-  function buildFullRecapHtml() {
-    var html = '<h1>Toutes tes <em>réponses</em></h1><hr class="qt-divider">';
-    PAGES.forEach(function (page) {
-      var plainTitle = page.title.replace(/<[^>]+>/g, '');
-      html += '<div class="qt-recap-section"><div class="qt-recap-section-title">' + plainTitle + '</div>';
-      if (page.isBilan) {
-        page.questions.forEach(function (q) {
-          var v = val(keyFor(page.id, null, q.id));
-          html += '<div class="qt-recap-item"><div class="qt-recap-name">' + q.label + '</div>'
-            + '<div class="qt-recap-line">' + (v ? v : '—') + '</div></div>';
-        });
-      } else {
-        page.rows.forEach(function (row) {
-          html += '<div class="qt-recap-item"><div class="qt-recap-name">' + row.label + '</div>';
-          row.fields.forEach(function (f) {
-            var v = val(keyFor(page.id, row.id, f.id));
-            html += '<div class="qt-recap-line"><strong>' + f.label + ' :</strong> ' + (v ? v : '—') + '</div>';
-          });
-          html += '</div>';
-        });
-        if (page.afterQuestion) {
-          var v2 = val(keyFor(page.id, null, page.afterQuestion.id));
-          html += '<div class="qt-recap-item"><div class="qt-recap-name">' + page.afterQuestion.label + '</div>'
-            + '<div class="qt-recap-line">' + (v2 ? v2 : '—') + '</div></div>';
+    printBox.querySelector('#qt-print-btn').onclick = function () {
+      document.body.classList.add('qt-printing-bilan');
+      window.print();
+    };
+    printBox.querySelector('#qt-print-all-btn').onclick = function () {
+      document.body.classList.remove('qt-printing-bilan');
+      document.querySelectorAll('.qt-accordion').forEach(function (a) {
+        if (!a.classList.contains('qt-accordion-open')) {
+          a.classList.add('qt-accordion-open');
+          autosizeTextareasIn(a.querySelector('.qt-accordion-panel'));
         }
-      }
-      html += '</div>';
-    });
-    return html;
+      });
+      window.print();
+    };
+    printBox.querySelector('#qt-restart').onclick = function () { state = { answers: {} }; buildPage(); };
   }
 
-  render();
+  buildPage();
 
   /* ---------- auto-hauteur pour intégration en iframe (Kajabi) ---------- */
   (function () {
@@ -709,7 +647,9 @@
     setTimeout(reportHeight, 300);
   })();
 
-  window.addEventListener('afterprint', function () { document.body.classList.remove('qt-printing-full'); });
+  window.addEventListener('afterprint', function () {
+    document.body.classList.remove('qt-printing-bilan');
+  });
 })();
 </script>
 </body>
