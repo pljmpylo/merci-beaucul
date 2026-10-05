@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz - Ton profil sexuel — Programme C.O.M.E.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    --blue: #2F6FE4;
+    --blue-soft: rgba(47,111,228,0.18);
+    --blue-faint: rgba(47,111,228,0.06);
+    --yellow: #F7FF59;
+    --ink: #1c1c1c;
+    --muted: #5b6273;
+    font-family: 'Raleway', Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a, button { cursor: pointer; font-family: inherit; }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+  .qt-wrap { min-height: 100vh; }
+  .qt-shell { max-width: 640px; margin: 0 auto; padding: 56px 24px 70px; }
+
+  .qt-hidden { display: none !important; }
+  .qt-eyebrow {
+    display: inline-block;
+    color: var(--blue);
+    border: 1px solid var(--blue-soft);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  /* ---------- CTA façon Mimétique ---------- */
+  .qt-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    overflow: hidden;
+    background: var(--yellow);
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    padding: 0.85rem 2.2rem;
+    border: 1.5px solid var(--blue);
+    border-radius: 10rem;
+    transition: color 450ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qt-btn::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    top: 102%;
+    background: var(--blue);
+    transition: top 450ms ease;
+    z-index: 0;
+  }
+  .qt-btn span { position: relative; z-index: 1; }
+  .qt-btn .qt-arrow { display: inline-block; transition: transform 450ms ease; }
+  .qt-btn:hover { color: var(--yellow); }
+  .qt-btn:hover::before { top: 0; }
+  .qt-btn:hover .qt-arrow { transform: translateX(5px); }
+  .qt-btn:disabled { opacity: 0.4; pointer-events: none; }
+  .qt-btn-outline { background: #fff; color: var(--blue); }
+  .qt-btn-outline::before { background: var(--blue); }
+  .qt-btn-outline:hover { color: var(--yellow); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qt-btn, .qt-btn::before, .qt-btn .qt-arrow, .qt-progress-bar { transition: none; }
+    .qt-screen { animation: none; }
+  }
+
+  .qt-screen { animation: qtFadeUp 0.45s ease both; }
+  @keyframes qtFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .qt-shell h1 {
+    font-size: clamp(28px, 5.4vw, 38px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    margin-bottom: 18px;
+  }
+  .qt-shell h1 em {
+    font-style: normal;
+    color: var(--blue);
+    background: linear-gradient(transparent 62%, var(--yellow) 62%);
+    padding: 0 4px;
+  }
+  .qt-intro-text {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 480px;
+    margin-bottom: 14px;
+  }
+
+  .qt-note{
+    background: var(--blue-faint);
+    border: 1px solid var(--blue-soft);
+    border-radius: 14px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--muted);
+    margin: 18px 0 6px;
+  }
+
+  /* ---------- progress ---------- */
+  .qt-progress-label {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 10px;
+    text-align: right;
+  }
+  .qt-progress-track {
+    height: 8px;
+    background: #fff;
+    border: 1.5px solid var(--blue);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 36px;
+  }
+  .qt-progress-bar {
+    height: 100%;
+    background: var(--yellow);
+    border-right: 1.5px solid var(--blue);
+    transition: width 350ms ease;
+    width: 0%;
+  }
+
+  .qt-q-text {
+    font-weight: 700;
+    font-size: clamp(20px, 3vw, 24px);
+    line-height: 1.32;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .qt-sub {
+    font-size: 14.5px;
+    color: var(--muted);
+    margin-bottom: 22px;
+  }
+
+  /* ---------- options ---------- */
+  .qt-options { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
+  .qt-opt-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    text-align: left;
+    width: 100%;
+    background: #fff;
+    border: 1.5px solid var(--blue-soft);
+    border-radius: 18px;
+    padding: 15px 18px;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--ink);
+    font-family: inherit;
+    transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+  }
+  .qt-opt-btn:hover:not(:disabled) {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 4px var(--blue-faint);
+  }
+  .qt-opt-btn.qt-selected {
+    border-color: var(--blue);
+    background: var(--yellow);
+    box-shadow: 0 0 0 4px var(--blue-faint);
+  }
+  .qt-opt-letter {
+    flex: 0 0 28px;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--blue);
+    background: #fff;
+    color: var(--blue);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12.5px; font-weight: 700;
+    line-height: 1;
+    margin-top: 1px;
+  }
+  .qt-selected .qt-opt-letter { background: var(--blue); color: var(--yellow); }
+  .qt-opt-check {
+    flex: 0 0 20px;
+    width: 20px; height: 20px;
+    border-radius: 6px;
+    border: 1.5px solid var(--blue);
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--yellow);
+    font-size: 12px; font-weight: 800;
+    margin-top: 2px;
+  }
+  .qt-selected .qt-opt-check { background: var(--blue); }
+  .qt-opt-text { flex: 1; }
+  .qt-opt-sub {
+    display: block;
+    font-size: 12.5px;
+    font-style: italic;
+    color: var(--muted);
+    margin-top: 5px;
+  }
+
+  /* ---------- fields ---------- */
+  .qt-field { margin-top: 18px; }
+  .qt-field-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .qt-input, .qt-textarea {
+    width: 100%;
+    border: 1.5px solid var(--blue-soft);
+    border-radius: 12px;
+    background: #fff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14.5px;
+    color: var(--ink);
+    padding: 11px 14px;
+    transition: border-color 180ms ease;
+  }
+  .qt-input::placeholder, .qt-textarea::placeholder { color: #9aa1b0; }
+  .qt-input:focus, .qt-textarea:focus { outline: none; border-color: var(--blue); }
+  .qt-textarea { resize: vertical; min-height: 90px; }
+
+  .qt-chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .qt-chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: #fff;
+    border: 1.5px dashed var(--blue-soft);
+    border-radius: 100px;
+    padding: 7px 15px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--muted);
+    transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+  }
+  .qt-chip:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* ---------- nav ---------- */
+  .qt-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; gap: 12px; flex-wrap: wrap; }
+  .qt-nav-left { display: flex; align-items: center; gap: 16px; }
+  .qt-btn-text { background: none; border: none; color: var(--muted); font-size: 13.5px; font-family: inherit; padding: 8px 4px; }
+  .qt-btn-text:hover { color: var(--blue); }
+  .qt-btn-text.qt-skip { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ---------- charte / résultat ---------- */
+  .qt-result-kicker {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+  .qt-divider { border: none; border-top: 1.5px solid var(--blue-soft); margin: 30px 0; }
+  .qt-card {
+    background: #fff;
+    border: 1.5px solid var(--blue);
+    border-radius: 22px;
+    padding: 24px 24px 26px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  .qt-charte-block { margin-bottom: 22px; }
+  .qt-charte-block:last-child { margin-bottom: 0; }
+  .qt-charte-tag {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 6px;
+  }
+  .qt-charte-text { font-size: 17.5px; font-weight: 600; line-height: 1.5; color: var(--ink); }
+  .qt-quote { font-size: 14.5px; color: var(--muted); font-style: italic; margin-bottom: 26px; }
+  .qt-quote strong { font-style: normal; color: var(--ink); }
+
+  @media (max-width: 520px) {
+    .qt-shell { padding: 40px 18px 56px; }
+    .qt-card { padding: 20px 18px 22px; }
+    .qt-btn { white-space: normal; text-align: center; padding: 0.85rem 1.6rem; }
+  }
+</style>
+</head>
+<body>
+<div class="qt-wrap">
+  <div class="qt-shell">
+    <div class="qt-progress-label" id="qt-progress-label"></div>
+    <div class="qt-progress-track" id="qt-progress-track"><div class="qt-progress-bar" id="qt-progress-bar"></div></div>
+    <div id="qt-app"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+
+  var STEPS = [
+    { etape:1, etapeLabel:"Les messages reçus", id:'intro1', type:'intro',
+      title:"Étape 1 — Les messages <em>reçus</em>",
+      sub:"Quand tu as grandi, qu'est-ce qu'on t'a appris — directement ou indirectement — sur ce qu'un homme devait être dans sa sexualité ?" },
+
+    { etape:1, etapeLabel:"Les messages reçus", id:'q1', type:'multi',
+      q:"Coche ce qui te parle, ou écris le tien.",
+      options:[
+        "Un homme doit toujours avoir envie.",
+        "Un homme doit assurer, savoir quoi faire et faire jouir l'autre.",
+        "Un homme doit tenir longtemps.",
+        "Un homme ne doit pas être vulnérable, inquiet ou hésitant.",
+        "Un homme doit être dominant / prendre les devants.",
+        "Un homme ne doit pas trop parler de sexe ou de ses émotions.",
+        "Un homme doit être performant, endurant, toujours prêt.",
+        "L'éjaculation est la preuve que le rapport est réussi.",
+        "La pénétration est ce qui compte vraiment.",
+        "Je n'ai pas reçu de message très clair, mais j'ai beaucoup appris par le porno, les potes ou l'ambiance autour de moi."
+      ],
+      extraTextLabel:"Autre message :" },
+
+    { etape:1, etapeLabel:"Les messages reçus", id:'q2', type:'single',
+      q:"Aujourd'hui, ce message te fait plutôt quoi ?",
+      options:[
+        "Il me met de la pression.",
+        "Il me pousse à jouer un rôle.",
+        "Il m'aide parfois, mais il me limite aussi.",
+        "Je ne sais pas encore.",
+        "Il ne me correspond plus du tout.",
+        "Il me ressemble encore en partie."
+      ]},
+
+    { etape:1, etapeLabel:"Les messages reçus", id:'q3', type:'text',
+      q:"Si tu pouvais remplacer ce message par une phrase plus juste pour toi, ce serait quoi ?",
+      placeholder:"Écris ta phrase…",
+      examples:[
+        "Je peux avoir envie sans devoir être disponible tout le temps.",
+        "Je peux prendre mon temps, changer de rythme et ne pas tout savoir.",
+        "Je n'ai pas besoin de tenir pour avoir de la valeur.",
+        "Le plaisir à deux ne repose pas sur moi seul.",
+        "Je peux demander, recevoir et dire non.",
+        "L'éjaculation est un événement, pas une note.",
+        "Je peux être vulnérable et désirant à la fois."
+      ]},
+
+    { etape:2, etapeLabel:"Les rôles appris", id:'intro2', type:'intro',
+      title:"Étape 2 — Les rôles <em>appris</em>",
+      sub:"Quand tu es dans un moment sexuel, quel rôle prends-tu souvent pour te sentir à ta place ou éviter d'être rejeté ?",
+      note:"Aucun de ces rôles n'est honteux. Ils ont souvent été utiles à un moment donné. Le sujet, ce n'est pas de les supprimer : c'est de vérifier si tu les choisis encore." },
+
+    { etape:2, etapeLabel:"Les rôles appris", id:'q4', type:'roles',
+      q:"Tu peux en cocher plusieurs.",
+      options:[
+        { label:"Le performer", sub:"« Je dois assurer, durer, faire parfaitement. » — protège de la peur de ne pas être assez, de décevoir, d'être comparé." },
+        { label:"Le guide / le prof", sub:"« Je sais ce que je fais, je montre le chemin. » — protège de la peur de ne pas savoir, d'être maladroit ou de recevoir." },
+        { label:"Le sauveur", sub:"« Le plaisir de l'autre passe avant le mien. » — protège de la peur de demander, de prendre de la place, d'être égoïste." },
+        { label:"Le dominateur / celui qui contrôle", sub:"« Je garde la main, je décide. » — protège de la peur de lâcher prise, d'être vulnérable ou de ne pas maîtriser." },
+        { label:"Le discret / l'invisible", sub:"« Je fais peu de bruit, je ne demande pas grand-chose. » — protège de la peur d'être trop, de déranger, d'être jugé." },
+        { label:"Le follower / celui qui s'adapte", sub:"« Je laisse l'autre décider de tout. » — protège de la peur de proposer, de dire ce que je veux, de prendre un risque." },
+        { label:"Le clown / le détaché", sub:"« Je fais rire, je dédramatise, je reste dans la tête. » — protège de la peur d'être touché, ému, vulnérable ou déçu." }
+      ],
+      extraTextLabel:"Autre rôle :",
+      extraPhraseLabel:"Une phrase, si tu veux :" },
+
+    { etape:2, etapeLabel:"Les rôles appris", id:'q5', type:'single',
+      q:"Ce rôle, aujourd'hui, te sert plutôt à…",
+      options:[
+        "Me sentir en sécurité.",
+        "Me rassurer.",
+        "Être aimé ou désiré.",
+        "Éviter de me sentir nul, gêné ou vulnérable.",
+        "Éviter de décevoir l'autre.",
+        "Me donner une identité claire.",
+        "Je ne sais pas encore."
+      ]},
+
+    { etape:2, etapeLabel:"Les rôles appris", id:'q6', type:'multi',
+      q:"Qu'est-ce que ce rôle te coûte parfois ?",
+      options:[
+        "Je ne sais plus ce dont j'ai envie.",
+        "Je me mets beaucoup de pression.",
+        "Je ne profite pas vraiment.",
+        "J'ai du mal à demander ou recevoir.",
+        "J'ai du mal à dire non ou à ralentir.",
+        "Je me sens seul, même à deux.",
+        "Je me compare trop."
+      ],
+      extraTextLabel:"Autre :" },
+
+    { etape:3, etapeLabel:"Les souvenirs qui restent", id:'intro3', type:'intro',
+      title:"Étape 3 — Les souvenirs qui <em>restent</em>",
+      sub:"Certains souvenirs sexuels ou relationnels nous accompagnent longtemps : une première fois, une remarque, une humiliation, une scène vue, une rupture, une expérience de honte, de pression ou de comparaison.",
+      note:"Tu n'as pas besoin de raconter quoi que ce soit que tu ne veux pas raconter. Tu peux rester général, passer cette partie, ou t'arrêter. Si un souvenir te submerge ou concerne une expérience non consentie, tu n'as pas à le traiter seul ici : parler à un·e sexologue, psychologue ou professionnel·le formé·e peut être une ressource importante." },
+
+    { etape:3, etapeLabel:"Les souvenirs qui restent", id:'q7', type:'single',
+      q:"Y a-t-il un souvenir, un événement ou une période qui influence encore ta façon de vivre le sexe aujourd'hui ?",
+      options:[
+        "Oui, clairement.",
+        "Peut-être, mais c'est flou.",
+        "Je ne pense pas.",
+        "Je préfère ne pas aller là pour l'instant."
+      ]},
+
+    { etape:3, etapeLabel:"Les souvenirs qui restent", id:'q8', type:'single',
+      q:"Sans raconter tous les détails : à quoi ce souvenir est-il surtout lié ?",
+      options:[
+        "Une première expérience.",
+        "Une remarque ou une comparaison.",
+        "Une éjaculation, une érection ou un moment vécu comme « raté ».",
+        "Le porno / les images auxquelles je me suis comparé.",
+        "Une relation où je ne me sentais pas en sécurité.",
+        "Une pression à faire ou être quelque chose.",
+        "Une rupture ou une déception.",
+        "Une expérience qui n'était pas vraiment désirée ou consentie."
+      ],
+      extraTextLabel:"Autre :",
+      skippable:true,
+      showIf: function(a){ return a.q7 === "Oui, clairement." || a.q7 === "Peut-être, mais c'est flou."; } },
+
+    { etape:3, etapeLabel:"Les souvenirs qui restent", id:'q9', type:'single',
+      q:"Quelle phrase ce souvenir t'a peut-être fait croire sur toi ?",
+      options:[
+        "« Je ne suis pas assez. »",
+        "« Je dois faire mieux la prochaine fois. »",
+        "« Je ne peux pas faire confiance à mon corps. »",
+        "« Je dois tout contrôler. »",
+        "« Je ne dois pas montrer que je suis touché. »",
+        "« Mon désir est trop / pas assez. »",
+        "« Je risque d'être rejeté. »"
+      ],
+      extraTextLabel:"Autre :",
+      skippable:true,
+      showIf: function(a){ return a.q7 === "Oui, clairement." || a.q7 === "Peut-être, mais c'est flou."; } },
+
+    { etape:3, etapeLabel:"Les souvenirs qui restent", id:'q10', type:'text',
+      q:"Qu'aimerais-tu pouvoir te dire aujourd'hui, avec le recul ?",
+      placeholder:"Écris-le à ta façon…",
+      skippable:true,
+      showIf: function(a){ return a.q7 === "Oui, clairement." || a.q7 === "Peut-être, mais c'est flou."; },
+      examples:[
+        "Ce moment ne résume pas ma sexualité.",
+        "Mon corps n'a pas échoué : il a réagi comme il pouvait.",
+        "Je n'avais pas à prouver ma valeur.",
+        "J'ai le droit de faire différemment aujourd'hui.",
+        "Ce qui s'est passé ne définit pas ce que je mérite.",
+        "Je peux demander de l'aide si cette trace est encore trop lourde."
+      ]},
+
+    { etape:4, etapeLabel:"Réappropriation", id:'intro4', type:'intro',
+      title:"Étape 4 — <em>Réappropriation</em>",
+      sub:"Tes réponses se transforment maintenant en une petite charte personnelle, en trois lignes." },
+
+    { etape:4, etapeLabel:"Réappropriation", id:'q11', type:'text',
+      q:"Je garde — dans ce que tu as appris, qu'est-ce que tu veux garder parce que cela te ressemble encore vraiment ?",
+      placeholder:"Je garde : ",
+      examples:["Aimer donner du plaisir", "Prendre soin", "Être spontané", "Jouer", "Être attentif", "Aimer guider parfois", "Être tendre", "Aimer une certaine intensité"] },
+
+    { etape:4, etapeLabel:"Réappropriation", id:'q12', type:'text',
+      q:"Je rends — quelle règle, attente ou rôle n'as-tu plus envie de porter seul ?",
+      placeholder:"Je rends : ",
+      examples:["Je dois toujours assurer", "Je dois tout savoir", "Je dois faire jouir l'autre", "Je dois éjaculer", "Je dois être fort", "Je dois passer après"] },
+
+    { etape:4, etapeLabel:"Réappropriation", id:'q13', type:'text',
+      q:"Je choisis — à la place, quelle permission veux-tu te donner cette semaine ?",
+      placeholder:"Cette semaine, je choisis : ",
+      examples:[
+        "Ralentir quand j'en ai besoin.",
+        "Demander ce que j'aime.",
+        "Ne pas tout contrôler.",
+        "Ne pas me juger si mon corps réagit autrement que prévu.",
+        "Recevoir autant que je donne.",
+        "Être curieux plutôt que performant.",
+        "Faire de la place à ma vulnérabilité.",
+        "Dire ce qui est vrai pour moi."
+      ]}
+  ];
+
+  var state = { home: true, index: 0, answers: {} };
+  var LETTERS = "ABCDEFGHIJ".split("");
+
+  function activeSteps() {
+    return STEPS.filter(function (s) { return !s.showIf || s.showIf(state.answers); });
+  }
+
+  function setProgress(index, total) {
+    document.getElementById('qt-progress-label').textContent = (index + 1) + ' / ' + total;
+    document.getElementById('qt-progress-bar').style.width = (((index + 1) / total) * 100) + '%';
+  }
+
+  function renderHome() {
+    document.getElementById('qt-progress-label').classList.add('qt-hidden');
+    document.getElementById('qt-progress-track').classList.add('qt-hidden');
+    var app = document.getElementById('qt-app');
+    app.innerHTML = '';
+    var wrap = document.createElement('div');
+    wrap.className = 'qt-screen';
+    var html = '';
+    html += '<span class="qt-eyebrow">Semaine 2 — Redéfinir</span>';
+    html += '<h1>Quiz - Mon <em>profil sexuel</em></h1>';
+    html += '<p class="qt-intro-text">Ce quiz c\'est pour comprendre comment s\'est formée ta sexualité et comment tu peux te défaire de ça pour quelque chose qui te ressemble vraiment.</p>';
+    html += '<button id="qt-home-start" class="qt-btn"><span>Commencer</span><span class="qt-arrow" aria-hidden="true">→</span></button>';
+    wrap.innerHTML = html;
+    app.appendChild(wrap);
+    wrap.querySelector('#qt-home-start').onclick = function () {
+      state.home = false;
+      document.getElementById('qt-progress-label').classList.remove('qt-hidden');
+      document.getElementById('qt-progress-track').classList.remove('qt-hidden');
+      render();
+    };
+  }
+
+  function render() {
+    if (state.home) { renderHome(); return; }
+    var steps = activeSteps();
+    if (state.index >= steps.length) { renderCharte(); return; }
+    var step = steps[state.index];
+    setProgress(state.index, steps.length);
+
+    var app = document.getElementById('qt-app');
+    app.innerHTML = '';
+    var wrap = document.createElement('div');
+    wrap.className = 'qt-screen';
+
+    var html = '';
+    if (step.type === 'intro') {
+      html += '<h1>' + step.title + '</h1>';
+      if (step.sub) html += '<p class="qt-intro-text">' + step.sub + '</p>';
+      if (step.note) html += '<div class="qt-note">' + step.note + '</div>';
+    } else {
+      html += '<p class="qt-q-text">' + step.q + '</p>';
+    }
+    html += '<div id="qt-field"></div>';
+    html += '<div class="qt-nav">';
+    html += '  <div class="qt-nav-left">';
+    if (state.index > 0) html += '<button class="qt-btn-text" id="qt-back">Retour</button>';
+    if (step.skippable) html += '<button class="qt-btn-text qt-skip" id="qt-skip">Passer cette question</button>';
+    html += '  </div>';
+    html += '  <button class="qt-btn" id="qt-next"><span>' + (step.type === 'intro' ? (step.id === 'intro1' ? 'Commencer' : 'Continuer') : 'Continuer') + '</span><span class="qt-arrow" aria-hidden="true">→</span></button>';
+    html += '</div>';
+
+    wrap.innerHTML = html;
+    app.appendChild(wrap);
+
+    var field = wrap.querySelector('#qt-field');
+    var nextBtn = wrap.querySelector('#qt-next');
+    var backBtn = wrap.querySelector('#qt-back');
+    var skipBtn = wrap.querySelector('#qt-skip');
+
+    if (backBtn) backBtn.onclick = function () { if (state.index > 0) { state.index -= 1; render(); } };
+    if (skipBtn) skipBtn.onclick = function () { state.index += 1; render(); };
+
+    if (step.type === 'intro') {
+      nextBtn.onclick = function () { state.index += 1; render(); };
+      return;
+    }
+
+    if (step.type === 'single') {
+      nextBtn.classList.add('qt-hidden');
+      var opts = document.createElement('div');
+      opts.className = 'qt-options';
+      step.options.forEach(function (label, i) {
+        var b = document.createElement('button');
+        b.className = 'qt-opt-btn' + (state.answers[step.id] === label ? ' qt-selected' : '');
+        b.innerHTML = '<span class="qt-opt-letter">' + LETTERS[i] + '</span><span class="qt-opt-text">' + label + '</span>';
+        b.onclick = function () { state.answers[step.id] = label; goNext(); };
+        opts.appendChild(b);
+      });
+      field.appendChild(opts);
+      if (step.extraTextLabel) appendExtraText(field, step.id, step.extraTextLabel);
+      return;
+    }
+
+    if (step.type === 'multi' || step.type === 'roles') {
+      var optsM = document.createElement('div');
+      optsM.className = 'qt-options';
+      var key = step.id;
+      var selectedSet = new Set(state.answers[key] || []);
+      step.options.forEach(function (opt) {
+        var label = typeof opt === 'string' ? opt : opt.label;
+        var b = document.createElement('button');
+        b.className = 'qt-opt-btn' + (selectedSet.has(label) ? ' qt-selected' : '');
+        var checkHtml = '<span class="qt-opt-check">' + (selectedSet.has(label) ? '✓' : '') + '</span>';
+        var textHtml = typeof opt === 'string'
+          ? '<span class="qt-opt-text">' + label + '</span>'
+          : '<span class="qt-opt-text">' + opt.label + '<span class="qt-opt-sub">' + opt.sub + '</span></span>';
+        b.innerHTML = checkHtml + textHtml;
+        b.onclick = function () {
+          if (selectedSet.has(label)) selectedSet.delete(label); else selectedSet.add(label);
+          state.answers[key] = Array.from(selectedSet);
+          render();
+        };
+        optsM.appendChild(b);
+      });
+      field.appendChild(optsM);
+
+      if (step.extraTextLabel) appendExtraText(field, step.id, step.extraTextLabel);
+      if (step.extraPhraseLabel) {
+        var lbl = document.createElement('label');
+        lbl.className = 'qt-field-label';
+        lbl.style.marginTop = '18px';
+        lbl.style.display = 'block';
+        lbl.textContent = step.extraPhraseLabel;
+        var wrapField = document.createElement('div');
+        wrapField.className = 'qt-field';
+        var ta = document.createElement('textarea');
+        ta.className = 'qt-textarea';
+        ta.style.minHeight = '64px';
+        ta.placeholder = '…';
+        ta.value = state.answers[step.id + '_phrase'] || '';
+        ta.oninput = function () { state.answers[step.id + '_phrase'] = ta.value.trim(); };
+        wrapField.appendChild(lbl);
+        wrapField.appendChild(ta);
+        field.appendChild(wrapField);
+      }
+      nextBtn.onclick = goNext;
+      return;
+    }
+
+    if (step.type === 'text') {
+      var fieldWrap = document.createElement('div');
+      fieldWrap.className = 'qt-field';
+      var ta2 = document.createElement('textarea');
+      ta2.className = 'qt-textarea';
+      ta2.placeholder = step.placeholder || '';
+      ta2.value = state.answers[step.id] || '';
+      ta2.oninput = function () { state.answers[step.id] = ta2.value.trim(); };
+      fieldWrap.appendChild(ta2);
+      field.appendChild(fieldWrap);
+
+      if (step.examples && step.examples.length) {
+        var lbl2 = document.createElement('div');
+        lbl2.className = 'qt-field-label';
+        lbl2.style.marginTop = '16px';
+        lbl2.textContent = "Des exemples, si tu veux t'en inspirer — tape pour l'utiliser";
+        field.appendChild(lbl2);
+        var chips = document.createElement('div');
+        chips.className = 'qt-chip-group';
+        step.examples.forEach(function (ex) {
+          var c = document.createElement('button');
+          c.type = 'button';
+          c.className = 'qt-chip';
+          c.textContent = ex;
+          c.onclick = function () { ta2.value = ex; state.answers[step.id] = ex; ta2.focus(); };
+          chips.appendChild(c);
+        });
+        field.appendChild(chips);
+      }
+      nextBtn.onclick = goNext;
+      setTimeout(function () { ta2.focus(); }, 50);
+      return;
+    }
+  }
+
+  function appendExtraText(field, stepId, label) {
+    var wrapField = document.createElement('div');
+    wrapField.className = 'qt-field';
+    var lbl = document.createElement('label');
+    lbl.className = 'qt-field-label';
+    lbl.textContent = label;
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'qt-input';
+    input.placeholder = '…';
+    input.value = state.answers[stepId + '_other'] || '';
+    input.oninput = function () { state.answers[stepId + '_other'] = input.value.trim(); };
+    wrapField.appendChild(lbl);
+    wrapField.appendChild(input);
+    field.appendChild(wrapField);
+  }
+
+  function goNext() { state.index += 1; render(); }
+
+  function renderCharte() {
+    var a = state.answers;
+    document.getElementById('qt-progress-bar').style.width = '100%';
+    document.getElementById('qt-progress-label').textContent = 'Terminé';
+    var app = document.getElementById('qt-app');
+    app.innerHTML = '';
+    var wrap = document.createElement('div');
+    wrap.className = 'qt-screen';
+    var html = '';
+    html += '<div class="qt-result-kicker">Ta charte</div>';
+    html += '<h1>Ta charte <em>personnelle</em></h1>';
+    html += '<p class="qt-intro-text">Ce que tu gardes, ce que tu rends, ce que tu choisis — à relire quand tu en as besoin.</p>';
+    html += '<hr class="qt-divider">';
+    html += '<div class="qt-card">';
+    html += '  <div class="qt-charte-block"><span class="qt-charte-tag">Je garde</span><p class="qt-charte-text">' + (a.q11 || '—') + '</p></div>';
+    html += '  <div class="qt-charte-block"><span class="qt-charte-tag">Je rends</span><p class="qt-charte-text">' + (a.q12 || '—') + '</p></div>';
+    html += '  <div class="qt-charte-block"><span class="qt-charte-tag">Cette semaine, je choisis</span><p class="qt-charte-text">' + (a.q13 || '—') + '</p></div>';
+    html += '</div>';
+    if (a.q3) html += '<p class="qt-quote">Et la phrase que tu as choisie pour remplacer le message reçu : <strong>« ' + a.q3 + ' »</strong></p>';
+    html += '<div class="qt-nav"><div class="qt-nav-left"></div><button type="button" class="qt-btn qt-btn-outline" id="qt-restart"><span>Recommencer</span><span class="qt-arrow" aria-hidden="true">↺</span></button></div>';
+    wrap.innerHTML = html;
+    app.appendChild(wrap);
+    wrap.querySelector('#qt-restart').onclick = function () { state = { index: 0, answers: {} }; render(); };
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
