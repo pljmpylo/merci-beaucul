@@ -300,10 +300,34 @@
   .qt-quote { font-size: 14.5px; color: var(--muted); font-style: italic; margin-bottom: 26px; }
   .qt-quote strong { font-style: normal; color: var(--ink); }
 
+  .qt-print-box {
+    border-top: 1.5px solid var(--blue-soft);
+    padding-top: 32px;
+    margin-top: 8px;
+    text-align: center;
+  }
+  .qt-print-title { font-weight: 800; font-size: 16px; color: var(--ink); margin-bottom: 6px; }
+  .qt-print-text { font-size: 13.5px; color: var(--muted); max-width: 400px; margin: 0 auto 18px; }
+  .qt-actions-stack { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+
+  .qt-full-recap { display: none; }
+  .qt-recap-item { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--blue-soft); text-align: left; }
+  .qt-recap-item:last-child { border-bottom: none; }
+  .qt-recap-etape { font-size: 10.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--blue); margin-bottom: 6px; }
+  .qt-recap-q { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .qt-recap-a { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+
   @media (max-width: 520px) {
     .qt-shell { padding: 40px 18px 56px; }
     .qt-card { padding: 20px 18px 22px; }
     .qt-btn { white-space: normal; text-align: center; padding: 0.85rem 1.6rem; }
+  }
+
+  @media print {
+    .qt-progress-label, .qt-progress-track, .qt-print-box, .qt-nav { display: none !important; }
+    .qt-full-recap { display: none; }
+    body.qt-printing-full #qt-charte-content { display: none !important; }
+    body.qt-printing-full .qt-full-recap { display: block !important; }
   }
 </style>
 </head>
@@ -608,7 +632,10 @@
         b.onclick = function () {
           if (selectedSet.has(label)) selectedSet.delete(label); else selectedSet.add(label);
           state.answers[key] = Array.from(selectedSet);
-          render();
+          var isSel = selectedSet.has(label);
+          b.classList.toggle('qt-selected', isSel);
+          var check = b.querySelector('.qt-opt-check');
+          if (check) check.textContent = isSel ? '✓' : '';
         };
         optsM.appendChild(b);
       });
@@ -691,6 +718,47 @@
 
   function goNext() { state.index += 1; render(); }
 
+  function formatAnswer(step) {
+    var a = state.answers;
+    if (step.type === 'single') {
+      var parts = [];
+      if (a[step.id]) parts.push(a[step.id]);
+      if (a[step.id + '_other']) parts.push('Autre : ' + a[step.id + '_other']);
+      return parts.length ? parts.join('<br>') : null;
+    }
+    if (step.type === 'multi' || step.type === 'roles') {
+      var arr = a[step.id] || [];
+      var parts2 = arr.slice();
+      if (a[step.id + '_other']) parts2.push('Autre : ' + a[step.id + '_other']);
+      var out = parts2.length ? parts2.join('<br>') : '';
+      if (a[step.id + '_phrase']) out += (out ? '<br><br>' : '') + '<em>' + a[step.id + '_phrase'] + '</em>';
+      return out || null;
+    }
+    if (step.type === 'text') {
+      return a[step.id] || null;
+    }
+    return null;
+  }
+
+  function buildFullRecapHtml() {
+    var steps = activeSteps();
+    var html = '<div class="qt-result-kicker">Ton parcours</div><h1>Toutes tes <em>réponses</em></h1><hr class="qt-divider">';
+    var any = false;
+    steps.forEach(function (step) {
+      if (step.type === 'intro') return;
+      var ans = formatAnswer(step);
+      if (!ans) return;
+      any = true;
+      html += '<div class="qt-recap-item">'
+        + '<div class="qt-recap-etape">Étape ' + step.etape + ' — ' + step.etapeLabel + '</div>'
+        + '<div class="qt-recap-q">' + step.q + '</div>'
+        + '<div class="qt-recap-a">' + ans + '</div>'
+        + '</div>';
+    });
+    if (!any) html += '<p class="qt-intro-text">Aucune réponse enregistrée.</p>';
+    return html;
+  }
+
   function renderCharte() {
     var a = state.answers;
     document.getElementById('qt-progress-bar').style.width = '100%';
@@ -700,6 +768,7 @@
     var wrap = document.createElement('div');
     wrap.className = 'qt-screen';
     var html = '';
+    html += '<div id="qt-charte-content">';
     html += '<div class="qt-result-kicker">Ta charte</div>';
     html += '<h1>Ta charte <em>personnelle</em></h1>';
     html += '<p class="qt-intro-text">Ce que tu gardes, ce que tu rends, ce que tu choisis — à relire quand tu en as besoin.</p>';
@@ -710,13 +779,54 @@
     html += '  <div class="qt-charte-block"><span class="qt-charte-tag">Cette semaine, je choisis</span><p class="qt-charte-text">' + (a.q13 || '—') + '</p></div>';
     html += '</div>';
     if (a.q3) html += '<p class="qt-quote">Et la phrase que tu as choisie pour remplacer le message reçu : <strong>« ' + a.q3 + ' »</strong></p>';
-    html += '<div class="qt-nav"><div class="qt-nav-left"></div><button type="button" class="qt-btn qt-btn-outline" id="qt-restart"><span>Recommencer</span><span class="qt-arrow" aria-hidden="true">↺</span></button></div>';
+    html += '</div>';
+
+    html += '<div id="qt-full-recap" class="qt-full-recap"></div>';
+
+    html += '<div class="qt-print-box">'
+      + '<div class="qt-print-title">Garde tes réponses</div>'
+      + '<p class="qt-print-text">Imprime cette page ou garde-la en PDF pour la relire quand tu en as besoin.</p>'
+      + '<div class="qt-actions-stack">'
+      + '<button type="button" class="qt-btn" id="qt-print-btn"><span>Imprimer la charte / PDF</span><span class="qt-arrow" aria-hidden="true">→</span></button>'
+      + '<button type="button" class="qt-btn qt-btn-outline" id="qt-print-all-btn"><span>Imprimer toutes mes réponses / PDF</span><span class="qt-arrow" aria-hidden="true">→</span></button>'
+      + '<button type="button" class="qt-btn qt-btn-outline" id="qt-restart"><span>Recommencer</span><span class="qt-arrow" aria-hidden="true">↺</span></button>'
+      + '</div>'
+      + '</div>';
+
     wrap.innerHTML = html;
     app.appendChild(wrap);
+    wrap.querySelector('#qt-print-btn').onclick = function () {
+      document.body.classList.remove('qt-printing-full');
+      window.print();
+    };
+    wrap.querySelector('#qt-print-all-btn').onclick = function () {
+      document.getElementById('qt-full-recap').innerHTML = buildFullRecapHtml();
+      document.body.classList.add('qt-printing-full');
+      window.print();
+    };
     wrap.querySelector('#qt-restart').onclick = function () { state = { index: 0, answers: {} }; render(); };
   }
 
+  window.addEventListener('afterprint', function () { document.body.classList.remove('qt-printing-full'); });
+
   render();
+
+  /* ---------- auto-hauteur pour intégration en iframe (Kajabi) ---------- */
+  (function () {
+    var lastHeight = 0;
+    function reportHeight() {
+      var h = document.documentElement.scrollHeight;
+      if (h !== lastHeight) {
+        lastHeight = h;
+        window.parent.postMessage({ type: 'come-quiz-height', height: h }, '*');
+      }
+    }
+    var observer = new MutationObserver(reportHeight);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+    window.addEventListener('load', reportHeight);
+    window.addEventListener('resize', reportHeight);
+    setTimeout(reportHeight, 300);
+  })();
 })();
 </script>
 </body>
