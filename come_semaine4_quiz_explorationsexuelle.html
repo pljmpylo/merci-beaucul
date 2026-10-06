@@ -314,6 +314,13 @@
     .qt-block-label { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
+<style id="qt-noscroll">
+  /* Pas de barre de défilement interne : dans l'iframe Kajabi, c'est la page parente qui défile */
+  html.qt-embedded, html.qt-embedded body { overflow: hidden !important; }
+  html.qt-embedded .qt-wrap { min-height: 0 !important; }
+  textarea { overflow: hidden !important; }
+</style>
+<script>try{if(window.self!==window.top)document.documentElement.classList.add('qt-embedded');}catch(e){document.documentElement.classList.add('qt-embedded');}</script>
 </head>
 <body>
 <div class="qt-wrap">
@@ -832,7 +839,7 @@
   (function () {
     function post() {
       try {
-        window.parent.postMessage({ type: 'come-quiz-height', height: document.documentElement.scrollHeight }, '*');
+        window.parent.postMessage({ type: 'come-quiz-height', height: Math.ceil(document.body.getBoundingClientRect().height) }, '*');
       } catch (e) {}
     }
     window.addEventListener('load', post);
@@ -841,6 +848,17 @@
     else { setInterval(post, 600); }
   })();
 
+})();
+</script>
+<script id="qt-textarea-fit">
+/* Champs texte : la case grandit avec le texte, jamais de barre de défilement interne */
+(function(){
+  function fit(t){ if(!t.getClientRects().length) return; if(t.scrollHeight>t.clientHeight+1){t.style.height=(t.scrollHeight+2)+'px';} }
+  function fitAll(){ document.querySelectorAll('textarea').forEach(fit); }
+  document.addEventListener('input',function(e){ if(e.target&&e.target.tagName==='TEXTAREA') fit(e.target); });
+  window.addEventListener('resize',fitAll); window.addEventListener('load',fitAll);
+  if(window.MutationObserver) new MutationObserver(fitAll).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+  fitAll();
 })();
 </script>
 </body>
