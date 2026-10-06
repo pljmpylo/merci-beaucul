@@ -408,7 +408,8 @@
       prompt: 'Choisis une exploration principale et, si tu as envie, une exploration bonus.', sub: 'L’objectif est de faire une chose pour de vrai, pas d’en sélectionner dix.' }
   ];
 
-  var PICKS = ['Changer de posture / de rôle', 'Réveiller un sens', 'Explorer une zone érogène', 'Découvrir une pratique', 'Nourrir mon imaginaire', 'Érotiser mon corps', 'Créer un moment sans objectif'];
+  var PICKS_MAIN = ['Changer de posture / de rôle', 'Explorer une zone érogène', 'Nourrir mon imaginaire', 'Créer un moment sans objectif'];
+  var PICKS_BONUS = ['Réveiller un sens', 'Découvrir une pratique', 'Érotiser mon corps'];
 
   var RECO = {
     'Le curieux': 'Tester une pratique ou une sensation avec une seule règle : pas besoin d’aller jusqu’au bout. Noter « j’ai aimé / je n’ai pas aimé / je veux comprendre davantage ».',
@@ -687,7 +688,6 @@
       main.querySelectorAll('.qt-opt').forEach(function (b) { b.classList.toggle('qt-selected', answers.q14a === b.dataset.v); });
       bonus.querySelectorAll('.qt-opt').forEach(function (b) {
         b.classList.toggle('qt-selected', answers.q14b === b.dataset.v);
-        b.classList.toggle('qt-opt-disabled', b.dataset.v === answers.q14a);
       });
       syncOther(); syncNext();
     }
@@ -698,12 +698,10 @@
       b.addEventListener('click', function () { if (!b.classList.contains('qt-opt-disabled')) onClick(); });
       host.appendChild(b);
     }
-    PICKS.forEach(function (p) {
-      chip(main, p, p, function () {
-        answers.q14a = p;
-        if (answers.q14b === p) answers.q14b = null;
-        paint();
-      });
+    PICKS_MAIN.forEach(function (p) {
+      chip(main, p, p, function () { answers.q14a = (answers.q14a === p) ? null : p; paint(); });
+    });
+    PICKS_BONUS.forEach(function (p) {
       chip(bonus, p, p, function () { answers.q14b = (answers.q14b === p) ? null : p; paint(); });
     });
     chip(bonus, 'Autre', 'Autre', function () { answers.q14b = (answers.q14b === 'Autre') ? null : 'Autre'; paint(); });
