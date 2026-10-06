@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon cycle du stress sexuel — Programme C.O.M.E.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    --blue: #2F6FE4;
+    --blue-soft: rgba(47,111,228,0.18);
+    --blue-line: rgba(47,111,228,0.4);
+    --blue-faint: rgba(47,111,228,0.06);
+    --yellow: #F7FF59;
+    --ink: #1c1c1c;
+    --muted: #5b6273;
+    font-family: 'Raleway', Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a, button { cursor: pointer; font-family: inherit; }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+  .qt-wrap { min-height: 100vh; }
+  .qt-shell { max-width: 640px; margin: 0 auto; padding: 56px 24px 70px; }
+
+  .qt-eyebrow {
+    display: inline-block;
+    color: var(--blue);
+    border: 1px solid var(--blue-soft);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  /* ---------- CTA façon Mimétique ---------- */
+  .qt-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    overflow: hidden;
+    background: var(--yellow);
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    padding: 0.85rem 2.2rem;
+    border: 1.5px solid var(--blue);
+    border-radius: 10rem;
+    transition: color 450ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qt-btn::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    top: 102%;
+    background: var(--blue);
+    transition: top 450ms ease;
+    z-index: 0;
+  }
+  .qt-btn span { position: relative; z-index: 1; }
+  .qt-btn:hover { color: var(--yellow); }
+  .qt-btn:hover::before { top: 0; }
+  .qt-btn-text { background: none; border: none; color: var(--muted); font-size: 13.5px; font-family: inherit; padding: 8px 4px; }
+  .qt-btn-text:hover { color: var(--blue); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qt-btn, .qt-btn::before { transition: none; }
+    .qt-screen { animation: none; }
+  }
+
+  .qt-screen { animation: qtFadeUp 0.45s ease both; }
+  @keyframes qtFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .qt-shell h1 {
+    font-size: clamp(30px, 6vw, 44px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin-bottom: 20px;
+  }
+  .qt-shell h1 em {
+    font-style: normal;
+    color: var(--blue);
+    background: linear-gradient(transparent 62%, var(--yellow) 62%);
+    padding: 0 4px;
+  }
+  .qt-intro-text { font-size: 16px; color: var(--muted); max-width: 520px; margin-bottom: 12px; text-wrap: pretty; }
+  .qt-tip { font-size: 13px; color: var(--muted); background: var(--blue-faint); border: 1px solid var(--blue-soft); border-radius: 12px; padding: 11px 15px; margin: 4px 0 4px; max-width: 520px; }
+
+  /* ---------- tableaux en toggles (façon Notion) ---------- */
+  .qt-accordion-list { margin-top: 30px; display: flex; flex-direction: column; gap: 12px; }
+  .qt-accordion {
+    border: 1.5px solid var(--blue-soft);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    transition: border-color 150ms ease;
+  }
+  .qt-accordion.qt-accordion-open { border-color: var(--blue); }
+  .qt-accordion-header {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    width: 100%;
+    background: #fff;
+    border: none;
+    padding: 15px 17px;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--ink);
+    text-align: left;
+    line-height: 1.35;
+  }
+  .qt-accordion-header:hover { background: var(--blue-faint); }
+  .qt-accordion-header .qt-jump-num { color: var(--blue); font-weight: 800; margin-right: 8px; }
+  .qt-accordion-chevron { color: var(--blue); flex-shrink: 0; font-size: 13px; transition: transform 200ms ease; }
+  .qt-accordion.qt-accordion-open .qt-accordion-chevron { transform: rotate(180deg); }
+  .qt-accordion-panel { display: none; padding: 16px 17px 20px; border-top: 1px solid var(--blue-soft); }
+  .qt-accordion.qt-accordion-open .qt-accordion-panel { display: block; }
+
+  /* ---------- tableau vertical : une situation = un toggle, les 6 colonnes deviennent 6 lignes ---------- */
+  .qt-table-wrap {
+    border: 1.5px solid var(--blue);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  .qt-table { table-layout: fixed; border-collapse: collapse; width: 100%; background: #fff; }
+  .qt-table th {
+    background: var(--blue-faint);
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: left;
+    vertical-align: top;
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--blue-line);
+    border-right: 1px solid var(--blue-line);
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+  .qt-table td { padding: 10px 10px; border-bottom: 1px solid var(--blue-line); vertical-align: top; }
+  .qt-table tr:last-child th, .qt-table tr:last-child td { border-bottom: none; }
+  .qt-table tr.qt-row-action th { background: rgba(247,255,89,0.45); }
+  .qt-table .qt-textarea {
+    display: block;
+    width: 100%;
+    font-family: 'Raleway', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink);
+    padding: 4px 2px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    border-bottom: 1px solid var(--blue-soft);
+    resize: none;
+    overflow: hidden;
+    min-height: 48px;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+  .qt-table .qt-textarea::placeholder { color: #8d95a6; font-style: italic; }
+  .qt-table .qt-textarea:focus { outline: none; border-bottom-color: var(--blue); }
+
+  .qt-table .qt-textarea.qt-note { min-height: 34px; margin-top: 10px; font-size: 12.5px; }
+  .qt-table .qt-textarea.qt-note::placeholder { color: #a3aab8; }
+  .qt-lead { font-size: 14.5px; color: var(--ink); line-height: 1.65; margin-bottom: 12px; text-wrap: pretty; }
+  .qt-lead:last-child { margin-bottom: 0; }
+  .qt-lead strong { color: var(--blue); }
+  .qt-section-label { font-size: 11px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; color: var(--blue); margin: 30px 0 -10px; }
+
+  .qt-prose { margin-top: 6px; }
+  .qt-prose h2 { font-size: 20px; font-weight: 800; line-height: 1.25; letter-spacing: -0.01em; color: var(--ink); margin: 0 0 14px; }
+  .qt-prose p { font-size: 15.5px; line-height: 1.7; color: #343843; margin-bottom: 14px; text-wrap: pretty; }
+  .qt-prose p.qt-punch { font-weight: 700; color: var(--blue); font-size: 16.5px; }
+  .qt-pick-hint { font-size: 12.5px; color: var(--muted); margin: 0 0 10px; }
+  .qt-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .qt-chip {
+    font-family: inherit; font-size: 12.5px; line-height: 1.4; text-align: left;
+    color: var(--ink); background: #fff;
+    border: 1px solid var(--blue-soft); border-radius: 12px;
+    padding: 6px 10px;
+    -webkit-hyphens: auto; hyphens: auto;
+    transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qt-chip:hover { border-color: var(--blue); background: var(--blue-faint); }
+  .qt-chip[aria-pressed="true"] { background: var(--yellow); border-color: var(--blue); color: var(--blue); font-weight: 600; }
+  .qt-chip[aria-pressed="true"]::before { content: '✓ '; }
+  @media (max-width: 460px) { .qt-chip { font-size: 12px; padding: 5px 8px; } }
+
+  @media (max-width: 460px) {
+    .qt-table th { font-size: 11px; padding: 10px 7px; }
+    .qt-table td { padding: 8px 7px; }
+    .qt-table .qt-textarea { font-size: 12.5px; padding: 4px 1px; }
+  }
+
+  /* ---------- impression ---------- */
+  .qt-print-box {
+    background: #fff;
+    border: 1.5px solid var(--blue);
+    border-radius: 22px;
+    padding: 26px 24px;
+    margin-top: 34px;
+    text-align: center;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  .qt-print-title { font-size: 11px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+  .qt-print-text { font-size: 14px; color: var(--muted); max-width: 380px; margin: 0 auto 16px; }
+  .qt-actions { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 30px; }
+
+  @media (max-width: 520px) {
+    .qt-shell { padding: 40px 18px 56px; }
+    .qt-accordion-header { padding: 13px 13px; font-size: 14px; }
+    .qt-accordion-panel { padding: 14px 10px 16px; }
+    .qt-print-box { padding: 22px 16px; }
+    .qt-print-box .qt-btn { white-space: normal; text-align: center; padding: 0.8rem 1.4rem; font-size: 0.85rem; line-height: 1.3; }
+  }
+
+  @media print {
+    body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .qt-print-box, .qt-actions, .qt-accordion-chevron, .qt-section-label, .qt-tip, .qt-pick-hint { display: none !important; }
+    .qt-accordion-list { margin-top: 12px !important; }
+    .qt-screen { animation: none; }
+    .qt-shell { padding-top: 16px; }
+    .qt-accordion { break-inside: avoid; page-break-inside: avoid; }
+    .qt-table .qt-textarea.qt-note::placeholder { color: transparent; }
+  }
+</style>
+<style id="qt-noscroll">
+  /* Pas de barre de défilement interne : dans l'iframe Kajabi, c'est la page parente qui défile */
+  html.qt-embedded, html.qt-embedded body { overflow: hidden !important; }
+  html.qt-embedded .qt-wrap { min-height: 0 !important; }
+  textarea { overflow: hidden !important; }
+</style>
+<script>try{if(window.self!==window.top)document.documentElement.classList.add('qt-embedded');}catch(e){document.documentElement.classList.add('qt-embedded');}</script>
+</head>
+<body>
+<div class="qt-wrap">
+  <div class="qt-shell">
+    <div id="qt-root" class="qt-screen"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+
+  /* ------------------------------------------------------------------
+     Contenu : une situation = un toggle. Les 6 colonnes du tableau Notion
+     deviennent 6 lignes (lisibles sur téléphone).
+     Chaque case : propositions à sélectionner (plusieurs choix possibles) + espace pour écrire avec ses mots
+     ------------------------------------------------------------------ */
+  var COLS = [
+    'Ce que je me raconte dans ma tête',
+    'Émotions ressenties',
+    'Ce que fait mon corps',
+    'Ce que je fais automatiquement',
+    'Ce que ça provoque ensuite',
+    'Une action pour interrompre le cycle'
+  ];
+
+  var PICK = [
+    { name: 'Baiser / début du rapprochement', opts: [
+      ['“Il faut que je bande”', '“Ça va bientôt commencer”'],
+      ['Excitation', 'Appréhension', 'Pression'],
+      ['Souffle plus court', 'Tension dans le ventre', 'Surveillance de l’érection'],
+      ['Je me mets à anticiper la suite au lieu d’être là'],
+      ['Je suis déjà dans la performance avant même que le sexe commence'],
+      ['Revenir à une sensation concrète : le goût, la chaleur, le contact', 'Prendre trois expirations lentes']
+    ]},
+    { name: 'Nudité de l’autre', opts: [
+      ['“Est-ce qu’elle/il va me trouver attirant ?”', '“Je dois être à la hauteur”'],
+      ['Gêne', 'Désir', 'Peur du jugement'],
+      ['Tension dans les épaules', 'Ventre serré', 'Regard qui se coupe'],
+      ['Je me cache', 'Je plaisante', 'Je vais trop vite'],
+      ['Moins de connexion', 'Plus de pression'],
+      ['Nommer une chose que tu trouves belle ou excitante', 'Ralentir et rester quelques secondes dans le regard ou le contact']
+    ]},
+    { name: 'Sexto / nudes', opts: [
+      ['“Je dois être sexy”', '“Il faut que je réponde comme il faut”'],
+      ['Excitation', 'Honte', 'Peur d’être ridicule'],
+      ['Cœur qui accélère', 'Tension dans les mains ou la mâchoire'],
+      ['Je surjoue', 'Je réponds sans envie', 'J’évite complètement'],
+      ['Je me sens déconnecté ou frustré'],
+      ['Prendre deux minutes avant de répondre', 'Envoyer une phrase qui te ressemble vraiment plutôt que performer']
+    ]},
+    { name: 'Dirty talk', opts: [
+      ['“Je ne sais pas quoi dire”', '“Ça va être gênant”'],
+      ['Honte', 'Blocage', 'Appréhension'],
+      ['Gorge serrée', 'Cerveau vide', 'Rire nerveux'],
+      ['Je me tais', 'Je répète des phrases qui ne me ressemblent pas'],
+      ['Je me juge et j’ose encore moins la fois suivante'],
+      ['Commencer par une phrase de sensation : “j’aime quand tu…”, “ça me fait quelque chose quand…”']
+    ]},
+    { name: 'Masturbation mutuelle', opts: [
+      ['“Il faut que ça marche”', '“Je dois être excité assez vite”'],
+      ['Pression', 'Gêne', 'Désir'],
+      ['Pénis qui réagit de façon irrégulière', 'Tension dans le bassin', 'Souffle retenu'],
+      ['Je me concentre sur mon érection ou sur le résultat'],
+      ['Je perds le plaisir et je surveille mon corps'],
+      ['Dire : “J’ai besoin de prendre mon temps”', 'Se concentrer quelques minutes sur le regard, les mains ou la respiration']
+    ]},
+    { name: 'Sexe oral reçu', opts: [
+      ['“Je dois bander fort”', '“Je ne dois pas venir trop vite”'],
+      ['Plaisir', 'Peur', 'Urgence'],
+      ['Périnée qui serre', 'Accélération du souffle', 'Tensions dans les cuisses'],
+      ['Je me raidis', 'Je me mets en apnée', 'Je laisse faire alors que c’est trop intense'],
+      ['L’excitation monte très vite', 'Je décroche'],
+      ['Changer de rythme ou de pression', 'Guider avec une phrase simple', 'Faire une pause et respirer']
+    ]},
+    { name: 'Sexe oral donné', opts: [
+      ['“Il faut que je la/le fasse jouir”', '“Je dois savoir faire”'],
+      ['Pression', 'Envie de bien faire', 'Anxiété'],
+      ['Mâchoire ou nuque tendue', 'Attention focalisée sur la “performance”'],
+      ['Je reproduis un geste sans écouter les réactions'],
+      ['Je me fatigue', 'Je perds le lien', 'L’autre peut ne pas oser guider'],
+      ['Demander un feedback simple : “plus lentement, plus fort ou pareil ?”', 'Alterner gestes et pauses']
+    ]},
+    { name: 'Pénétration', opts: [
+      ['“Il faut que je tienne”', '“Je ne dois pas venir maintenant”'],
+      ['Pression', 'Urgence', 'Peur de l’échec'],
+      ['Souffle bloqué', 'Périnée contracté', 'Rythme qui s’accélère', 'Corps raide'],
+      ['Je continue alors que ça monte trop', 'Je force le contrôle', 'J’évite la pénétration'],
+      ['L’éjaculation arrive vite', 'L’expérience devient stressante'],
+      ['Ralentir ou arrêter le mouvement', 'Changer de position / de pratique', 'Poser l’attention sur l’expiration et le relâchement du bassin']
+    ]},
+    { name: 'Après l’éjaculation', opts: [
+      ['“J’ai tout gâché”', '“C’est fini”', '“Elle/il est déçu·e”'],
+      ['Honte', 'Tristesse', 'Frustration', 'Retrait'],
+      ['Relâchement brutal', 'Envie de se détourner ou de se fermer'],
+      ['Je m’excuse', 'Je m’isole', 'Je coupe le moment'],
+      ['Le sexe devient associé à l’échec', 'L’autre peut rester sans repère'],
+      ['Se reconnecter : demander “comment tu te sens ?”', 'Poursuivre avec contact, caresses, mains, bouche, sextoy ou câlin selon les envies']
+    ]},
+    { name: 'Après un moment sans orgasme / sans érection', opts: [
+      ['“Je ne fonctionne pas”', '“Je suis nul”'],
+      ['Frustration', 'Inquiétude', 'Colère', 'Honte'],
+      ['Fatigue', 'Agitation', 'Corps fermé'],
+      ['Je me force à continuer', 'Je m’éloigne', 'Je fais comme si de rien n’était'],
+      ['Encore plus de pression au prochain moment'],
+      ['Nommer simplement ce qui se passe : “je suis un peu dans ma tête, j’ai besoin de souffler”', 'Sortir de l’objectif et choisir un autre type de connexion']
+    ]},
+    { name: 'Quand l’autre propose quelque chose de nouveau', opts: [
+      ['“Je dois accepter”', '“Je vais avoir l’air coincé si je refuse”'],
+      ['Curiosité', 'Peur', 'Confusion'],
+      ['Tension', 'Hésitation', 'Sensation de se couper de soi'],
+      ['Je dis oui sans envie', 'Je dis non sans pouvoir expliquer'],
+      ['Je peux ressentir du regret, de la honte ou de la distance'],
+      ['Utiliser “peut-être, mais pas tout de suite”', 'Demander du temps ou des infos', 'Proposer une version plus accessible']
+    ]},
+    { name: 'Quand j’ai envie de proposer quelque chose', opts: [
+      ['“C’est trop bizarre”', '“L’autre va me juger”'],
+      ['Désir', 'Vulnérabilité', 'Peur du rejet'],
+      ['Nœud au ventre', 'Gorge serrée', 'Excitation qui retombe'],
+      ['Je garde l’envie pour moi', 'Je la transforme en blague'],
+      ['Je rejoue toujours le même scénario'],
+      ['Commencer par une demande à faible enjeu : “j’aimerais qu’on mette de la musique”, “j’aimerais essayer plus lentement”']
+    ]}
+  ];
+
+  var root = document.getElementById('qt-root');
+  var state = { answers: {}, sel: {} };
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  /* hauteur d'un champ = hauteur de son contenu, ou de son exemple s'il est vide
+     (scrollHeight vaut 0 tant que le toggle est fermé : on mesure à l'ouverture) */
+  function autosize(ta) {
+    var saved = ta.value;
+    if (!saved) ta.value = ta.placeholder;
+    ta.style.height = 'auto';
+    ta.style.height = (ta.scrollHeight + 2) + 'px';
+    ta.value = saved;
+  }
+  function autosizeIn(container) {
+    container.querySelectorAll('.qt-textarea').forEach(autosize);
+  }
+
+  function accordion(id, title, inner) {
+    return '<div class="qt-accordion" id="' + id + '">'
+      + '<button type="button" class="qt-accordion-header" aria-expanded="false">'
+      +   '<span>' + esc(title) + '</span><span class="qt-accordion-chevron">▾</span>'
+      + '</button>'
+      + '<div class="qt-accordion-panel">' + inner + '</div></div>';
+  }
+  function tableWrap(rows) {
+    return '<div class="qt-table-wrap"><table class="qt-table">'
+      + '<colgroup><col style="width:36%"><col style="width:64%"></colgroup>'
+      + '<tbody>' + rows + '</tbody></table></div>';
+  }
+  function rowHTML(ci, cell) {
+    return '<tr' + (ci === 5 ? ' class="qt-row-action"' : '') + '><th scope="row">' + COLS[ci] + '</th><td>' + cell + '</td></tr>';
+  }
+
+  function pickToggle(st, si) {
+    var rows = '';
+    COLS.forEach(function (c, ci) {
+      var chips = st.opts[ci].map(function (o, oi) {
+        var key = 'p' + si + 'c' + ci + 'o' + oi;
+        return '<button type="button" class="qt-chip" data-key="' + key + '" aria-pressed="' + (state.sel[key] ? 'true' : 'false') + '">' + esc(o) + '</button>';
+      }).join('');
+      var nkey = 'p' + si + 'c' + ci + 't';
+      var note = '<textarea class="qt-textarea qt-note" rows="1" data-key="' + nkey + '" placeholder="(ou écris avec tes mots)" aria-label="' + esc(st.name + ' : ' + COLS[ci] + ' — avec tes mots') + '">' + esc(state.answers[nkey] || '') + '</textarea>';
+      rows += rowHTML(ci, '<div class="qt-chips">' + chips + '</div>' + note);
+    });
+    return accordion('qt-acc-p' + si, st.name, '<p class="qt-pick-hint">Sélectionne ce qui te ressemble (plusieurs choix possibles) et complète avec tes mots si tu veux.</p>' + tableWrap(rows));
+  }
+
+  function build() {
+    var html = '';
+    html += '<span class="qt-eyebrow">Semaine 1 — Comprendre</span>';
+    html += '<h1>Mon cycle du <em>stress sexuel</em></h1>';
+
+    html += '<div class="qt-prose">'
+      + '<h2>Comprendre ton cycle de stress sexuel</h2>'
+      + '<p>Le stress sexuel ne commence pas forcément au moment où tu éjacules ou quand tu sens que “ça va trop vite”. Il peut apparaître bien avant : au premier baiser, face à la nudité de l’autre, quand il faut répondre à un sexto, recevoir du sexe oral, pénétrer, parler de ses envies ou simplement sentir que le moment devient important.</p>'
+      + '<p>Souvent, le cycle ressemble à ça : une situation déclenche une pensée automatique (“il faut que je bande”, “je dois assurer”, “je vais être jugé”, “je ne dois pas venir maintenant”) puis cette pensée crée une émotion, une réaction dans le corps et un réflexe. Tu peux te crisper, bloquer ton souffle, accélérer, plaisanter, éviter, te concentrer sur ton érection ou continuer alors que tu aurais envie de ralentir. Et, après, tu peux te juger ou avoir l’impression que le moment est “raté”. Le cycle recommence alors plus facilement la fois suivante.</p>'
+      + '<p>Ce tableau n’est pas là pour te dire que tu fais mal les choses. Il sert à rendre visible un mécanisme qui se joue souvent très vite et presque sans qu’on s’en rende compte. Plus tu arrives à repérer une pensée, une émotion ou un signal physique un peu plus tôt, plus tu peux créer une petite marge : respirer, ralentir, demander, changer de rythme, faire une pause, proposer autre chose ou simplement remettre ton attention sur une sensation agréable.</p>'
+      + '<p>Lis le tableau une première fois à froid. Ensuite, ne cherche pas à tout retenir ni à appliquer toutes les actions. Choisis une seule situation qui te parle — par exemple la pénétration, le sexe oral reçu, ou le moment juste après l’éjaculation — et regarde quel scénario ressemble le plus au tien. Tu peux compléter les lignes avec tes propres mots : les pensées, les sensations et les réactions sont personnelles.</p>'
+      + '<p class="qt-punch">L’objectif n’est pas de ne plus jamais stresser. L’objectif est de ne plus laisser le stress prendre tout le volant.</p>'
+      + '</div>';
+
+    html += '<p class="qt-tip">Ouvre une situation : sélectionne les propositions qui te ressemblent et complète avec tes propres mots.</p>';
+
+    html += '<div class="qt-accordion-list">';
+    PICK.forEach(function (st, i) { html += pickToggle(st, i); });
+    html += '</div>';
+
+    html += '<div class="qt-print-box">'
+      + '<div class="qt-print-title">Garde tes réponses</div>'
+      + '<p class="qt-print-text">Imprime ton tableau ou garde-le en PDF pour retrouver tes réponses au fil du programme. Toutes les situations s’ouvrent automatiquement.</p>'
+      + '<button type="button" class="qt-btn" id="qt-print-btn"><span>Imprimer mes réponses / PDF</span></button>'
+      + '</div>';
+    html += '<div class="qt-actions"><button type="button" class="qt-btn-text" id="qt-restart">↺ Recommencer</button></div>';
+
+    root.innerHTML = html;
+
+    root.querySelectorAll('.qt-accordion-header').forEach(function (h) {
+      h.addEventListener('click', function () {
+        var acc = h.parentNode;
+        var open = acc.classList.toggle('qt-accordion-open');
+        h.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (open) autosizeIn(acc.querySelector('.qt-accordion-panel'));
+      });
+    });
+    root.querySelectorAll('.qt-textarea').forEach(function (ta) {
+      ta.addEventListener('input', function () {
+        state.answers[ta.dataset.key] = ta.value;
+        autosize(ta);
+      });
+    });
+    root.querySelectorAll('.qt-chip').forEach(function (c) {
+      c.addEventListener('click', function () {
+        var on = c.getAttribute('aria-pressed') !== 'true';
+        c.setAttribute('aria-pressed', on ? 'true' : 'false');
+        if (on) state.sel[c.dataset.key] = 1; else delete state.sel[c.dataset.key];
+      });
+    });
+
+    document.getElementById('qt-print-btn').addEventListener('click', function () {
+      root.querySelectorAll('.qt-accordion').forEach(function (a) {
+        if (!a.classList.contains('qt-accordion-open')) {
+          a.classList.add('qt-accordion-open');
+          a.querySelector('.qt-accordion-header').setAttribute('aria-expanded', 'true');
+        }
+        autosizeIn(a.querySelector('.qt-accordion-panel'));
+      });
+      window.print();
+    });
+    document.getElementById('qt-restart').addEventListener('click', function () {
+      state = { answers: {}, sel: {} };
+      build();
+      window.scrollTo(0, 0);
+    });
+  }
+
+  build();
+
+  var rt;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () {
+      root.querySelectorAll('.qt-accordion-open .qt-accordion-panel').forEach(autosizeIn);
+    }, 120);
+  });
+
+  /* ---------------- auto-hauteur (iframe Kajabi) ---------------- */
+  (function () {
+    function post() {
+      try {
+        window.parent.postMessage({ type: 'come-quiz-height', height: Math.ceil(document.body.getBoundingClientRect().height) }, '*');
+      } catch (e) {}
+    }
+    window.addEventListener('load', post);
+    window.addEventListener('resize', post);
+    if (window.ResizeObserver) { new ResizeObserver(post).observe(document.body); }
+    else { setInterval(post, 600); }
+  })();
+
+})();
+</script>
+<script id="qt-textarea-fit">
+/* Champs texte : la case grandit avec le texte, jamais de barre de défilement interne */
+(function(){
+  function fit(t){ if(!t.getClientRects().length) return; if(t.scrollHeight>t.clientHeight+1){t.style.height=(t.scrollHeight+2)+'px';} }
+  function fitAll(){ document.querySelectorAll('textarea').forEach(fit); }
+  document.addEventListener('input',function(e){ if(e.target&&e.target.tagName==='TEXTAREA') fit(e.target); });
+  window.addEventListener('resize',fitAll); window.addEventListener('load',fitAll);
+  if(window.MutationObserver) new MutationObserver(fitAll).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+  fitAll();
+})();
+</script>
+</body>
+</html>
