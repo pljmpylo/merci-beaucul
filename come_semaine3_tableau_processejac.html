@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon tableau process éjac — Programme C.O.M.E.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    --blue: #2F6FE4;
+    --blue-soft: rgba(47,111,228,0.18);
+    --blue-line: rgba(47,111,228,0.4);
+    --blue-faint: rgba(47,111,228,0.06);
+    --yellow: #F7FF59;
+    --ink: #1c1c1c;
+    --muted: #5b6273;
+    font-family: 'Raleway', Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a, button { cursor: pointer; font-family: inherit; }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+  .qt-wrap { min-height: 100vh; }
+  .qt-shell { max-width: 640px; margin: 0 auto; padding: 56px 24px 70px; }
+
+  .qt-eyebrow {
+    display: inline-block;
+    color: var(--blue);
+    border: 1px solid var(--blue-soft);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  /* ---------- CTA façon Mimétique ---------- */
+  .qt-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    overflow: hidden;
+    background: var(--yellow);
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    padding: 0.85rem 2.2rem;
+    border: 1.5px solid var(--blue);
+    border-radius: 10rem;
+    transition: color 450ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qt-btn::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    top: 102%;
+    background: var(--blue);
+    transition: top 450ms ease;
+    z-index: 0;
+  }
+  .qt-btn span { position: relative; z-index: 1; }
+  .qt-btn:hover { color: var(--yellow); }
+  .qt-btn:hover::before { top: 0; }
+  .qt-btn-text { background: none; border: none; color: var(--muted); font-size: 13.5px; font-family: inherit; padding: 8px 4px; }
+  .qt-btn-text:hover { color: var(--blue); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qt-btn, .qt-btn::before { transition: none; }
+    .qt-screen { animation: none; }
+  }
+
+  .qt-screen { animation: qtFadeUp 0.45s ease both; }
+  @keyframes qtFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .qt-shell h1 {
+    font-size: clamp(30px, 6vw, 44px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin-bottom: 20px;
+  }
+  .qt-shell h1 em {
+    font-style: normal;
+    color: var(--blue);
+    background: linear-gradient(transparent 62%, var(--yellow) 62%);
+    padding: 0 4px;
+  }
+  .qt-intro-text { font-size: 16px; color: var(--muted); max-width: 520px; margin-bottom: 12px; text-wrap: pretty; }
+  .qt-tip { font-size: 13px; color: var(--muted); background: var(--blue-faint); border: 1px solid var(--blue-soft); border-radius: 12px; padding: 11px 15px; margin: 4px 0 4px; max-width: 520px; }
+
+  /* ---------- tableaux en toggles (façon Notion) ---------- */
+  .qt-accordion-list { margin-top: 30px; display: flex; flex-direction: column; gap: 12px; }
+  .qt-accordion {
+    border: 1.5px solid var(--blue-soft);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    transition: border-color 150ms ease;
+  }
+  .qt-accordion.qt-accordion-open { border-color: var(--blue); }
+  .qt-accordion-header {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    width: 100%;
+    background: #fff;
+    border: none;
+    padding: 15px 17px;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--ink);
+    text-align: left;
+    line-height: 1.35;
+  }
+  .qt-accordion-header:hover { background: var(--blue-faint); }
+  .qt-accordion-header .qt-jump-num { color: var(--blue); font-weight: 800; margin-right: 8px; }
+  .qt-accordion-chevron { color: var(--blue); flex-shrink: 0; font-size: 13px; transition: transform 200ms ease; }
+  .qt-accordion.qt-accordion-open .qt-accordion-chevron { transform: rotate(180deg); }
+  .qt-accordion-panel { display: none; padding: 16px 17px 20px; border-top: 1px solid var(--blue-soft); }
+  .qt-accordion.qt-accordion-open .qt-accordion-panel { display: block; }
+
+  /* ---------- tableau (structure de la page Notion, sans défilement) ---------- */
+  .qt-table-wrap {
+    border: 1.5px solid var(--blue);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  .qt-table { table-layout: fixed; border-collapse: collapse; width: 100%; background: #fff; }
+  .qt-table th {
+    background: var(--blue-faint);
+    color: var(--blue);
+    font-size: 11.5px;
+    font-weight: 700;
+    text-align: left;
+    vertical-align: top;
+    padding: 10px 8px;
+    border-bottom: 1.5px solid var(--blue);
+    border-right: 1px solid var(--blue-line);
+    word-break: normal;
+    overflow-wrap: normal;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+  .qt-table th:last-child { border-right: none; }
+  .qt-table td { padding: 10px 8px; border-right: 1px solid var(--blue-line); vertical-align: top; }
+  .qt-table td:last-child { border-right: none; }
+  .qt-table .qt-textarea {
+    display: block;
+    width: 100%;
+    font-family: 'Raleway', sans-serif;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--ink);
+    padding: 4px 2px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    border-bottom: 1px solid var(--blue-soft);
+    resize: none;
+    overflow: hidden;
+    min-height: 70px;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+  .qt-table .qt-textarea::placeholder { color: #9aa1b0; font-style: italic; }
+  .qt-table .qt-textarea:focus { outline: none; border-bottom-color: var(--blue); }
+
+  @media (max-width: 460px) {
+    .qt-table th { font-size: 10px; padding: 8px 5px; }
+    .qt-table td { padding: 8px 5px; }
+    .qt-table .qt-textarea { font-size: 11px; padding: 4px 1px; }
+  }
+
+  /* ---------- impression ---------- */
+  .qt-print-box {
+    background: #fff;
+    border: 1.5px solid var(--blue);
+    border-radius: 22px;
+    padding: 26px 24px;
+    margin-top: 34px;
+    text-align: center;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  .qt-print-title { font-size: 11px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+  .qt-print-text { font-size: 14px; color: var(--muted); max-width: 380px; margin: 0 auto 16px; }
+  .qt-actions { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 30px; }
+
+  @media (max-width: 520px) {
+    .qt-shell { padding: 40px 18px 56px; }
+    .qt-accordion-header { padding: 13px 13px; font-size: 14px; }
+    .qt-accordion-panel { padding: 14px 10px 16px; }
+    .qt-print-box { padding: 22px 16px; }
+    .qt-print-box .qt-btn { white-space: normal; text-align: center; padding: 0.8rem 1.4rem; font-size: 0.85rem; line-height: 1.3; }
+  }
+
+  @media print {
+    body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .qt-print-box, .qt-actions, .qt-accordion-chevron, .qt-tip { display: none !important; }
+    .qt-screen { animation: none; }
+    .qt-shell { padding-top: 16px; }
+    .qt-accordion { break-inside: avoid; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="qt-wrap">
+  <div class="qt-shell">
+    <div id="qt-root" class="qt-screen"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+
+  /* ------------------------------------------------------------------
+     Contenu : un tableau par étape (toggle), 4 colonnes à remplir.
+     Les exemples sont des placeholders « (ex : … ) ».
+     ------------------------------------------------------------------ */
+  var COLS = [
+    'Ce qui se passe globalement dans ton corps / avec la personne',
+    'Sensations à repérer',
+    'Actions possibles pour toi',
+    'Comment la/le partenaire peut aider'
+  ];
+
+  var STEPS = [
+    {
+      num: '1',
+      name: 'Excitation qui démarre',
+      ex: [
+        '(ex : le désir s’active, mon sexe commence à durcir, je commence à penser au fait de tenir…)',
+        '(ex : chaleur dans le bas-ventre, gonflement verge, respiration un peu plus rapide.)',
+        '(ex : prendre 2–3 respirations profondes, observer ce qui se passe sans vouloir “aller vite”, se laisser le temps de s’installer.)',
+        '(ex : prendre le temps aussi : contacts doux, échanges de regards, parler de ce qui fait envie, ne pas pousser tout de suite vers la pénétration ou la “performance”.)'
+      ]
+    },
+    {
+      num: '2',
+      name: 'Excitation moyenne (zone de manœuvre)',
+      ex: [
+        '(ex : l’excitation monte, encore pas mal de marge avant l’éjaculation, je suis encore focus sur ellui…)',
+        '(ex : pénis bien en érection, + de tension musculaire, respiration déjà bloquée, périnée très contracté…)',
+        '(ex : ralentir, varier le rythme, faire des pauses courtes, élargir les zones de plaisir (baiser, caresses, autres parties du corps), respirer plus bas dans le ventre…)',
+        '(ex : être ok avec les changements de rythme, proposer d’explorer d’autres zones, rassurer (par la parole, le corps) que “prendre son temps” est bienvenu, pas vécu comme un problème.)'
+      ]
+    },
+    {
+      num: '3',
+      name: 'Excitation forte, proche du point de non-retour',
+      ex: [
+        '(ex : le corps se prépare à éjaculer : si la stimulation continue pareil, l’éjaculation est imminente, je me déconnecte d’elle et je commence à être dans ma tête pour contrôler)',
+        '(ex : sensation nette de “ça vient”, pulsations fortes, périnée qui serre, envie de contracter tout le corps, possible apnée…)',
+        '(ex : arrêter la stimulation du pénis, garder un contact ailleurs (corps, souffle), relâcher le périnée autant que possible, respirer lentement jusqu’à ce que ça redescende un peu.)',
+        '(ex : changer de rythme ou de pratique sur demande, proposer de poser la main sur le torse ou la respiration pour aider à calmer, se rappeler que la pause sert le plaisir de tout le monde, pas seulement “le problème de l’autre”.)'
+      ]
+    },
+    {
+      num: '4',
+      name: 'Point de non-retour + éjaculation',
+      ex: [
+        '(ex : sperme expulsé, muscles du périnée qui se contractent par vagues, orgasme ou pas, auto-jugement ou satisfaction…)',
+        '(ex : contractions rythmiques dans le pénis et le bassin, décharge, relâchement ensuite.)',
+        '(ex : laisser le corps vivre ce qui est engagé, observer comment tu te sens après (physiquement, émotionnellement), ne pas te juger, te rappeler que tu peux continuer de jouer avec le plaisir de ta partenaire.)',
+        '(ex : éviter les remarques blessantes ou ironiques, rester en lien (contact, câlin, parole), rappeler que le moment sexuel ne s’arrête pas forcément avec l’éjaculation : on peut continuer avec d’autres formes de plaisir, pour l’un·e comme pour l’autre.)'
+      ]
+    }
+  ];
+
+  var root = document.getElementById('qt-root');
+  var state = { answers: {} };
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  /* hauteur d'un champ = hauteur de son contenu, ou de son exemple s'il est vide
+     (scrollHeight vaut 0 tant que le toggle est fermé : on mesure à l'ouverture) */
+  function autosize(ta) {
+    var saved = ta.value;
+    if (!saved) ta.value = ta.placeholder;
+    ta.style.height = 'auto';
+    ta.style.height = (ta.scrollHeight + 2) + 'px';
+    ta.value = saved;
+  }
+  function autosizeIn(container) {
+    container.querySelectorAll('.qt-textarea').forEach(autosize);
+  }
+
+  function build() {
+    var html = '';
+    html += '<span class="qt-eyebrow">Semaine 3 — S’approprier</span>';
+    html += '<h1>Mon tableau <em>process éjac</em></h1>';
+    html += '<p class="qt-intro-text">C’est l’heure de refaire un point sur tes sensations après 2 semaines de programme. Observe s’il y a déjà des différences à certains endroits ou des choses à renforcer.</p>';
+    html += '<p class="qt-tip">Ce tableau est plus confortable à remplir sur ordinateur. Sur téléphone, passe en mode paysage.</p>';
+
+    html += '<div class="qt-accordion-list">';
+    STEPS.forEach(function (st, si) {
+      html += '<div class="qt-accordion" id="qt-acc-' + si + '">'
+        + '<button type="button" class="qt-accordion-header" aria-expanded="false">'
+        +   '<span><span class="qt-jump-num">' + st.num + '.</span>' + st.name + '</span>'
+        +   '<span class="qt-accordion-chevron">▾</span>'
+        + '</button>'
+        + '<div class="qt-accordion-panel"><div class="qt-table-wrap"><table class="qt-table">'
+        +   '<colgroup><col style="width:25%"><col style="width:25%"><col style="width:25%"><col style="width:25%"></colgroup>'
+        +   '<thead><tr>' + COLS.map(function (c) { return '<th>' + c + '</th>'; }).join('') + '</tr></thead>'
+        +   '<tbody><tr>' + st.ex.map(function (ex, ci) {
+              var key = 's' + si + 'c' + ci;
+              return '<td><textarea class="qt-textarea" data-key="' + key + '" placeholder="' + esc(ex) + '" aria-label="' + esc(st.name + ' : ' + COLS[ci]) + '">' + esc(state.answers[key] || '') + '</textarea></td>';
+            }).join('') + '</tr></tbody>'
+        + '</table></div></div></div>';
+    });
+    html += '</div>';
+
+    html += '<div class="qt-print-box">'
+      + '<div class="qt-print-title">Garde tes réponses</div>'
+      + '<p class="qt-print-text">Imprime ton tableau ou garde-le en PDF pour retrouver tes réponses au fil du programme. Les 4 étapes s’ouvrent automatiquement.</p>'
+      + '<button type="button" class="qt-btn" id="qt-print-btn"><span>Imprimer mes réponses / PDF</span></button>'
+      + '</div>';
+    html += '<div class="qt-actions"><button type="button" class="qt-btn-text" id="qt-restart">↺ Recommencer</button></div>';
+
+    root.innerHTML = html;
+
+    root.querySelectorAll('.qt-accordion-header').forEach(function (h) {
+      h.addEventListener('click', function () {
+        var acc = h.parentNode;
+        var open = acc.classList.toggle('qt-accordion-open');
+        h.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (open) autosizeIn(acc.querySelector('.qt-accordion-panel'));
+      });
+    });
+    root.querySelectorAll('.qt-textarea').forEach(function (ta) {
+      ta.addEventListener('input', function () {
+        state.answers[ta.dataset.key] = ta.value;
+        autosize(ta);
+      });
+    });
+
+    document.getElementById('qt-print-btn').addEventListener('click', function () {
+      root.querySelectorAll('.qt-accordion').forEach(function (a) {
+        if (!a.classList.contains('qt-accordion-open')) {
+          a.classList.add('qt-accordion-open');
+          a.querySelector('.qt-accordion-header').setAttribute('aria-expanded', 'true');
+        }
+        autosizeIn(a.querySelector('.qt-accordion-panel'));
+      });
+      window.print();
+    });
+    document.getElementById('qt-restart').addEventListener('click', function () {
+      state = { answers: {} };
+      build();
+      window.scrollTo(0, 0);
+    });
+  }
+
+  build();
+
+  var rt;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () {
+      root.querySelectorAll('.qt-accordion-open .qt-accordion-panel').forEach(autosizeIn);
+    }, 120);
+  });
+
+  /* ---------------- auto-hauteur (iframe Kajabi) ---------------- */
+  (function () {
+    function post() {
+      try {
+        window.parent.postMessage({ type: 'come-quiz-height', height: document.documentElement.scrollHeight }, '*');
+      } catch (e) {}
+    }
+    window.addEventListener('load', post);
+    window.addEventListener('resize', post);
+    if (window.ResizeObserver) { new ResizeObserver(post).observe(document.body); }
+    else { setInterval(post, 600); }
+  })();
+
+})();
+</script>
+</body>
+</html>
