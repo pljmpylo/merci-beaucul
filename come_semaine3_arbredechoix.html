@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon arbre de choix — Programme C.O.M.E.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    --blue: #2F6FE4;
+    --blue-soft: rgba(47,111,228,0.18);
+    --blue-line: rgba(47,111,228,0.4);
+    --blue-faint: rgba(47,111,228,0.06);
+    --yellow: #F7FF59;
+    --yellow-soft: rgba(247,255,89,0.35);
+    --ink: #1c1c1c;
+    --muted: #5b6273;
+    font-family: 'Raleway', Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a, button { cursor: pointer; font-family: inherit; }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+  .qt-wrap { min-height: 100vh; }
+  .qt-shell { max-width: 640px; margin: 0 auto; padding: 56px 24px 70px; }
+  .qt-hidden { display: none !important; }
+
+  .qt-eyebrow {
+    display: inline-block;
+    color: var(--blue);
+    border: 1px solid var(--blue-soft);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  /* ---------- CTA façon Mimétique ---------- */
+  .qt-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    overflow: hidden;
+    background: var(--yellow);
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    padding: 0.85rem 2.2rem;
+    border: 1.5px solid var(--blue);
+    border-radius: 10rem;
+    transition: color 450ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qt-btn::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    top: 102%;
+    background: var(--blue);
+    transition: top 450ms ease;
+    z-index: 0;
+  }
+  .qt-btn span { position: relative; z-index: 1; }
+  .qt-btn .qt-arrow { display: inline-block; transition: transform 450ms ease; }
+  .qt-btn:hover { color: var(--yellow); }
+  .qt-btn:hover::before { top: 0; }
+  .qt-btn:hover .qt-arrow { transform: translateX(5px); }
+  .qt-btn:disabled { opacity: 0.4; pointer-events: none; }
+  .qt-btn-outline { background: #fff; color: var(--blue); }
+  .qt-btn-outline::before { background: var(--blue); }
+  .qt-btn-outline:hover { color: var(--yellow); }
+
+  .qt-btn-text { background: none; border: none; color: var(--muted); font-size: 13.5px; font-family: inherit; padding: 8px 4px; }
+  .qt-btn-text:hover { color: var(--blue); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qt-btn, .qt-btn::before, .qt-btn .qt-arrow, .qt-progress-bar { transition: none; }
+    .qt-screen { animation: none; }
+  }
+
+  .qt-screen { animation: qtFadeUp 0.45s ease both; }
+  @keyframes qtFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .qt-shell h1 {
+    font-size: clamp(30px, 6vw, 44px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin-bottom: 20px;
+  }
+  .qt-shell h1 em {
+    font-style: normal;
+    color: var(--blue);
+    background: linear-gradient(transparent 62%, var(--yellow) 62%);
+    padding: 0 4px;
+  }
+  .qt-intro-text { font-size: 16px; color: var(--muted); max-width: 520px; margin-bottom: 12px; text-wrap: pretty; }
+  .qt-intro-lead { font-size: 17px; font-weight: 700; color: var(--ink); max-width: 520px; margin-bottom: 12px; text-wrap: balance; }
+
+  /* ---------- les portes ---------- */
+  .qt-doors { display: flex; flex-direction: column; gap: 12px; margin-top: 30px; }
+  .qt-door {
+    display: flex; align-items: center; gap: 16px; width: 100%;
+    text-align: left;
+    background: #fff;
+    border: 1.5px solid var(--blue-soft);
+    border-radius: 18px;
+    padding: 16px 18px;
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  }
+  .qt-door:hover { border-color: var(--blue); box-shadow: 0 0 0 5px var(--blue-faint), 0 8px 22px rgba(47,111,228,0.12); transform: translateY(-1px); }
+  .qt-door-letter {
+    flex: 0 0 38px; width: 38px; height: 38px; border-radius: 50%;
+    background: var(--blue); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 15px;
+  }
+  .qt-door-body { flex: 1; min-width: 0; }
+  .qt-door-label { display: block; font-weight: 700; font-size: 15px; line-height: 1.35; color: var(--ink); }
+  .qt-door-promise { display: block; font-weight: 600; font-style: italic; font-size: 13.5px; color: var(--blue); margin-top: 3px; }
+  .qt-door-go { flex-shrink: 0; color: var(--blue); font-size: 18px; transition: transform 180ms ease; }
+  .qt-door:hover .qt-door-go { transform: translateX(4px); }
+  .qt-door-done { display: inline-block; margin-left: 8px; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; background: var(--yellow); color: var(--blue); border: 1px solid var(--blue); border-radius: 999px; padding: 1px 8px; vertical-align: 2px; }
+
+  /* ---------- parcours ---------- */
+  .qt-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 12px; }
+  .qt-topbar .qt-btn-text { padding-left: 0; }
+  .qt-progress-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); text-align: right; }
+  .qt-progress-track { height: 4px; background: var(--blue-soft); border-radius: 4px; overflow: hidden; margin-bottom: 34px; }
+  .qt-progress-bar { height: 100%; background: var(--blue); border-radius: 4px; transition: width 350ms ease; width: 0%; }
+
+  .qt-door-tag {
+    display: inline-block;
+    background: var(--blue); color: #fff;
+    font-size: 10.5px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;
+    padding: 5px 13px; border-radius: 100px; margin-bottom: 14px;
+  }
+  .qt-step-title { font-weight: 800; font-size: clamp(26px, 4.8vw, 34px); line-height: 1.15; color: var(--blue); margin-bottom: 18px; text-wrap: balance; }
+  .qt-q-text { font-weight: 700; font-size: clamp(20px, 3.2vw, 25px); line-height: 1.3; color: var(--blue); margin-bottom: 26px; text-wrap: balance; }
+  .qt-para { font-size: 15.5px; color: var(--muted); margin-bottom: 14px; text-wrap: pretty; }
+  .qt-hint { font-size: 12.5px; color: var(--muted); margin-top: 12px; }
+
+  .qt-options { display: flex; flex-direction: column; gap: 10px; }
+  .qt-opt {
+    display: flex; align-items: flex-start; gap: 14px;
+    text-align: left;
+    background: #fff;
+    border: 1.5px solid var(--blue-soft);
+    border-radius: 16px;
+    padding: 14px 16px;
+    font-size: 15px; line-height: 1.5; color: var(--ink);
+    transition: border-color 180ms ease, background 180ms ease, opacity 180ms ease;
+  }
+  .qt-opt:hover:not(.qt-opt-disabled) { border-color: var(--blue); background: var(--blue-faint); }
+  .qt-opt.qt-selected { border-color: var(--blue); background: var(--yellow-soft); }
+  .qt-opt-disabled { opacity: 0.4; cursor: not-allowed; }
+  .qt-opt-mark {
+    flex: 0 0 22px; width: 22px; height: 22px; margin-top: 1px;
+    border: 1.5px solid var(--blue-line);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; color: transparent;
+    background: #fff;
+    transition: all 150ms ease;
+  }
+  .qt-opt.qt-multi .qt-opt-mark { border-radius: 7px; }
+  .qt-opt.qt-selected .qt-opt-mark { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .qt-opt-text { flex: 1; min-width: 0; padding-top: 1px; text-wrap: pretty; }
+
+  /* chips (mots à choisir) */
+  .qt-options.qt-wordgrid { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+  .qt-options.qt-wordgrid .qt-opt { width: auto; padding: 9px 16px; border-radius: 999px; font-weight: 600; }
+  .qt-options.qt-wordgrid .qt-opt-mark { display: none; }
+
+  .qt-input, .qt-textarea {
+    width: 100%;
+    border: 1.5px solid var(--blue-soft);
+    border-radius: 12px;
+    background: #fff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14.5px;
+    color: var(--ink);
+    padding: 11px 14px;
+    transition: border-color 180ms ease;
+  }
+  .qt-input::placeholder, .qt-textarea::placeholder { color: #9aa1b0; font-style: italic; }
+  .qt-input:focus, .qt-textarea:focus { outline: none; border-color: var(--blue); }
+  .qt-textarea { resize: vertical; min-height: 84px; line-height: 1.5; }
+  .qt-other { margin-top: 12px; }
+
+  .qt-field { margin-bottom: 18px; }
+  .qt-field:last-child { margin-bottom: 0; }
+  .qt-field-label {
+    display: block;
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 7px;
+  }
+  .qt-prefix { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .qt-prefix > span { font-size: 14.5px; color: var(--ink); font-weight: 600; }
+  .qt-prefix .qt-input { flex: 1; min-width: 160px; }
+
+  .qt-examples-label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin: 16px 0 8px; }
+  .qt-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .qt-chip {
+    background: #fff; border: 1.5px dashed var(--blue-line); color: var(--blue);
+    border-radius: 999px; padding: 6px 13px; font-size: 12.5px; font-weight: 600;
+    transition: all 150ms ease;
+  }
+  .qt-chip:hover { border-style: solid; border-color: var(--blue); background: var(--yellow); }
+
+  .qt-callout {
+    background: var(--yellow-soft);
+    border: 1.5px solid var(--blue);
+    border-radius: 18px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+    font-size: 15px; color: var(--ink); text-wrap: pretty;
+  }
+  .qt-callout-label { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--blue); margin-bottom: 6px; }
+
+  .qt-card {
+    background: #fff;
+    border: 1.5px solid var(--blue);
+    border-radius: 20px;
+    padding: 22px 20px 24px;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+
+  .qt-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 34px; gap: 12px; flex-wrap: wrap; }
+
+  /* ---------- carte finale ---------- */
+  .qt-result-kicker { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .qt-result-title { font-weight: 800; font-size: clamp(26px, 4.6vw, 34px); color: var(--blue); line-height: 1.15; margin-bottom: 16px; }
+  .qt-result-desc { font-size: 15.5px; color: var(--muted); margin-bottom: 12px; text-wrap: balance; }
+  .qt-carte { margin: 26px 0 8px; }
+  .qt-carte-line { padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px solid var(--blue-soft); }
+  .qt-carte-line:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .qt-carte-tag { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; color: var(--blue); margin-bottom: 6px; }
+  .qt-carte-text { font-weight: 700; font-size: 16.5px; line-height: 1.45; color: var(--ink); text-wrap: pretty; }
+  .qt-carte-text .qt-carte-letter { display: inline-flex; width: 26px; height: 26px; border-radius: 50%; background: var(--blue); color: #fff; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 800; margin-right: 8px; vertical-align: 1px; }
+
+  .qt-print-box {
+    background: #fff;
+    border: 1.5px solid var(--blue);
+    border-radius: 22px;
+    padding: 26px 24px;
+    margin-top: 34px;
+    text-align: center;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  .qt-print-title { font-size: 11px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+  .qt-print-text { font-size: 14px; color: var(--muted); max-width: 380px; margin: 0 auto 16px; }
+  .qt-actions { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 30px; }
+
+  @media (max-width: 520px) {
+    .qt-shell { padding: 40px 18px 56px; }
+    .qt-card { padding: 18px 16px 20px; }
+    .qt-door { padding: 14px 14px; gap: 13px; }
+    .qt-btn { padding: 0.85rem 1.7rem; }
+    .qt-prefix > span { width: 100%; }
+  }
+
+  @media print {
+    body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    #qt-intro, #qt-quiz, .qt-print-box, .qt-actions { display: none !important; }
+    #qt-results { display: block !important; }
+    .qt-screen { animation: none; }
+    .qt-shell { padding-top: 16px; }
+    .qt-card { break-inside: avoid; page-break-inside: avoid; }
+    .qt-textarea { resize: none; }
+  }
+</style>
+</head>
+<body>
+<div class="qt-wrap">
+  <div class="qt-shell">
+
+    <!-- ============ INTRO / MENU DES PORTES ============ -->
+    <div id="qt-intro" class="qt-screen">
+      <span class="qt-eyebrow">Semaine 3 — S’approprier</span>
+      <h1>Mon arbre de <em>choix</em></h1>
+      <p class="qt-intro-lead">Tu vas construire des repères qui te ressemblent.</p>
+      <p class="qt-intro-text">Pas des règles à suivre, pas une liste de choses à réussir : des points d’appui personnels. Choisis le territoire que tu as le plus envie de rendre plus vivant, plus doux, plus libre ou plus à ton image.</p>
+      <p class="qt-intro-text">Il n’y a pas de « meilleure » porte : la bonne, c’est celle qui te donne un peu de curiosité.</p>
+      <div class="qt-doors" id="qt-doors"></div>
+    </div>
+
+    <!-- ============ PARCOURS D'UNE PORTE ============ -->
+    <div id="qt-quiz" class="qt-screen qt-hidden">
+      <div class="qt-topbar">
+        <button type="button" class="qt-btn-text" id="qt-menu-btn">← Menu des portes</button>
+        <div class="qt-progress-label" id="qt-progress-label"></div>
+      </div>
+      <div class="qt-progress-track"><div class="qt-progress-bar" id="qt-progress-bar"></div></div>
+      <div id="qt-q-container"></div>
+    </div>
+
+    <!-- ============ CARTE FINALE ============ -->
+    <div id="qt-results" class="qt-screen qt-hidden">
+      <div id="qt-results-container"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+
+  /* ---------------- Contenu ---------------- */
+  var DOORS = [
+    { key: 'A', label: 'La place de la sexualité dans ma vie', promise: 'Créer mon rituel de sexualité choisie' },
+    { key: 'B', label: 'Mon corps, mes sensations, mon sexe', promise: 'Trouver mon langage corporel du plaisir' },
+    { key: 'C', label: 'Mes pratiques, mes envies, mes limites', promise: 'Composer mon menu sexuel personnel' },
+    { key: 'D', label: 'Mes sources d’excitation et mes fantasmes', promise: 'Nourrir ce qui m’allume vraiment' },
+    { key: 'E', label: 'Mon cadre de confiance / sécurité', promise: 'Designer mes meilleures conditions de kiff' }
+  ];
+
+  var BRANCHES = {
+
+    A: {
+      title: 'Créer mon rituel de sexualité choisie',
+      intro: 'Une sexualité à toi ne se joue pas seulement au moment où tu as très envie ou au moment où tu te masturbes vite fait. Elle peut aussi exister dans les petits rituels qui te reconnectent à ton désir, à ton corps, à ton imaginaire ou à ta curiosité.\n\nL’idée n’est pas d’ajouter une tâche à ta semaine. L’idée est de créer un rendez-vous qui te fait du bien avant même qu’il commence.',
+      steps: [
+        { id: 'a1', type: 'single', hasOther: true,
+          prompt: 'Si tu pouvais créer un rendez-vous avec ta sexualité qui te ressemble vraiment, quelle énergie aurait-il ?',
+          options: ['Un moment de détente : ralentir, respirer, me reconnecter à mon corps.', 'Un moment de curiosité : apprendre, lire, écouter, découvrir une idée.', 'Un moment de jeu : essayer quelque chose sans enjeu.', 'Un moment de désir : nourrir mon imaginaire ou mon excitation.', 'Un moment de douceur : prendre soin de mon corps sans objectif.', 'Un moment de lien : partager quelque chose avec mon/ma partenaire.'] },
+        { id: 'a2', type: 'multi', hasOther: true,
+          prompt: 'Pour que ce rendez-vous ne ressemble pas à une obligation, qu’aimerais-tu y mettre ? Choisis tout ce qui te parle.',
+          options: ['Un créneau où je ne serai pas pressé.', 'Une playlist ou un son qui me met dans une bonne énergie.', 'Une lumière / une ambiance particulière.', 'Une règle simple : pas d’objectif d’éjaculation, pas d’écran, pas de pression.', 'Quelque chose à boire, à manger ou à sentir.', 'Un support : podcast, livre, guide audio, exercice écrit.', 'Une intention : « je me donne le droit de ne rien réussir ».'] },
+        { id: 'a3', type: 'text',
+          prompt: 'Complète : « Quand je prends soin de ma sexualité, j’ai envie que cela ressemble à… »',
+          placeholder: '…',
+          examples: ['un sas de décompression', 'une heure de jeu', 'un moment sans téléphone', 'une bulle de curiosité', 'un rendez-vous avec mon corps', 'un espace à deux sans objectif'] }
+      ],
+      mission: {
+        intro: 'Crée ton premier rendez-vous signature. Il peut durer 10 minutes ou une heure. Il peut inclure de la masturbation ou pas. Le seul critère : tu dois avoir envie d’y revenir.',
+        fields: [
+          { id: 'rituel', label: 'Mon rituel', placeholder: 'le nom de ton rendez-vous' },
+          { id: 'duree', label: 'Durée réaliste', placeholder: '(ex : 20 min)' },
+          { id: 'ing1', label: 'Ingrédient 1', placeholder: '…' },
+          { id: 'ing2', label: 'Ingrédient 2', placeholder: '…' },
+          { id: 'ing3', label: 'Ingrédient 3', placeholder: '…' },
+          { id: 'regle', label: 'La règle qui me libère', prefix: 'Pendant ce moment, je n’ai pas besoin de', placeholder: '…' }
+        ]
+      },
+      summary: function (a) {
+        return 'Un rituel : « ' + (a.rituel || '…') + ' » (' + (a.duree || '…') + '), avec ' + ([a.ing1, a.ing2, a.ing3].filter(Boolean).join(', ') || '…') + '.'
+          + (a.regle ? ' Pendant ce moment, je n’ai pas besoin de ' + a.regle + '.' : '');
+      }
+    },
+
+    B: {
+      title: 'Trouver mon langage corporel du plaisir',
+      intro: 'Ton corps n’envoie pas seulement des signaux d’alerte ou de montée d’excitation. Il peut aussi te dire : « là je suis bien », « là je suis curieux », « là je veux plus de lenteur », « là j’ai envie d’être touché autrement », « là ça suffit ».\n\nCette porte sert à créer ton propre langage corporel : pas des termes techniques, juste des mots qui te permettent de mieux te reconnaître et, si tu en as envie, de mieux te faire comprendre.',
+      steps: [
+        { id: 'b1', type: 'multi', hasOther: true,
+          prompt: 'À quoi reconnais-tu un moment où ton corps se sent vraiment bien, pas forcément au bord de l’orgasme, juste bien ?',
+          options: ['Je respire plus librement.', 'Mon corps est plus lourd, relâché ou chaud.', 'Je bouge plus spontanément.', 'Je me sens moins dans ma tête.', 'Je suis curieux de continuer, sans urgence.', 'Je peux recevoir sans surveiller ce qui se passe.', 'Je me sens vivant, présent, connecté.'] },
+        { id: 'b2', type: 'multi', hasOther: true, maxSelect: 3, words: true,
+          prompt: 'Choisis trois mots qui décrivent le type de plaisir que tu aimerais ressentir davantage.',
+          options: ['Lent', 'Chaud', 'Profond', 'Léger', 'Joueur', 'Enveloppant', 'Électrique', 'Doux', 'Intense', 'Serein', 'Animal', 'Tendre', 'Libre', 'Surprenant', 'Sensuel'] },
+        { id: 'b3', type: 'multi', hasOther: true,
+          prompt: 'Dans quelles conditions ton corps a-t-il le plus de chances de te donner ces sensations ?',
+          options: ['Quand je peux prendre mon temps.', 'Quand le rythme est lent ou changeant.', 'Quand il y a plus de caresses que de gestes « efficaces ».', 'Quand je peux bouger mon bassin et ne pas rester figé.', 'Quand je suis seul.', 'Quand l’autre est attentif / à l’écoute.', 'Quand il y a une ambiance ou un son qui me plaît.', 'Quand je ne suis pas focalisé sur l’érection ou l’éjaculation.'] },
+        { id: 'b4', type: 'single', hasOther: true,
+          prompt: 'Quel signal agréable as-tu envie de suivre davantage cette semaine ?',
+          options: ['Ma respiration quand elle devient plus ample.', 'Mon envie de bouger ou d’onduler le bassin.', 'Une zone qui frissonne ou chauffe.', 'Mon envie de faire un son / gémir / parler.', 'Mon envie de ralentir.', 'Mon envie de recevoir.', 'Ma curiosité pour une texture, un toucher ou une pression.'] }
+      ],
+      mission: {
+        intro: 'Donne un nom à ton état de plaisir préféré. Pendant un moment solo ou à deux, repère un instant où tu te sens bien. Donne-lui un nom à toi : « le chaud calme », « la lenteur qui monte », « le corps ouvert », « la bulle », « le mode chat », ou ce que tu veux.',
+        fields: [
+          { id: 'nom', label: 'Mon nom à moi', placeholder: '(ex : le chaud calme)' },
+          { id: 'signaux', label: 'Les signaux qui me le montrent', placeholder: '…', area: true },
+          { id: 'aide', label: 'Ce qui l’aide à apparaître', placeholder: '« Pour retrouver cet état, mon corps semble aimer… »', area: true }
+        ]
+      },
+      summary: function (a) {
+        return 'Mon état : « ' + (a.nom || '…') + ' ». Signaux : ' + (a.signaux || '…') + '. Ce qui l’aide à apparaître : ' + (a.aide || '…') + '.';
+      }
+    },
+
+    C: {
+      title: 'Composer mon menu sexuel personnel',
+      intro: 'Un menu, ce n’est pas une to-do list. Tu ne dois pas tout prendre, tu ne dois pas tout aimer, et tu peux changer d’avis selon ton humeur, ton corps ou la personne avec qui tu es.\n\nL’idée est de sortir du scénario unique pour te dire : « Aujourd’hui, j’ai plusieurs manières possibles de vivre du plaisir. »',
+      steps: [
+        { id: 'c1', type: 'multi', hasOther: true, maxSelect: 3,
+          prompt: 'De quoi as-tu envie que tes moments sexuels soient plus souvent faits ? Choisis jusqu’à trois ingrédients.',
+          options: ['De lenteur.', 'De rires, de légèreté et de jeu.', 'De caresses et de contact sur tout le corps.', 'De sons, de mots ou de silence.', 'De sensualité avant la sexualité génitale.', 'De surprise ou de nouveauté douce.', 'De recevoir autant que de donner.', 'De connexion et de regard.', 'De gestes très simples, mais réellement choisis.', 'D’intensité, mais à mon rythme.'] },
+        { id: 'c2', type: 'multi', hasOther: true,
+          prompt: 'Quand tu imagines un moment de plaisir qui te ressemble, quels formats as-tu envie d’avoir comme options ?',
+          options: ['Une masturbation lente / exploratoire.', 'Un massage ou auto-massage.', 'Des baisers et caresses longues.', 'Du sexe oral donné ou reçu.', 'Des mains, doigts, textures ou sextoys.', 'Un moment sans pénétration.', 'De la pénétration, mais sans en faire le centre.', 'Un moment après l’éjaculation qui continue autrement.', 'Un moment érotique sans toucher : regards, mots, scénario, porno audio.'] },
+        { id: 'c3_entree', type: 'single', hasOther: true, words: true, step: 'Ton menu · l’entrée',
+          prompt: 'Compose ton « menu du moment idéal ». D’abord, ton entrée :',
+          options: ['Baisers', 'Regard', 'Douche', 'Massage', 'Mots', 'Musique', 'Caresses'] },
+        { id: 'c3_coeur', type: 'single', hasOther: true, words: true, step: 'Ton menu · le cœur',
+          prompt: 'Ensuite, le cœur du moment :',
+          options: ['Mains', 'Bouche', 'Sextoy', 'Frottements', 'Pénétration', 'Jeu'] },
+        { id: 'c3_sortie', type: 'single', hasOther: true, words: true, step: 'Ton menu · la sortie',
+          prompt: 'Et enfin, la sortie :',
+          options: ['Câlin', 'Continuer autrement', 'Massage', 'Parler', 'Dormir', 'Reprendre plus tard'] },
+        { id: 'c4', type: 'single', hasOther: true,
+          prompt: 'Dans ton menu, quel ingrédient as-tu envie de remettre au centre cette semaine ?',
+          options: ['Une entrée plus longue.', 'Plus de place au plaisir que je reçois.', 'Un autre format que la pénétration.', 'Une sortie choisie après l’éjaculation.', 'Plus de paroles ou de feedback.', 'Plus de jeu ou de lenteur.'] }
+      ],
+      mission: {
+        intro: 'Teste une nouvelle composition, pas une nouvelle performance. Choisis un seul ingrédient de ton menu et donne-lui plus de place dans un prochain moment solo ou à deux.',
+        fields: [
+          { id: 'focus', label: 'Cette semaine, je mets davantage de… dans ma sexualité.', placeholder: '…' }
+        ]
+      },
+      summary: function (a) {
+        return 'Mon menu du moment : ' + (a.c3_entree || '…') + ' → ' + (a.c3_coeur || '…') + ' → ' + (a.c3_sortie || '…') + '. Cette semaine, je mets davantage de ' + (a.focus || '…') + ' dans ma sexualité.';
+      }
+    },
+
+    D: {
+      title: 'Nourrir ce qui m’allume vraiment',
+      intro: 'Ton excitation mérite mieux que le pilotage automatique. Tu n’as pas besoin de jeter ce qui te plaît déjà, ni de culpabiliser pour tes sources d’excitation. Cette porte sert simplement à choisir ce que tu veux nourrir, diversifier ou rendre plus personnel.',
+      steps: [
+        { id: 'd1', type: 'single', hasOther: true,
+          prompt: 'Quelle énergie aimerais-tu sentir plus souvent dans ton excitation ?',
+          options: ['Plus de sensualité.', 'Plus de jeu.', 'Plus de lenteur et de tension.', 'Plus de connexion.', 'Plus d’audace douce.', 'Plus de mystère ou d’imaginaire.', 'Plus de simplicité et de présence.', 'Plus de liberté.'] },
+        { id: 'd2', type: 'single', hasOther: true,
+          prompt: 'Quelle porte d’entrée t’aide le plus à créer cette énergie ?',
+          options: ['Les sons : musique, voix, gémissements, porno audio.', 'Les images : corps, lumière, esthétique, vidéo, miroir.', 'Le toucher : peau, massage, texture, chaleur, pression.', 'L’imaginaire : scènes, histoires, fantasmes, souvenirs.', 'L’ambiance : odeur, lieu, heure, tenue, décor.', 'Le lien : regard, conversation, mots, se sentir désiré.'] },
+        { id: 'd3', type: 'text',
+          prompt: 'Quel élément, déjà présent chez toi, mériterait plus d’attention ?',
+          placeholder: '…' }
+      ],
+      mission: {
+        intro: 'Crée une capsule d’excitation à toi. Choisis une ambiance, un support ou un scénario qui correspond à ton énergie choisie. Pendant 10 à 20 minutes, explore-le sans obligation d’aller jusqu’à l’éjaculation. Puis garde une trace.',
+        fields: [
+          { id: 'capsule', label: 'Ma capsule (ambiance, support ou scénario)', placeholder: '…', area: true },
+          { id: 'garde', label: 'Ce que je garde pour la suite', placeholder: '(ex : une note, un mot, une playlist, une image, une phrase…)', area: true }
+        ]
+      },
+      summary: function (a) {
+        return 'Une capsule d’excitation autour de : ' + (a.capsule || '…') + '. Ce que je garde : ' + (a.garde || '…') + '.';
+      }
+    },
+
+    E: {
+      title: 'Designer mes meilleures conditions de kiff',
+      intro: 'Les meilleures expériences sexuelles ne viennent pas seulement des bonnes techniques. Elles viennent souvent d’un contexte : le temps disponible, le droit de ralentir, l’ambiance, la confiance, les mots qu’on se donne, la possibilité de rire, de changer d’avis ou de ne rien prouver.\n\nIci, tu vas designer tes conditions de kiff : pas pour tout contrôler, mais pour donner plus de chances à ton désir et à ton corps de se sentir bien.',
+      steps: [
+        { id: 'e1', type: 'single', hasOther: true,
+          prompt: 'Si tu devais améliorer un seul élément autour du sexe, lequel aurait le plus d’effet sur ton plaisir ?',
+          options: ['Avoir plus de temps et moins d’urgence.', 'Me sentir moins attendu sur ma performance.', 'Pouvoir parler plus simplement de ce que j’aime.', 'Avoir une ambiance plus travaillée : lieu, lumière, son, confort.', 'Me sentir plus connecté à l’autre avant de commencer.', 'Savoir que je peux ralentir, changer ou arrêter.', 'Préparer davantage le moment au lieu de compter sur la spontanéité.'] },
+        { id: 'e2', type: 'single', hasOther: true,
+          prompt: 'Quelle « météo » te fait le plus envie pour un prochain moment ?',
+          options: ['Douce et lente.', 'Ludique et légère.', 'Sensuelle et enveloppante.', 'Spontanée mais sans pression.', 'Intense mais avec de la place pour les pauses.', 'Intime et connectée.', 'Curieuse et expérimentale.'] },
+        { id: 'e3', type: 'multi', hasOther: true, maxSelect: 3,
+          prompt: 'Choisis trois ingrédients très concrets qui pourraient créer cette météo.',
+          options: ['Bloquer un créneau où personne n’est pressé.', 'Mettre les téléphones loin.', 'Préparer de l’eau, un lubrifiant, une serviette, un sextoy ou ce qui rend le moment plus fluide.', 'Choisir une playlist, une lumière ou une odeur.', 'Commencer habillés, par un massage, un baiser ou une conversation.', 'Se dire avant : « On n’a aucun objectif à atteindre. »', 'Se mettre d’accord sur une phrase ou un geste pour ralentir.', 'Prévoir une suite douce après l’éjaculation ou la fin du moment.'] },
+        { id: 'e4', type: 'text',
+          prompt: 'Quel petit détail pourrait te faire te sentir davantage dans une sexualité à toi ?',
+          placeholder: '…',
+          examples: ['ne pas regarder l’heure', 'mettre ma playlist', 'oser dire que je veux commencer lentement', 'ne pas avoir mon téléphone à côté', 'prévoir du lubrifiant', 'savoir qu’on peut s’arrêter'] }
+      ],
+      mission: {
+        intro: 'Crée ta météo de kiff. Avant ton prochain moment solo ou à deux, prépare les trois ingrédients que tu as choisis. Tu ne prépares pas une performance : tu prépares un contexte dans lequel tu as plus de chances de te sentir bien.',
+        fields: [
+          { id: 'permission', label: 'La permission que je me donne', prefix: 'J’ai le droit de', placeholder: '…' }
+        ]
+      },
+      summary: function (a) {
+        return 'Ma météo de kiff : ' + (a.e2 || '…') + ', avec ' + ((a.e3 || []).join(', ') || '…') + '. La permission que je me donne : « J’ai le droit de ' + (a.permission || '…') + '. »';
+      }
+    }
+  };
+
+  /* ---------------- Outils ---------------- */
+  var state = { branch: null, index: 0, answers: {} };
+
+  var elIntro = document.getElementById('qt-intro');
+  var elQuiz = document.getElementById('qt-quiz');
+  var elResults = document.getElementById('qt-results');
+  var elContainer = document.getElementById('qt-q-container');
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function doorOf(key) { return DOORS.filter(function (d) { return d.key === key; })[0]; }
+
+  function branchSteps() {
+    var b = BRANCHES[state.branch];
+    var out = [{ kind: 'intro' }];
+    b.steps.forEach(function (s) { out.push({ kind: 'q', step: s }); });
+    out.push({ kind: 'mission' });
+    return out;
+  }
+
+  /* Réponses « résolues » : « Autre » remplacé par le texte précisé, puis échappées pour le HTML */
+  function resolvedAnswers() {
+    var b = BRANCHES[state.branch], out = {};
+    Object.keys(state.answers).forEach(function (k) {
+      var v = state.answers[k];
+      out[k] = Array.isArray(v) ? v.slice() : v;
+    });
+    b.steps.forEach(function (s) {
+      var other = state.answers[s.id + '_other'] || 'Autre';
+      function clean(x) { return (x === 'Autre' ? other : x).replace(/\.$/, ''); }
+      if (s.type === 'single' && out[s.id]) out[s.id] = clean(out[s.id]);
+      if (s.type === 'multi' && Array.isArray(out[s.id])) out[s.id] = out[s.id].map(clean);
+    });
+    Object.keys(out).forEach(function (k) {
+      out[k] = Array.isArray(out[k]) ? out[k].map(esc) : esc(out[k] == null ? '' : out[k]);
+    });
+    return out;
+  }
+
+  function hasProgress(key) {
+    var b = BRANCHES[key];
+    return b.steps.some(function (s) {
+      var v = state.answers[s.id];
+      return Array.isArray(v) ? v.length > 0 : !!v;
+    }) || b.mission.fields.some(function (f) { return !!state.answers[f.id]; });
+  }
+
+  function autosize(ta) {
+    ta.style.height = 'auto';
+    ta.style.height = Math.max(ta.scrollHeight + 2, 84) + 'px';
+  }
+
+  /* ---------------- Écran 0 : menu des portes ---------------- */
+  function renderDoors() {
+    var html = '';
+    DOORS.forEach(function (d) {
+      html += '<button type="button" class="qt-door" data-key="' + d.key + '">'
+        + '<span class="qt-door-letter">' + d.key + '</span>'
+        + '<span class="qt-door-body"><span class="qt-door-label">' + d.label + (hasProgress(d.key) ? '<span class="qt-door-done">en cours</span>' : '') + '</span>'
+        + '<span class="qt-door-promise">' + d.promise + '</span></span>'
+        + '<span class="qt-door-go">→</span></button>';
+    });
+    var box = document.getElementById('qt-doors');
+    box.innerHTML = html;
+    box.querySelectorAll('.qt-door').forEach(function (b) {
+      b.addEventListener('click', function () {
+        state.branch = b.dataset.key;
+        state.index = 0;
+        elIntro.classList.add('qt-hidden');
+        elResults.classList.add('qt-hidden');
+        elQuiz.classList.remove('qt-hidden');
+        window.scrollTo(0, 0);
+        renderStep();
+      });
+    });
+  }
+
+  function goMenu() {
+    elQuiz.classList.add('qt-hidden');
+    elResults.classList.add('qt-hidden');
+    elIntro.classList.remove('qt-hidden');
+    renderDoors();
+    window.scrollTo(0, 0);
+  }
+  document.getElementById('qt-menu-btn').addEventListener('click', goMenu);
+
+  /* ---------------- Parcours ---------------- */
+  function navHtml(nextLabel, nextId, showNext) {
+    return '<div class="qt-nav">'
+      + '<button type="button" class="qt-btn-text" id="qt-back">← Retour</button>'
+      + (showNext === false ? '<span></span>' : '<button type="button" class="qt-btn" id="' + (nextId || 'qt-next') + '"><span>' + nextLabel + '</span><span class="qt-arrow">→</span></button>')
+      + '</div>';
+  }
+
+  function renderStep() {
+    var steps = branchSteps(), s = steps[state.index], total = steps.length;
+    var b = BRANCHES[state.branch], door = doorOf(state.branch);
+    document.getElementById('qt-progress-label').textContent = 'Étape ' + (state.index + 1) + ' / ' + total;
+    document.getElementById('qt-progress-bar').style.width = (((state.index + 1) / total) * 100) + '%';
+    var tag = '<span class="qt-door-tag">Porte ' + door.key + ' · ' + door.promise + '</span>';
+
+    if (s.kind === 'intro') {
+      var paras = b.intro.split('\n\n').map(function (p) { return '<p class="qt-para">' + p + '</p>'; }).join('');
+      elContainer.innerHTML = tag + '<h2 class="qt-step-title">' + b.title + '</h2>' + paras
+        + '<div class="qt-nav"><button type="button" class="qt-btn-text" id="qt-back">← Retour</button>'
+        + '<button type="button" class="qt-btn" id="qt-next"><span>Commencer</span><span class="qt-arrow">→</span></button></div>';
+      document.getElementById('qt-back').addEventListener('click', goMenu);
+      document.getElementById('qt-next').addEventListener('click', function () { state.index++; renderStep(); });
+      return;
+    }
+
+    if (s.kind === 'mission') { renderMission(tag, b); return; }
+    renderQuestion(tag, s.step);
+  }
+
+  function renderQuestion(tag, step) {
+    var answers = state.answers;
+    var html = tag + '<p class="qt-q-text">' + step.prompt + '</p><div id="qt-field"></div>';
+    var isSingle = step.type === 'single';
+    elContainer.innerHTML = html;
+    var field = document.getElementById('qt-field');
+    var next;
+
+    function addNav(show) {
+      field.insertAdjacentHTML('afterend', navHtml('Continuer', 'qt-next', true));
+      document.getElementById('qt-back').addEventListener('click', function () { state.index--; renderStep(); });
+      next = document.getElementById('qt-next');
+      next.addEventListener('click', function () { state.index++; renderStep(); });
+      return next;
+    }
+
+    /* ---- choix unique ---- */
+    if (isSingle) {
+      var all = step.hasOther ? step.options.concat(['Autre']) : step.options;
+      var box = document.createElement('div');
+      box.className = 'qt-options' + (step.words ? ' qt-wordgrid' : '');
+      field.appendChild(box);
+      var otherBox = null;
+      addNav();
+
+      function syncNext() {
+        var a = answers[step.id];
+        next.disabled = !a || (a === 'Autre' && !answers[step.id + '_other']);
+      }
+      function showOther() {
+        if (otherBox) return;
+        otherBox = document.createElement('div');
+        otherBox.className = 'qt-other';
+        otherBox.innerHTML = '<span class="qt-field-label">Précise</span><input type="text" class="qt-input" placeholder="…">';
+        var inp = otherBox.querySelector('input');
+        inp.value = answers[step.id + '_other'] || '';
+        inp.addEventListener('input', function () { answers[step.id + '_other'] = inp.value.trim(); syncNext(); });
+        box.insertAdjacentElement('afterend', otherBox);
+        setTimeout(function () { inp.focus(); }, 40);
+      }
+
+      all.forEach(function (label) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'qt-opt' + (answers[step.id] === label ? ' qt-selected' : '');
+        btn.innerHTML = '<span class="qt-opt-mark">✓</span><span class="qt-opt-text">' + esc(label) + '</span>';
+        btn.addEventListener('click', function () {
+          answers[step.id] = label;
+          box.querySelectorAll('.qt-opt').forEach(function (c) { c.classList.remove('qt-selected'); });
+          btn.classList.add('qt-selected');
+          if (label === 'Autre') { showOther(); syncNext(); }
+          else {
+            if (otherBox) { otherBox.remove(); otherBox = null; }
+            syncNext();
+            setTimeout(function () { if (answers[step.id] === label) { state.index++; renderStep(); } }, 320);
+          }
+        });
+        box.appendChild(btn);
+      });
+      if (answers[step.id] === 'Autre') showOther();
+      syncNext();
+      return;
+    }
+
+    /* ---- choix multiple ---- */
+    if (step.type === 'multi') {
+      var allM = step.hasOther ? step.options.concat(['Autre']) : step.options;
+      var sel = new Set(answers[step.id] || []);
+      var max = step.maxSelect || null;
+      var boxM = document.createElement('div');
+      boxM.className = 'qt-options' + (step.words ? ' qt-wordgrid' : '');
+      field.appendChild(boxM);
+      var hint = document.createElement('p');
+      hint.className = 'qt-hint';
+      field.appendChild(hint);
+      var otherM = null;
+      addNav();
+
+      function refresh() {
+        boxM.querySelectorAll('.qt-opt').forEach(function (c) {
+          var on = c.classList.contains('qt-selected');
+          c.classList.toggle('qt-opt-disabled', !!(max && sel.size >= max && !on));
+        });
+        hint.textContent = max ? 'Jusqu’à ' + max + ' choix (' + sel.size + '/' + max + ').' : 'Tu peux en choisir plusieurs.';
+      }
+      function showOtherM() {
+        if (otherM) return;
+        otherM = document.createElement('div');
+        otherM.className = 'qt-other';
+        otherM.innerHTML = '<span class="qt-field-label">Précise</span><input type="text" class="qt-input" placeholder="…">';
+        var inp = otherM.querySelector('input');
+        inp.value = answers[step.id + '_other'] || '';
+        inp.addEventListener('input', function () { answers[step.id + '_other'] = inp.value.trim(); });
+        hint.insertAdjacentElement('afterend', otherM);
+        setTimeout(function () { inp.focus(); }, 40);
+      }
+      allM.forEach(function (label) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'qt-opt qt-multi' + (sel.has(label) ? ' qt-selected' : '');
+        btn.innerHTML = '<span class="qt-opt-mark">✓</span><span class="qt-opt-text">' + esc(label) + '</span>';
+        btn.addEventListener('click', function () {
+          if (btn.classList.contains('qt-opt-disabled')) return;
+          if (sel.has(label)) { sel.delete(label); btn.classList.remove('qt-selected'); }
+          else { sel.add(label); btn.classList.add('qt-selected'); }
+          answers[step.id] = Array.from(sel);
+          if (label === 'Autre') {
+            if (sel.has('Autre')) showOtherM(); else if (otherM) { otherM.remove(); otherM = null; }
+          }
+          refresh();
+        });
+        boxM.appendChild(btn);
+      });
+      if (sel.has('Autre')) showOtherM();
+      refresh();
+      return;
+    }
+
+    /* ---- texte libre ---- */
+    if (step.type === 'text') {
+      var ta = document.createElement('textarea');
+      ta.className = 'qt-textarea';
+      ta.placeholder = step.placeholder || '';
+      ta.value = answers[step.id] || '';
+      ta.addEventListener('input', function () { answers[step.id] = ta.value.trim(); autosize(ta); });
+      field.appendChild(ta);
+      if (step.examples && step.examples.length) {
+        var lbl = document.createElement('span');
+        lbl.className = 'qt-examples-label';
+        lbl.textContent = 'Des exemples pour t’inspirer, clique pour en utiliser un :';
+        field.appendChild(lbl);
+        var chips = document.createElement('div');
+        chips.className = 'qt-chips';
+        step.examples.forEach(function (ex) {
+          var c = document.createElement('button');
+          c.type = 'button';
+          c.className = 'qt-chip';
+          c.textContent = ex;
+          c.addEventListener('click', function () { ta.value = ex; answers[step.id] = ex; autosize(ta); ta.focus(); });
+          chips.appendChild(c);
+        });
+        field.appendChild(chips);
+      }
+      addNav();
+      autosize(ta);
+      setTimeout(function () { ta.focus(); }, 40);
+    }
+  }
+
+  /* ---------------- Mission ---------------- */
+  function renderMission(tag, b) {
+    var m = b.mission;
+    var html = tag + '<h2 class="qt-step-title">Ta mission de la semaine</h2>'
+      + '<div class="qt-callout"><span class="qt-callout-label">À tester cette semaine</span>' + m.intro + '</div>'
+      + '<div class="qt-card" id="qt-mfields"></div>'
+      + '<div class="qt-nav"><button type="button" class="qt-btn-text" id="qt-back">← Retour</button>'
+      + '<button type="button" class="qt-btn" id="qt-next"><span>Valider ma mission</span><span class="qt-arrow">→</span></button></div>';
+    elContainer.innerHTML = html;
+    var host = document.getElementById('qt-mfields');
+    m.fields.forEach(function (f) {
+      var fld = document.createElement('div');
+      fld.className = 'qt-field';
+      var lab = document.createElement('label');
+      lab.className = 'qt-field-label';
+      lab.textContent = f.label;
+      fld.appendChild(lab);
+      var el;
+      if (f.area) {
+        el = document.createElement('textarea');
+        el.className = 'qt-textarea';
+      } else {
+        el = document.createElement('input');
+        el.type = 'text';
+        el.className = 'qt-input';
+      }
+      el.placeholder = f.placeholder || '';
+      el.value = state.answers[f.id] || '';
+      el.addEventListener('input', function () {
+        state.answers[f.id] = el.value.trim();
+        if (f.area) autosize(el);
+      });
+      if (f.prefix) {
+        var line = document.createElement('div');
+        line.className = 'qt-prefix';
+        line.innerHTML = '<span>' + f.prefix + '</span>';
+        line.appendChild(el);
+        fld.appendChild(line);
+      } else {
+        fld.appendChild(el);
+      }
+      host.appendChild(fld);
+      if (f.area) autosize(el);
+    });
+    document.getElementById('qt-back').addEventListener('click', function () { state.index--; renderStep(); });
+    document.getElementById('qt-next').addEventListener('click', showCarte);
+  }
+
+  /* ---------------- Carte finale ---------------- */
+  function showCarte() {
+    elQuiz.classList.add('qt-hidden');
+    elIntro.classList.add('qt-hidden');
+    elResults.classList.remove('qt-hidden');
+    var b = BRANCHES[state.branch], door = doorOf(state.branch);
+    var summary = b.summary(resolvedAnswers());
+
+    var html = '<div class="qt-result-kicker">Fin de l’arbre</div>'
+      + '<h2 class="qt-result-title">Ta carte de réappropriation</h2>'
+      + '<p class="qt-result-desc">Cette semaine, tu n’as pas besoin de changer toute ta sexualité. Tu choisis juste de créer une condition, un mot, un rythme ou un espace qui te ressemble davantage.</p>'
+      + '<div class="qt-card qt-carte">'
+      +   '<div class="qt-carte-line"><span class="qt-carte-tag">La porte que j’ai choisie</span><p class="qt-carte-text"><span class="qt-carte-letter">' + door.key + '</span>' + door.label + '</p></div>'
+      +   '<div class="qt-carte-line"><span class="qt-carte-tag">Ce que je veux faire exister</span><p class="qt-carte-text">' + summary + '</p></div>'
+      +   '<div class="qt-carte-line"><span class="qt-carte-tag">Mon expérience de la semaine</span><textarea class="qt-textarea" id="qt-exp" placeholder="(à remplir après ton moment, cette semaine…)"></textarea></div>'
+      +   '<div class="qt-carte-line"><span class="qt-carte-tag">Ce que je veux garder</span><textarea class="qt-textarea" id="qt-garde" placeholder="…"></textarea></div>'
+      + '</div>'
+      + '<div class="qt-print-box">'
+      +   '<div class="qt-print-title">Garde ta carte</div>'
+      +   '<p class="qt-print-text">Imprime cette page ou garde-la en PDF pour retrouver ta carte et ta mission au fil du programme.</p>'
+      +   '<button type="button" class="qt-btn" id="qt-print-btn"><span>Imprimer ma carte / PDF</span></button>'
+      + '</div>'
+      + '<div class="qt-actions">'
+      +   '<button type="button" class="qt-btn qt-btn-outline" id="qt-other-door"><span>Choisir une autre porte</span></button>'
+      +   '<button type="button" class="qt-btn-text" id="qt-edit">← Modifier ma mission</button>'
+      +   '<button type="button" class="qt-btn-text" id="qt-reset">↺ Tout effacer et recommencer</button>'
+      + '</div>';
+    document.getElementById('qt-results-container').innerHTML = html;
+    window.scrollTo(0, 0);
+
+    [['qt-exp', 'experience'], ['qt-garde', 'garde_final']].forEach(function (pair) {
+      var ta = document.getElementById(pair[0]);
+      ta.value = state.answers[pair[1]] || '';
+      ta.addEventListener('input', function () { state.answers[pair[1]] = ta.value.trim(); autosize(ta); });
+      autosize(ta);
+    });
+    document.getElementById('qt-print-btn').addEventListener('click', function () { window.print(); });
+    document.getElementById('qt-other-door').addEventListener('click', goMenu);
+    document.getElementById('qt-edit').addEventListener('click', function () {
+      state.index = branchSteps().length - 1;
+      elResults.classList.add('qt-hidden');
+      elQuiz.classList.remove('qt-hidden');
+      renderStep();
+    });
+    document.getElementById('qt-reset').addEventListener('click', function () {
+      state = { branch: null, index: 0, answers: {} };
+      goMenu();
+    });
+  }
+
+  /* ---------------- init ---------------- */
+  renderDoors();
+
+  /* ---------------- auto-hauteur (iframe Kajabi) ---------------- */
+  (function () {
+    function post() {
+      try {
+        window.parent.postMessage({ type: 'come-quiz-height', height: document.documentElement.scrollHeight }, '*');
+      } catch (e) {}
+    }
+    window.addEventListener('load', post);
+    window.addEventListener('resize', post);
+    if (window.ResizeObserver) { new ResizeObserver(post).observe(document.body); }
+    else { setInterval(post, 600); }
+  })();
+
+})();
+</script>
+</body>
+</html>
