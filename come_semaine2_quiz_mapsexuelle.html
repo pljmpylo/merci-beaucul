@@ -370,6 +370,90 @@
   .qt-accordion-panel { display: none; padding: 18px 16px 20px; border-top: 1px solid var(--blue-soft); }
   .qt-accordion.qt-accordion-open .qt-accordion-panel { display: block; }
 
+
+  /* ---------- exercices interactifs ---------- */
+  .qt-blocks { margin-top: 4px; }
+  .qt-blk { margin-top: 20px; }
+  .qt-blk-label { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 9px; line-height: 1.4; text-wrap: pretty; }
+  .qt-blk-hint { font-size: 12.5px; color: var(--muted); margin: -5px 0 9px; }
+  .qt-blk-text { font-size: 14px; color: var(--ink); margin-top: 20px; text-wrap: pretty; }
+  .qt-field {
+    display: block; width: 100%;
+    font-family: 'Raleway', sans-serif; font-size: 13.5px; line-height: 1.5; color: var(--ink);
+    background: #fff; border: 1px solid var(--blue-soft); border-radius: 12px;
+    padding: 10px 12px; min-height: 46px; resize: none; overflow: hidden;
+    -webkit-hyphens: auto; hyphens: auto;
+  }
+  .qt-field::placeholder { color: #8d95a6; font-style: italic; }
+  .qt-field:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-faint); }
+  .qt-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .qt-chips + .qt-field { margin-top: 10px; }
+  .qt-chip {
+    font-family: inherit; font-size: 13px; line-height: 1.4; text-align: left;
+    color: var(--ink); background: #fff;
+    border: 1px solid var(--blue-soft); border-radius: 12px; padding: 7px 11px;
+    -webkit-hyphens: auto; hyphens: auto;
+    transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qt-chip:hover { border-color: var(--blue); background: var(--blue-faint); }
+  .qt-chip[aria-pressed="true"] { background: var(--yellow); border-color: var(--blue); color: var(--blue); font-weight: 600; }
+  .qt-chip[aria-pressed="true"]::before { content: '✓ '; }
+  .qt-checks { display: flex; flex-direction: column; gap: 9px; }
+  .qt-check { position: relative; display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14px; line-height: 1.45; color: var(--ink); }
+  .qt-check input { position: absolute; opacity: 0; width: 20px; height: 20px; margin: 0; cursor: pointer; }
+  .qt-box {
+    flex: 0 0 20px; width: 20px; height: 20px; margin-top: 1px;
+    border: 1.5px solid var(--blue); border-radius: 6px; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--blue); font-size: 13px; font-weight: 800; line-height: 1;
+    transition: background 150ms ease;
+  }
+  .qt-check input:checked + .qt-box { background: var(--yellow); }
+  .qt-check input:checked + .qt-box::after { content: '✓'; }
+  .qt-check input:focus-visible + .qt-box { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .qt-done-lab { margin-top: 24px; padding-top: 16px; border-top: 1px dashed var(--blue-soft); font-weight: 700; color: var(--blue); }
+  .qt-done-tag {
+    display: none; margin-top: 4px;
+    font-size: 10.5px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--blue);
+    background: var(--yellow); border: 1px solid var(--blue); border-radius: 999px; padding: 1px 8px;
+  }
+  .qt-acc-done .qt-done-tag { display: inline-block; }
+
+  .qt-gridt-wrap { border: 1px solid var(--blue-line); border-radius: 14px; overflow: hidden; background: #fff; }
+  .qt-gridt { table-layout: fixed; border-collapse: collapse; width: 100%; }
+  .qt-gridt th {
+    background: var(--blue-faint); color: var(--blue);
+    font-size: 12.5px; font-weight: 700; line-height: 1.4; text-align: left; vertical-align: top;
+    padding: 10px; border-bottom: 1px solid var(--blue-line); border-right: 1px solid var(--blue-line);
+    -webkit-hyphens: auto; hyphens: auto;
+  }
+  .qt-gridt td { padding: 8px 10px; vertical-align: top; border-bottom: 1px solid var(--blue-line); border-right: 1px solid var(--blue-line); }
+  .qt-gridt th:last-child, .qt-gridt td:last-child { border-right: none; }
+  .qt-gridt tr:last-child th, .qt-gridt tr:last-child td { border-bottom: none; }
+  .qt-gridt .qt-field { border: none; border-bottom: 1px solid var(--blue-soft); border-radius: 0; padding: 4px 2px; min-height: 40px; background: transparent; }
+  .qt-gridt .qt-field:focus { border-bottom-color: var(--blue); box-shadow: none; }
+  .qt-rate { display: flex; flex-wrap: wrap; gap: 4px; padding-top: 2px; }
+  .qt-rate-btn {
+    width: 28px; height: 28px; padding: 0; border-radius: 50%;
+    border: 1px solid var(--blue-soft); background: #fff; color: var(--blue); font-size: 12px; font-weight: 700;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qt-rate-btn:hover { border-color: var(--blue); background: var(--blue-faint); }
+  .qt-rate-btn[aria-pressed="true"] { background: var(--yellow); border-color: var(--blue); }
+
+  @media (max-width: 520px) {
+    .qt-gridt thead { display: none; }
+    .qt-gridt, .qt-gridt tbody, .qt-gridt tr, .qt-gridt th, .qt-gridt td { display: block; width: auto; }
+    .qt-gridt th { border-right: none; border-bottom: none; padding: 10px 10px 2px; background: var(--blue-faint); }
+    .qt-gridt td { border-right: none; border-bottom: none; padding: 6px 10px 10px; background: var(--blue-faint); }
+    .qt-gridt tr { border-bottom: 1px solid var(--blue-line); }
+    .qt-gridt tr:last-child { border-bottom: none; }
+    .qt-gridt td[data-h]::before { content: attr(data-h); display: block; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+    .qt-gridt .qt-field { background: #fff; border: 1px solid var(--blue-soft); border-radius: 10px; padding: 8px 10px; }
+    .qt-chip { font-size: 12.5px; }
+  }
+
   .qt-closing { font-size: 15px; color: var(--ink); margin-top: 26px; }
   .qt-closing strong { color: var(--blue); }
 
@@ -409,6 +493,10 @@
     .qt-accordion-panel { display: block !important; }
     .qt-accordion-chevron { display: none !important; }
     .qt-prio-chip { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .qt-chip[aria-pressed="false"], .qt-rate-btn[aria-pressed="false"] { display: none; }
+    .qt-chip, .qt-rate-btn, .qt-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .qt-field::placeholder { color: transparent; }
+    .qt-gridt { display: table; } 
   }
 </style>
 <style id="qt-noscroll">
@@ -614,6 +702,7 @@
     state.index = 0;
     state.values = AXES.map(function () { return 5; });
     state.touched = AXES.map(function () { return false; });
+    exoState = {};
   }
   resetState();
 
@@ -802,6 +891,324 @@
     return arr.map(function (x) { return x.k; });
   }
 
+  /* ------------------------------------------------------------------
+     Exercices interactifs : un par axe et par zone de score.
+     lead   = la consigne (en bandeau jaune)
+     blocks = les éléments à remplir :
+       text   : phrase d'instruction
+       write  : zone d'écriture
+       chips  : pastilles (multi:true = plusieurs choix) + zone « avec mes mots » (more)
+       check  : cases à cocher
+       grid   : petit tableau (lignes = libellés, colonnes = écrire ou noter de 1 à 5)
+     ------------------------------------------------------------------ */
+  var SUITE = ['Caresses', 'Sexe oral', 'Doigts', 'Sextoy', 'Massage', 'Câlins', 'Parler de ce qui donne envie'];
+
+  var EXOS = [
+    /* 1 — Place de la pénétration */
+    {
+      low: {
+        lead: 'Écris ton scénario idéal de rapport, éjaculation incluse ou non, et regarde si la pénétration y a une place choisie.',
+        blocks: [
+          { t: 'write', label: 'Mon scénario idéal de rapport', ph: 'Ce qui se passe, dans l’ordre que j’aime…' },
+          { t: 'chips', label: 'Dans mon scénario, la pénétration a…', opts: ['une place choisie', 'une place par habitude', 'pas de place, et ça me va', 'pas de place, mais j’aimerais'] },
+          { t: 'text', html: 'Si tu en as envie : explore une pénétration lente, sans objectif de performance, en observant les sensations et les positions qui créent le moins de tension.' },
+          { t: 'write', label: 'Les sensations et les positions qui créent le moins de tension', ph: 'Ce que j’ai observé…' }
+        ]
+      },
+      mid: {
+        lead: 'Teste un rapport où la pénétration arrive plus tard, change de rythme, ou n’est qu’une séquence parmi d’autres.',
+        blocks: [
+          { t: 'chips', label: 'Je teste…', multi: true, opts: ['une pénétration qui arrive plus tard', 'une pénétration qui change de rythme', 'une pénétration qui n’est qu’une séquence parmi d’autres'] },
+          { t: 'text', html: 'Après l’éjaculation, choisis consciemment une autre forme de plaisir plutôt que déclarer automatiquement la fin du moment.' },
+          { t: 'chips', label: 'Après l’éjaculation, je choisis…', multi: true, opts: SUITE, more: 'Autre chose, avec mes mots…' },
+          { t: 'write', label: 'Ce que j’ai remarqué', ph: 'Dans mon corps, dans ma tête, entre nous…' }
+        ]
+      },
+      high: {
+        lead: 'Écris de manière très détaillée « tout ce qu’un rapport peut être en dehors de la pénétration ».',
+        blocks: [
+          { t: 'grid', cols: [{ type: 'write', ph: 'Tout ce qui me vient…' }], rows: ['Les actes', 'Les sensations', 'Les rôles de chacun·e'] }
+        ]
+      }
+    },
+
+    /* 2 — Importance de l’éjaculation */
+    {
+      low: {
+        lead: 'Écris ce qui fait un bon moment sexuel pour toi quand l’éjaculation n’est pas le centre. Puis teste un moment solo ou à deux sans objectif d’éjaculation.',
+        blocks: [
+          { t: 'chips', label: 'Un bon moment sexuel, pour moi, c’est…', multi: true, opts: ['Sensation', 'Connexion', 'Rire', 'Désir', 'Curiosité', 'Plaisir de l’autre', 'Lenteur'], more: 'Mes propres mots…' },
+          { t: 'check', label: 'Je teste un moment sans objectif d’éjaculation', items: ['en solo', 'à deux'] },
+          { t: 'write', label: 'Ce que j’ai remarqué', ph: 'Ce que ça change quand l’éjaculation n’est pas le centre…' }
+        ]
+      },
+      mid: {
+        lead: 'Observe ce que tu ressens après une éjaculation rapide : corps, pensées, émotions.',
+        blocks: [
+          { t: 'grid', label: 'Après une éjaculation rapide, j’observe…', cols: [{ type: 'write', ph: 'Ce que je remarque…' }], rows: ['Dans mon corps', 'Dans mes pensées', 'Dans mes émotions'] },
+          { t: 'write', label: 'Après, j’aimerais pouvoir ressentir…', ph: 'Compléter avec mes mots' },
+          { t: 'chips', label: 'Une suite au moment sexuel qui ne dépend pas de mon éjaculation', multi: true, opts: SUITE, more: 'Autre chose, avec mes mots…' }
+        ]
+      },
+      high: {
+        lead: 'Explore la masturbation sans but d’éjaculation. L’objectif n’est pas de te priver mais de créer d’autres expériences que « je monte → je finis ».',
+        blocks: [
+          { t: 'chips', label: 'Mes 5 prochaines séances solo : marque celle que tu rallonges de cinq minutes (une sur cinq)', multi: true, opts: ['Séance 1', 'Séance 2', 'Séance 3', 'Séance 4', 'Séance 5'] },
+          { t: 'check', label: 'Pendant une séance, j’ai pratiqué', items: ['la masturbation sans but d’éjaculation', 'l’observation de la montée d’excitation', 'l’observation des pauses'] },
+          { t: 'write', label: 'Ce que j’ai observé', ph: 'La montée, les pauses, ce qui change quand je ne vise pas la fin…' }
+        ]
+      }
+    },
+
+    /* 3 — Diversité de la sexualité */
+    {
+      low: {
+        lead: 'Repère tes automatismes pendant la masturbation ou un rapport. À chaque séance, ajoute un micro-changement.',
+        blocks: [
+          { t: 'write', label: 'Mes automatismes', ph: 'Position, rythme, contenu, enchaînement…' },
+          { t: 'chips', label: 'Mon micro-changement de la prochaine séance', multi: true, opts: ['Rythme', 'Angle du corps', 'Yeux ouverts / fermés', 'Lubrifiant', 'Préservatif', 'Musique', 'Ambiance', 'Stimulation différente'], more: 'Autre micro-changement…' },
+          { t: 'write', label: 'Ce que ça a changé', ph: 'Ce que j’ai ressenti…' }
+        ]
+      },
+      mid: {
+        lead: 'Choisis une nouvelle source d’excitation.',
+        blocks: [
+          { t: 'chips', label: 'Ma nouvelle source d’excitation', multi: true, opts: ['Musique', 'Lumière', 'Odeur', 'Porno audio', 'Sextoy', 'Massage', 'Fantasme partagé'], more: 'Autre source…' },
+          { t: 'write', label: 'Comment je l’intègre, et ce que ça donne', ph: 'Quand, comment, ce que j’ai ressenti…' }
+        ]
+      },
+      high: {
+        lead: 'Crée ton propre menu du désir, puis propose à un·e partenaire d’explorer un fantasme commun.',
+        blocks: [
+          { t: 'grid', label: 'Mon menu du désir', cols: [{ type: 'write', ph: 'Mes envies…' }], rows: ['Ce que je veux refaire', 'Ce que je veux explorer', 'Ce que je ne veux pas'] },
+          { t: 'chips', label: 'Je propose d’explorer un fantasme commun…', opts: ['à l’écrit', 'à l’oral', 'en réel'] },
+          { t: 'write', label: 'Le cadre de confiance, défini ensemble', ph: 'Ce qu’on se dit avant, les limites, le mot pour arrêter…' }
+        ]
+      }
+    },
+
+    /* 4 — Relation à ton sexe */
+    {
+      low: {
+        lead: 'Prends un temps sans objectif orgasmique, avec curiosité. Teste différentes textures pour le plaisir de sentir, pas pour « finir efficacement ».',
+        blocks: [
+          { t: 'chips', label: 'Pendant ce temps, je…', multi: true, opts: ['observe', 'touche', 'masse', 'nomme les sensations'] },
+          { t: 'chips', label: 'Textures testées', multi: true, opts: ['Huile', 'Gel', 'Lubrifiant'], more: 'Autre texture…' },
+          { t: 'write', label: 'Mes mots pour nommer les sensations', ph: 'Chaud, fourmillant, doux, intense…' }
+        ]
+      },
+      mid: {
+        lead: 'Fais une cartographie des sensations : où ressens-tu le plus, le moins, avec quelles intensités ? Fais varier rythme et pression.',
+        blocks: [
+          { t: 'grid', cols: [{ type: 'rate', h: 'Intensité (1 = peu, 5 = beaucoup)' }, { type: 'write', h: 'Ce qui change avec le rythme et la pression', ph: 'Ce que je remarque…' }], rows: ['Base de la verge', 'Zone sous le gland', 'Gland', 'Testicules', 'Périnée'] },
+          { t: 'write', label: 'Ma carte en une phrase', ph: 'Ce que j’ai découvert…' }
+        ]
+      },
+      high: {
+        lead: 'Érotise ton corps au-delà du sexe.',
+        blocks: [
+          { t: 'chips', label: 'Je choisis…', multi: true, opts: ['des photos de mon corps qui me plaisent', 'un texte érotique centré sur mes sensations', 'un auto-massage non génital'] },
+          { t: 'write', label: 'L’ambiance qui me plaît', ph: 'Musique, lumière, huile, température…' },
+          { t: 'write', label: 'Mon texte, ou ce que j’ai ressenti', ph: 'Quelques lignes…' }
+        ]
+      }
+    },
+
+    /* 5 — Plaisir au-delà de l’éjaculation */
+    {
+      low: {
+        lead: 'Prévois à l’avance une « suite » après l’éjaculation. L’exercice est de continuer le rapport avec les autres outils disponibles, sans voir l’éjaculation comme le clap de fin.',
+        blocks: [
+          { t: 'chips', label: 'Ma suite prévue', multi: true, opts: SUITE, more: 'Autre chose, avec mes mots…' },
+          { t: 'write', label: 'Ce que j’ai ressenti en continuant', ph: 'Dans mon corps, dans ma tête, entre nous…' }
+        ]
+      },
+      mid: {
+        lead: 'Explore une soirée centrée sur le plaisir de l’autre, sans faire de la pénétration ton objectif.',
+        blocks: [
+          { t: 'chips', label: 'Ma soirée centrée sur le plaisir de l’autre', multi: true, opts: ['Mains', 'Bouche', 'Massage', 'Sextoy'], more: 'Autre chose…' },
+          { t: 'text', html: 'Développe une compétence précise.' },
+          { t: 'chips', label: 'La compétence que je choisis', opts: ['Massage de la vulve', 'Massage du pénis', 'Stimulation manuelle ou orale inspirée d’un sextoy'] },
+          { t: 'write', label: 'Ce que j’ai appris', ph: 'Ce qui a marché, ce que je referais…' }
+        ]
+      },
+      high: {
+        lead: 'Choisis un sens à développer et crée un moment spécifiquement dédié à ce sens.',
+        blocks: [
+          { t: 'chips', label: 'Mon sens', opts: ['Toucher', 'Son', 'Odeur', 'Vue', 'Goût'] },
+          { t: 'write', label: 'Mon moment dédié à ce sens', ph: 'Ce que je prépare, comment je le crée…' },
+          { t: 'write', label: 'Ce que j’ai ressenti', ph: 'Ce qui m’a surpris…' }
+        ]
+      }
+    },
+
+    /* 6 — Expression de ton désir */
+    {
+      low: {
+        lead: 'Remplis le tableau pour trouver tes mots',
+        blocks: [
+          { t: 'grid', cols: [{ type: 'write', ph: 'Mes mots…' }], rows: ['J’ai envie de…', 'Peut-être que j’aimerais…', 'Je ne veux pas / pas comme ça'] }
+        ]
+      },
+      mid: {
+        lead: 'Écris ton scénario idéal de rapport en décrivant les sensations, pas seulement les actes. Puis choisis une phrase simple à partager.',
+        blocks: [
+          { t: 'write', label: 'Mon scénario idéal, avec les sensations', ph: 'Ce que je ressens, pas seulement ce que je fais…' },
+          { t: 'chips', label: 'Ma phrase à partager', opts: ['“J’aimerais qu’on teste…”', '“J’aime quand…”', '“J’ai besoin de ralentir / changer de rythme”'] },
+          { t: 'write', label: 'Ma phrase, complétée', ph: 'Avec mes mots…' }
+        ]
+      },
+      high: {
+        lead: 'Choisis une envie précise que tu aimerais vivre dans les prochains jours : pas un fantasme immense, juste une chose concrète.',
+        blocks: [
+          { t: 'chips', label: 'Des exemples', opts: ['“J’aimerais que tu me touches plus lentement”', '“J’ai envie qu’on prenne dix minutes sans pénétration”', '“J’aimerais te regarder me toucher”'] },
+          { t: 'write', label: 'Mon envie, à la première personne, sans me justifier', ph: 'J’ai envie de…' },
+          { t: 'chips', label: 'Après l’avoir dite, je me sens…', multi: true, opts: ['Libre', 'Gêné', 'Excité', 'Vulnérable'], more: 'Autre chose…' }
+        ]
+      }
+    },
+
+    /* 7 — Alignement avec ton moi sexuel */
+    {
+      low: {
+        lead: 'Identifie les messages sexuels reçus et ce qu’ils t’ont appris à croire.',
+        blocks: [
+          { t: 'chips', label: 'Les messages que j’ai reçus', multi: true, opts: ['Performer', 'Être viril', 'Dominer', 'Savoir quoi faire', 'Ne pas avoir peur', 'Toujours vouloir'], more: 'Autres messages, avec mes mots…' },
+          { t: 'grid', cols: [{ type: 'write', ph: 'Ma réponse…' }], rows: ['Qu’est-ce qu’ils me servent ?', 'Qu’est-ce qu’ils me coûtent ?', 'Qu’aurais-je aimé apprendre à la place ?'] }
+        ]
+      },
+      mid: {
+        lead: 'Identifie les rôles que tu joues, puis réponds aux deux questions.',
+        blocks: [
+          { t: 'chips', label: 'Les rôles que je joue', multi: true, opts: ['Dominant', 'Sauveur', 'Guide', '“Mâle alpha”', 'Prof', '“Enfant”'], more: 'Autres rôles…' },
+          { t: 'grid', cols: [{ type: 'write', ph: 'Ma réponse…' }], rows: ['Est-ce que ce rôle me sert ?', 'Qu’est-ce qu’il m’empêche de montrer ou de ressentir ?'] }
+        ]
+      },
+      high: {
+        lead: 'Nourris cet alignement, pas pour te changer, mais pour rester curieux.',
+        blocks: [
+          { t: 'chips', label: 'Je crée…', multi: true, opts: ['un texte', 'une playlist', 'une scène érotique qui me ressemble'] },
+          { t: 'write', label: 'Ma création', ph: 'Titre, quelques lignes, morceaux…' },
+          { t: 'chips', label: 'J’explore de nouvelles représentations de la sexualité', multi: true, opts: ['Films', 'Livres', 'Podcasts', 'Imaginaires', 'Personnes et orientations différentes'], more: 'Ce que j’ai découvert…' }
+        ]
+      }
+    }
+  ];
+
+  /* ---------------- rendu des exercices ---------------- */
+  var exoState = {};
+
+  function xa(s) { return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+  function xfield(key, ph, label) {
+    return '<textarea class="qt-field" rows="1" data-wk="' + key + '" placeholder="' + xa(ph || '') + '" aria-label="' + xa(label || ph || 'Ma réponse') + '">' + esc(exoState[key] || '') + '</textarea>';
+  }
+  function xchips(key, opts, multi) {
+    var sel = exoState[key] || [];
+    return '<div class="qt-chips" data-g="' + key + '">' + opts.map(function (o, i) {
+      return '<button type="button" class="qt-chip" data-ck="' + key + '" data-i="' + i + '" data-multi="' + (multi ? 1 : 0) + '" aria-pressed="' + (sel.indexOf(i) > -1 ? 'true' : 'false') + '">' + o + '</button>';
+    }).join('') + '</div>';
+  }
+  function xrate(key) {
+    var v = exoState[key], h = '<div class="qt-rate" data-g="' + key + '">';
+    for (var n = 1; n <= 5; n++) h += '<button type="button" class="qt-rate-btn" data-rk="' + key + '" data-v="' + n + '" aria-pressed="' + (v === n ? 'true' : 'false') + '" aria-label="' + n + ' sur 5">' + n + '</button>';
+    return h + '</div>';
+  }
+
+  function blockHTML(b, key) {
+    var h = '';
+    if (b.t === 'text') return '<p class="qt-blk-text">' + b.html + '</p>';
+    h += '<div class="qt-blk">';
+    if (b.label) h += '<div class="qt-blk-label">' + b.label + '</div>';
+    if (b.t === 'write') {
+      h += xfield(key, b.ph, b.label);
+    } else if (b.t === 'chips') {
+      h += xchips(key, b.opts, b.multi);
+      if (b.more) h += xfield(key + 'm', b.more, (b.label || '') + ' : avec mes mots');
+    } else if (b.t === 'check') {
+      var sel = exoState[key] || [];
+      h += '<div class="qt-checks">' + b.items.map(function (it, i) {
+        return '<label class="qt-check"><input type="checkbox" data-xk="' + key + '" data-i="' + i + '"' + (sel.indexOf(i) > -1 ? ' checked' : '') + '><span class="qt-box"></span><span>' + it + '</span></label>';
+      }).join('') + '</div>';
+    } else if (b.t === 'grid') {
+      var many = b.cols.length > 1, hasHead = b.cols.some(function (c) { return c.h; });
+      h += '<div class="qt-gridt-wrap"><table class="qt-gridt"><colgroup><col style="width:' + (many ? 30 : 38) + '%">'
+        + b.cols.map(function () { return '<col style="width:' + (many ? 35 : 62) + '%">'; }).join('') + '</colgroup>';
+      if (hasHead) h += '<thead><tr><th></th>' + b.cols.map(function (c) { return '<th>' + (c.h || '') + '</th>'; }).join('') + '</tr></thead>';
+      h += '<tbody>' + b.rows.map(function (r, ri) {
+        return '<tr><th scope="row">' + r + '</th>' + b.cols.map(function (c, ci) {
+          var k = key + 'r' + ri + 'c' + ci;
+          return '<td' + (c.h ? ' data-h="' + xa(c.h) + '"' : '') + '>' + (c.type === 'rate' ? xrate(k) : xfield(k, c.ph, r)) + '</td>';
+        }).join('') + '</tr>';
+      }).join('') + '</tbody></table></div>';
+    }
+    return h + '</div>';
+  }
+
+  function exoKey(k, band) { return 'x' + k + band; }
+  function exoDone(k, band) { return !!exoState[exoKey(k, band) + 'done']; }
+  function exoHTML(k, band) {
+    var X = EXOS[k][band], base = exoKey(k, band);
+    var h = '<div class="qt-exo"><p>' + X.lead + '</p></div><div class="qt-blocks">';
+    X.blocks.forEach(function (b, i) { h += blockHTML(b, base + 'b' + i); });
+    h += '<label class="qt-check qt-done-lab"><input type="checkbox" data-dk="' + base + 'done"' + (exoDone(k, band) ? ' checked' : '') + '><span class="qt-box"></span><span>J’ai fait cet exercice</span></label>';
+    return h + '</div>';
+  }
+
+  function xsize(ta) {
+    if (!ta.getClientRects().length) return;
+    var saved = ta.value;
+    if (!saved) ta.value = ta.placeholder;
+    ta.style.height = 'auto';
+    ta.style.height = (ta.scrollHeight + 2) + 'px';
+    ta.value = saved;
+  }
+  function xsizeIn(el) { el.querySelectorAll('.qt-field').forEach(xsize); }
+
+  /* un seul jeu d'écouteurs, déléguée sur la page de résultats */
+  function wireExos() {
+    elResults.addEventListener('click', function (e) {
+      var chip = e.target.closest ? e.target.closest('.qt-chip[data-ck]') : null;
+      if (chip) {
+        var key = chip.getAttribute('data-ck'), i = +chip.getAttribute('data-i'), multi = chip.getAttribute('data-multi') === '1';
+        var arr = (exoState[key] || []).slice(), at = arr.indexOf(i);
+        if (multi) { if (at > -1) arr.splice(at, 1); else arr.push(i); }
+        else { arr = at > -1 ? [] : [i]; }
+        exoState[key] = arr;
+        chip.parentNode.querySelectorAll('.qt-chip').forEach(function (c) {
+          c.setAttribute('aria-pressed', arr.indexOf(+c.getAttribute('data-i')) > -1 ? 'true' : 'false');
+        });
+        return;
+      }
+      var rb = e.target.closest ? e.target.closest('.qt-rate-btn') : null;
+      if (rb) {
+        var rk = rb.getAttribute('data-rk'), v = +rb.getAttribute('data-v');
+        exoState[rk] = exoState[rk] === v ? null : v;
+        rb.parentNode.querySelectorAll('.qt-rate-btn').forEach(function (c) {
+          c.setAttribute('aria-pressed', exoState[rk] === +c.getAttribute('data-v') ? 'true' : 'false');
+        });
+      }
+    });
+    elResults.addEventListener('input', function (e) {
+      var t = e.target;
+      if (t && t.getAttribute && t.getAttribute('data-wk')) { exoState[t.getAttribute('data-wk')] = t.value; xsize(t); }
+    });
+    elResults.addEventListener('change', function (e) {
+      var t = e.target;
+      if (!t || !t.getAttribute) return;
+      var xk = t.getAttribute('data-xk'), dk = t.getAttribute('data-dk');
+      if (xk) {
+        var arr = (exoState[xk] || []).slice(), i = +t.getAttribute('data-i'), at = arr.indexOf(i);
+        if (t.checked && at < 0) arr.push(i);
+        if (!t.checked && at > -1) arr.splice(at, 1);
+        exoState[xk] = arr;
+      } else if (dk) {
+        exoState[dk] = t.checked;
+        var acc = t.closest('.qt-accordion');
+        if (acc) acc.classList.toggle('qt-acc-done', t.checked);
+      }
+    });
+  }
+
   /* ---------------- résultats ---------------- */
   function showResults() {
     elQuiz.classList.add('qt-hidden');
@@ -846,10 +1253,10 @@
     html += '<div class="qt-accordion-list">';
     AXES.forEach(function (a, k) {
       var v = state.values[k], b = bandOf(v), c = a[b];
-      html += '<div class="qt-accordion" id="qt-acc-' + k + '">'
+      html += '<div class="qt-accordion' + (exoDone(k, b) ? ' qt-acc-done' : '') + '" id="qt-acc-' + k + '">'
         + '<button type="button" class="qt-accordion-header" aria-expanded="false">'
         +   '<span class="qt-card-num">' + (k + 1) + '</span>'
-        +   '<span class="qt-accordion-title">' + a.name + (prio.indexOf(k) > -1 ? '<em>Prioritaire</em>' : '') + '</span>'
+        +   '<span class="qt-accordion-title">' + a.name + (prio.indexOf(k) > -1 ? '<em>Prioritaire</em>' : '') + '<span class="qt-done-tag">✓ Fait</span></span>'
         +   '<span class="qt-card-score">' + v + ' <small>/ 10</small></span>'
         +   '<span class="qt-accordion-chevron">▾</span>'
         + '</button>'
@@ -857,7 +1264,7 @@
         +   '<span class="qt-label">Ce que cela peut raconter</span>'
         +   '<p class="qt-story">' + c.story + '</p>'
         +   '<span class="qt-label">Exercice à explorer</span>'
-        +   '<div class="qt-exo"><p>' + c.exo + '</p></div>'
+        +   exoHTML(k, b)
         + '</div></div>';
     });
     html += '</div>';
@@ -881,6 +1288,7 @@
         var acc = h.parentNode;
         var open = acc.classList.toggle('qt-accordion-open');
         h.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (open) xsizeIn(acc.querySelector('.qt-accordion-panel'));
       });
     });
     document.querySelectorAll('.qt-prio-chip').forEach(function (c) {
@@ -888,6 +1296,7 @@
         var acc = document.getElementById('qt-acc-' + c.dataset.axis);
         acc.classList.add('qt-accordion-open');
         acc.querySelector('.qt-accordion-header').setAttribute('aria-expanded', 'true');
+        xsizeIn(acc.querySelector('.qt-accordion-panel'));
         acc.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
@@ -908,8 +1317,10 @@
   var rt;
   window.addEventListener('resize', function () {
     clearTimeout(rt);
-    rt = setTimeout(function () { if (!elResults.classList.contains('qt-hidden')) drawRadar(); }, 120);
+    rt = setTimeout(function () { if (!elResults.classList.contains('qt-hidden')) { drawRadar(); document.querySelectorAll('.qt-accordion-open .qt-accordion-panel').forEach(xsizeIn); } }, 120);
   });
+
+  wireExos();
 
   /* ---------------- auto-hauteur (iframe Kajabi) ---------------- */
   (function () {
