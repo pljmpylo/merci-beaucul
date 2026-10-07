@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz - Ma map sexuelle — Programme C.O.M.E.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    --blue: #2F6FE4;
+    --blue-soft: rgba(47,111,228,0.18);
+    --blue-line: rgba(47,111,228,0.4);
+    --blue-faint: rgba(47,111,228,0.06);
+    --yellow: #F7FF59;
+    --yellow-soft: rgba(247,255,89,0.35);
+    --ink: #1c1c1c;
+    --muted: #5b6273;
+    font-family: 'Raleway', Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a, button { cursor: pointer; font-family: inherit; }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+  .qt-wrap { min-height: 100vh; }
+  .qt-shell { max-width: 640px; margin: 0 auto; padding: 56px 24px 70px; }
+  .qt-hidden { display: none !important; }
+
+  .qt-eyebrow {
+    display: inline-block;
+    color: var(--blue);
+    border: 1px solid var(--blue-soft);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  /* ---------- CTA façon Mimétique ---------- */
+  .qt-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    overflow: hidden;
+    background: var(--yellow);
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    padding: 0.85rem 2.2rem;
+    border: 1.5px solid var(--blue);
+    border-radius: 10rem;
+    transition: color 450ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qt-btn::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    top: 102%;
+    background: var(--blue);
+    transition: top 450ms ease;
+    z-index: 0;
+  }
+  .qt-btn span { position: relative; z-index: 1; }
+  .qt-btn .qt-arrow { display: inline-block; transition: transform 450ms ease; }
+  .qt-btn:hover { color: var(--yellow); }
+  .qt-btn:hover::before { top: 0; }
+  .qt-btn:hover .qt-arrow { transform: translateX(5px); }
+  .qt-btn:disabled { opacity: 0.4; pointer-events: none; }
+  .qt-btn-outline { background: #fff; color: var(--blue); }
+  .qt-btn-outline::before { background: var(--blue); }
+  .qt-btn-outline:hover { color: var(--yellow); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qt-btn, .qt-btn::before, .qt-btn .qt-arrow, .qt-progress-bar { transition: none; }
+    .qt-screen { animation: none; }
+  }
+
+  .qt-screen { animation: qtFadeUp 0.45s ease both; }
+  @keyframes qtFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .qt-shell h1 {
+    font-size: clamp(30px, 6vw, 44px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin-bottom: 20px;
+  }
+  .qt-shell h1 em {
+    font-style: normal;
+    color: var(--blue);
+    background: linear-gradient(transparent 62%, var(--yellow) 62%);
+    padding: 0 4px;
+  }
+  .qt-intro-text { font-size: 16px; color: var(--muted); max-width: 480px; margin-bottom: 12px; }
+  #qt-intro .qt-btn { margin-top: 24px; }
+
+  /* ---------- quiz ---------- */
+  .qt-progress-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    text-align: right;
+  }
+  .qt-progress-track { height: 4px; background: var(--blue-soft); border-radius: 4px; overflow: hidden; margin-bottom: 36px; }
+  .qt-progress-bar { height: 100%; background: var(--blue); border-radius: 4px; transition: width 350ms ease; width: 0%; }
+
+  .qt-axis-name {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 5px 13px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+  }
+  .qt-q-text {
+    font-weight: 700;
+    font-size: clamp(20px, 3.2vw, 25px);
+    line-height: 1.3;
+    color: var(--blue);
+    margin-bottom: 44px;
+  }
+
+  /* ---------- curseur ---------- */
+  .qt-slider-box { padding: 0 2px; }
+  .qt-slider {
+    --p: 0.444;
+    position: relative;
+    height: 74px;
+    margin-top: 6px;
+  }
+  .qt-track {
+    position: absolute; left: 0; right: 0; top: 34px;
+    height: 8px; border-radius: 8px;
+    background: var(--blue-soft);
+  }
+  .qt-track-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: calc(15px + (100% - 30px) * var(--p));
+    background: var(--blue);
+    border-radius: 8px;
+  }
+  .qt-slider.qt-untouched .qt-track-fill { background: var(--blue-line); }
+  .qt-range {
+    -webkit-appearance: none; appearance: none;
+    position: absolute; left: 0; right: 0; top: 20px;
+    width: 100%; height: 36px;
+    background: transparent;
+    margin: 0;
+    touch-action: pan-y;
+  }
+  .qt-range::-webkit-slider-runnable-track { -webkit-appearance: none; height: 36px; background: transparent; border: none; }
+  .qt-range::-moz-range-track { height: 36px; background: transparent; border: none; }
+  .qt-range::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--yellow);
+    border: 2.5px solid var(--blue);
+    box-shadow: 0 0 0 5px var(--blue-faint), 0 3px 10px rgba(47,111,228,0.3);
+    margin-top: 3px;
+    cursor: grab;
+  }
+  .qt-range::-moz-range-thumb {
+    width: 25px; height: 25px; border-radius: 50%;
+    background: var(--yellow);
+    border: 2.5px solid var(--blue);
+    box-shadow: 0 0 0 5px var(--blue-faint), 0 3px 10px rgba(47,111,228,0.3);
+    cursor: grab;
+  }
+  .qt-slider.qt-untouched .qt-range::-webkit-slider-thumb { background: #fff; border-style: dashed; }
+  .qt-slider.qt-untouched .qt-range::-moz-range-thumb { background: #fff; border-style: dashed; }
+  .qt-range:focus-visible { outline: none; }
+  .qt-range:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--blue); outline-offset: 3px; }
+  .qt-range:focus-visible::-moz-range-thumb { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+  .qt-bubble {
+    position: absolute; top: -4px;
+    left: calc(15px + (100% - 30px) * var(--p));
+    transform: translateX(-50%);
+    min-width: 34px; height: 30px; padding: 0 9px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--blue); color: #fff;
+    font-weight: 800; font-size: 14px;
+    border-radius: 9px;
+    pointer-events: none;
+  }
+  .qt-bubble::after {
+    content: ''; position: absolute; left: 50%; bottom: -5px; margin-left: -5px;
+    border: 5px solid transparent; border-top-color: var(--blue); border-bottom: 0;
+  }
+  .qt-slider.qt-untouched .qt-bubble { background: #fff; color: var(--blue); border: 1.5px dashed var(--blue); font-weight: 700; font-size: 12px; white-space: nowrap; }
+  .qt-slider.qt-untouched .qt-bubble::after { display: none; }
+  .qt-ticks { position: relative; height: 18px; margin-top: -6px; }
+  .qt-tick {
+    position: absolute; top: 0;
+    left: calc(15px + (100% - 30px) * var(--t));
+    transform: translateX(-50%);
+    font-size: 11.5px; font-weight: 600; color: var(--muted);
+  }
+  .qt-tick.qt-tick-on { color: var(--blue); font-weight: 800; }
+
+  .qt-extremes { display: flex; justify-content: space-between; gap: 22px; margin-top: 20px; }
+  .qt-extreme {
+    flex: 1 1 0; min-width: 0;
+    font-size: 13.5px; line-height: 1.45; color: var(--muted);
+    border-top: 2px solid var(--blue-soft);
+    padding-top: 10px;
+    transition: color 180ms ease, border-color 180ms ease;
+  }
+  .qt-extreme strong { display: block; font-size: 10.5px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--blue); margin-bottom: 4px; }
+  .qt-extreme-right { text-align: right; }
+  .qt-extreme, .qt-q-text, .qt-result-desc { text-wrap: balance; }
+  .qt-extreme.qt-extreme-on { color: var(--ink); border-top-color: var(--blue); }
+
+  .qt-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; gap: 12px; flex-wrap: wrap; }
+  .qt-nav-left { display: flex; align-items: center; gap: 16px; }
+  .qt-btn-text { background: none; border: none; color: var(--muted); font-size: 13.5px; font-family: inherit; padding: 8px 4px; }
+  .qt-btn-text:hover { color: var(--blue); }
+  .qt-hint { font-size: 12.5px; color: var(--muted); min-height: 20px; margin-top: 14px; text-align: center; }
+
+  /* ---------- résultats ---------- */
+  .qt-result-kicker { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .qt-result-title { font-weight: 800; font-size: clamp(26px, 4.6vw, 34px); color: var(--blue); line-height: 1.15; margin-bottom: 16px; }
+  .qt-result-desc { font-size: 15.5px; color: var(--muted); margin-bottom: 12px; }
+  .qt-result-desc strong { color: var(--ink); }
+
+  .qt-radar-card {
+    background: #fff;
+    border: 1.5px solid var(--blue);
+    border-radius: 22px;
+    padding: 14px 8px 12px;
+    margin: 26px 0 8px;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  .qt-radar { width: 100%; }
+  .qt-radar svg { display: block; margin: 0 auto; max-width: 100%; height: auto; overflow: visible; }
+  .qt-radar-note { font-size: 12px; color: var(--muted); text-align: center; margin: 4px 14px 4px; }
+
+  .qt-divider { border: none; border-top: 1.5px solid var(--blue-soft); margin: 32px 0; }
+  .qt-section-title { font-weight: 800; font-size: 18px; color: var(--ink); margin-bottom: 6px; }
+  .qt-section-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+
+  .qt-card {
+    background: #fff;
+    border: 1.5px solid var(--blue-soft);
+    border-radius: 20px;
+    padding: 20px 20px 22px;
+    margin-bottom: 16px;
+    break-inside: avoid; page-break-inside: avoid;
+  }
+  .qt-card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .qt-card-num {
+    flex: 0 0 30px; width: 30px; height: 30px; border-radius: 50%;
+    background: var(--blue); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 13px;
+  }
+  .qt-card-name { flex: 1; min-width: 0; font-weight: 800; font-size: 15.5px; color: var(--blue); line-height: 1.3; }
+  .qt-card-score {
+    flex: 0 0 auto;
+    background: var(--yellow); color: var(--blue);
+    border: 1.5px solid var(--blue);
+    border-radius: 999px;
+    padding: 3px 12px;
+    font-size: 13px; font-weight: 800; white-space: nowrap;
+  }
+  .qt-card-score small { font-size: 10.5px; font-weight: 600; opacity: 0.8; }
+  .qt-read {
+    background: var(--blue-faint);
+    border-radius: 12px;
+    padding: 11px 14px;
+    margin-bottom: 16px;
+    font-size: 13px; line-height: 1.5; color: var(--muted);
+  }
+  .qt-read b { color: var(--blue); font-weight: 800; }
+  .qt-read .qt-read-go { display: block; margin-top: 3px; }
+  .qt-label {
+    display: block;
+    font-size: 11px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 6px;
+  }
+  .qt-story { font-size: 14.5px; color: var(--ink); margin-bottom: 16px; text-wrap: pretty; }
+  .qt-exo {
+    background: var(--yellow-soft);
+    border: 1px solid rgba(47,111,228,0.25);
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+  .qt-exo p { font-size: 14.5px; color: var(--ink); text-wrap: pretty; }
+
+
+  /* ---------- tableau de lecture ---------- */
+  .qt-table-wrap {
+    border: 1.5px solid var(--blue);
+    border-radius: 18px;
+    overflow: hidden;
+    margin: 26px 0 0;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  .qt-table { table-layout: fixed; border-collapse: collapse; width: 100%; background: #fff; }
+  .qt-table th {
+    background: var(--blue-faint); color: var(--blue);
+    font-size: 11.5px; font-weight: 700; text-align: left; vertical-align: top;
+    padding: 10px 10px; border-bottom: 1.5px solid var(--blue); border-right: 1px solid var(--blue-line);
+  }
+  .qt-table td {
+    padding: 12px 10px; font-size: 13px; line-height: 1.5; vertical-align: top;
+    border-bottom: 1px solid var(--blue-line); border-right: 1px solid var(--blue-line);
+    -webkit-hyphens: auto; hyphens: auto; text-wrap: pretty;
+  }
+  .qt-table th:last-child, .qt-table td:last-child { border-right: none; }
+  .qt-table tbody tr:last-child td { border-bottom: none; }
+  .qt-table td.qt-score-cell { font-weight: 800; color: var(--blue); white-space: nowrap; }
+
+  /* ---------- encadré priorités ---------- */
+  .qt-prio {
+    background: var(--yellow-soft);
+    border: 1.5px solid var(--blue);
+    border-radius: 18px;
+    padding: 18px 20px 20px;
+    margin-top: 22px;
+  }
+  .qt-prio-title { font-weight: 800; font-size: 11.5px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; }
+  .qt-prio-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .qt-prio-chip {
+    background: var(--yellow); color: var(--blue);
+    border: 1.5px solid var(--blue); border-radius: 999px;
+    padding: 7px 15px; font-size: 13px; font-weight: 700; line-height: 1.3;
+    transition: background 150ms ease, color 150ms ease;
+  }
+  .qt-prio-chip:hover { background: var(--blue); color: var(--yellow); }
+  .qt-prio-chip small { font-weight: 600; opacity: 0.75; margin-left: 4px; }
+  .qt-prio-note { font-size: 13px; color: var(--muted); margin-top: 12px; text-wrap: pretty; }
+
+  /* ---------- exercices en toggles ---------- */
+  .qt-accordion-list { display: flex; flex-direction: column; gap: 12px; }
+  .qt-accordion { border: 1.5px solid var(--blue-soft); border-radius: 16px; overflow: hidden; background: #fff; transition: border-color 150ms ease; }
+  .qt-accordion.qt-accordion-open { border-color: var(--blue); }
+  .qt-accordion-header {
+    display: flex; align-items: center; gap: 12px; width: 100%;
+    background: #fff; border: none; padding: 14px 16px; text-align: left;
+    font-family: inherit; font-size: 14.5px; font-weight: 700; color: var(--ink);
+  }
+  .qt-accordion-header:hover { background: var(--blue-faint); }
+  .qt-accordion-header .qt-card-num { flex: 0 0 28px; width: 28px; height: 28px; font-size: 12.5px; }
+  .qt-accordion-title { flex: 1; min-width: 0; line-height: 1.3; }
+  .qt-accordion-title em { display: block; font-style: normal; font-size: 10.5px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--blue); margin-top: 2px; }
+  .qt-accordion-chevron { color: var(--blue); flex-shrink: 0; font-size: 13px; transition: transform 200ms ease; }
+  .qt-accordion.qt-accordion-open .qt-accordion-chevron { transform: rotate(180deg); }
+  .qt-accordion-panel { display: none; padding: 18px 16px 20px; border-top: 1px solid var(--blue-soft); }
+  .qt-accordion.qt-accordion-open .qt-accordion-panel { display: block; }
+
+  .qt-closing { font-size: 15px; color: var(--ink); margin-top: 26px; }
+  .qt-closing strong { color: var(--blue); }
+
+  .qt-print-box {
+    background: #fff;
+    border: 1.5px solid var(--blue);
+    border-radius: 22px;
+    padding: 26px 24px;
+    margin-top: 34px;
+    text-align: center;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  .qt-print-title { font-size: 11px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+  .qt-print-text { font-size: 14px; color: var(--muted); max-width: 380px; margin: 0 auto 16px; }
+  .qt-actions { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 30px; }
+
+  @media (max-width: 520px) {
+    .qt-shell { padding: 40px 18px 56px; }
+    .qt-card { padding: 18px 16px 20px; }
+    .qt-extreme { font-size: 12.5px; }
+    .qt-card-head { flex-wrap: wrap; }
+    .qt-card-score { margin-left: 42px; }
+    .qt-table th { font-size: 10.5px; padding: 8px 6px; }
+    .qt-table td { font-size: 11.5px; padding: 9px 6px; }
+    .qt-accordion-header { padding: 13px 13px; font-size: 14px; }
+    .qt-accordion-panel { padding: 16px 13px 18px; }
+  }
+
+  @media print {
+    body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    #qt-intro, #qt-quiz, .qt-print-box, .qt-actions { display: none !important; }
+    #qt-results { display: block !important; }
+    .qt-screen { animation: none; }
+    .qt-shell { padding-top: 16px; }
+    .qt-radar-card { break-inside: avoid; page-break-inside: avoid; }
+    .qt-accordion { break-inside: avoid; page-break-inside: avoid; border-color: var(--blue-soft); }
+    .qt-accordion-panel { display: block !important; }
+    .qt-accordion-chevron { display: none !important; }
+    .qt-prio-chip { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+<style id="qt-noscroll">
+  /* Pas de barre de défilement interne : dans l'iframe Kajabi, c'est la page parente qui défile */
+  html.qt-embedded, html.qt-embedded body { overflow: hidden !important; }
+  html.qt-embedded .qt-wrap { min-height: 0 !important; }
+  textarea { overflow: hidden !important; }
+</style>
+<script>try{if(window.self!==window.top)document.documentElement.classList.add('qt-embedded');}catch(e){document.documentElement.classList.add('qt-embedded');}</script>
+</head>
+<body>
+<div class="qt-wrap">
+  <div class="qt-shell">
+
+    <!-- ============ INTRO ============ -->
+    <div id="qt-intro" class="qt-screen">
+      <span class="qt-eyebrow">Semaine 2 — Redéfinir</span>
+      <h1>Ma map <em>sexuelle</em></h1>
+      <p class="qt-intro-text">Déplace les curseurs selon ce qui te ressemble le plus pour établir ta map sexuelle et découvrir des exercices qui te correspondent.</p>
+      <p class="qt-intro-text">7 questions, pas de bonne ou de mauvaise réponse : place le curseur de 1 à 10, là où tu te reconnais aujourd’hui.</p>
+      <button id="qt-start-btn" class="qt-btn" type="button"><span>Commencer</span><span class="qt-arrow">→</span></button>
+    </div>
+
+    <!-- ============ QUIZ ============ -->
+    <div id="qt-quiz" class="qt-screen qt-hidden">
+      <div class="qt-progress-label" id="qt-progress-label"></div>
+      <div class="qt-progress-track"><div class="qt-progress-bar" id="qt-progress-bar"></div></div>
+      <div id="qt-q-container"></div>
+    </div>
+
+    <!-- ============ RESULTS ============ -->
+    <div id="qt-results" class="qt-screen qt-hidden">
+      <div id="qt-results-container"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+
+  /* ------------------------------------------------------------------
+     Contenu : 7 axes. Pour chaque axe, un texte par zone de score
+     (low = 1–3, mid = 4–7, high = 8–10). Seule la zone correspondant
+     au placement du curseur est affichée.
+     ------------------------------------------------------------------ */
+  var AXES = [
+    {
+      name: 'Place de la pénétration',
+      lines: ['Place de la', 'pénétration'],
+      short: 'Pénétration',
+      q: 'Dans ta définition d’un rapport sexuel réussi, la pénétration (vagin, anus, bouche) compte :',
+      left: 'Très peu / c’est juste une possibilité parmi d’autres',
+      right: 'Énormément / c’est quasiment ce qui définit un rapport',
+      low: {
+        story: 'La pénétration c’est un des plats du buffet à volonté du sexe, tu sais déjà construire du plaisir sans elle. C’est une force si cela correspond à ton envie, pas une obligation de “réintroduire” la pénétration.',
+        exo: 'Écrire ton scénario idéal de rapport, éjaculation incluse ou non, et regarder si la pénétration y a une place choisie. Si tu en as envie : explorer une pénétration lente, sans objectif de performance, en observant les sensations et les positions qui créent le moins de tension.'
+      },
+      mid: {
+        story: 'La pénétration compte, mais elle n’est pas forcément tout le rapport. Tu peux consolider cette souplesse.',
+        exo: 'Tester un rapport où la pénétration arrive plus tard, change de rythme, ou n’est qu’une séquence parmi d’autres. Après l’éjaculation, choisir consciemment une autre forme de plaisir plutôt que déclarer automatiquement la fin du moment.'
+      },
+      high: {
+        story: 'La pénétration porte probablement beaucoup de poids : validation, performance, idée d’un “vrai” rapport, peur qu’elle s’arrête trop vite.',
+        exo: 'Écrire de manière très détaillée “tout ce qu’un rapport peut être en dehors de la pénétration” : les actes, les sensations, les rôles de chacun·e…'
+      }
+    },
+    {
+      name: 'Importance de l’éjaculation',
+      lines: ['Importance de', 'l’éjaculation'],
+      short: 'Éjaculation',
+      q: 'Pour toi, le fait d’éjaculer au “bon” moment ou comme prévu dans un rapport compte :',
+      left: 'Peu / c’est pas central pour dire si c’est réussi',
+      right: 'Beaucoup / ça définit presque à lui seul si c’est réussi ou non',
+      low: {
+        story: 'Tu arrives déjà à dissocier, au moins en partie, plaisir, orgasme et éjaculation.',
+        exo: 'Écrire ce qui fait un bon moment sexuel pour toi quand l’éjaculation n’est pas le centre : sensation, connexion, rire, désir, curiosité, plaisir de l’autre, lenteur. Puis tester un moment solo ou à deux sans objectif d’éjaculation.'
+      },
+      mid: {
+        story: 'Tu sais que l’éjaculation n’est pas tout, mais elle garde un poids émotionnel ou symbolique.',
+        exo: 'Observer ce que tu ressens après une éjaculation rapide : corps, pensées, émotions. Puis compléter : “Après, j’aimerais pouvoir ressentir…” et prévoir une suite au moment sexuel qui ne dépend pas de ton éjaculation.'
+      },
+      high: {
+        story: 'L’éjaculation est probablement vécue comme une ligne d’arrivée ou un verdict. Cela peut renforcer la pression et rendre chaque rapport binaire : “réussi” ou “raté”.',
+        exo: 'Explorer la masturbation sans but d’éjaculation ; une fois sur cinq, rallonger une séance solo de cinq minutes ; pratiquer l’observation de la montée d’excitation et des pauses. L’objectif n’est pas de se priver mais de créer d’autres expériences que “je monte → je finis”.'
+      }
+    },
+    {
+      name: 'Diversité de la sexualité',
+      lines: ['Diversité de', 'la sexualité'],
+      short: 'Diversité',
+      q: 'Quand tu penses à rapport sexuel, dans ta tête c’est plutôt :',
+      left: 'Quasi uniquement préli-péné-éjac',
+      right: 'Un ensemble large : touchers, jeux, fantasmes, érotisme, spiritualité…',
+      low: {
+        story: 'Ta sexualité peut être très routinière, centrée sur une stimulation, une position, un type de porno ou un enchaînement précis.',
+        exo: 'Repérer tes automatismes pendant la masturbation ou un rapport. À chaque séance, ajouter un micro-changement : rythme, angle du corps, yeux ouverts/fermés, lubrifiant, préservatif, musique, ambiance, stimulation différente.'
+      },
+      mid: {
+        story: 'T’as déjà quelques variantes, mais elles sont peut-être pas encore devenues des options naturelles ou assumées.',
+        exo: 'Choisir une nouvelle source d’excitation : musique, lumière, odeur, porno audio, sextoy, massage, fantasme partagé.'
+      },
+      high: {
+        story: 'Tu as une sexualité déjà riche et variée. Le point d’attention : rester connecté à ce qui t’excite réellement plutôt que multiplier les expériences pour “bien faire”.',
+        exo: 'Créer ton propre menu du désir : ce que tu veux refaire, ce que tu veux explorer, ce que tu ne veux pas. Proposer à un·e partenaire d’explorer un fantasme commun à l’écrit, à l’oral ou en réel, dans un cadre de confiance défini ensemble.'
+      }
+    },
+    {
+      name: 'Relation à ton sexe',
+      lines: ['Relation', 'à ton sexe'],
+      short: 'Ton sexe',
+      q: 'Aujourd’hui, ta relation à ton sexe, c’est plutôt :',
+      left: 'Un outil fonctionnel / un truc entre mes jambes dont je m’occupe vite fait',
+      right: 'Une partie de moi que j’honore, que j’explore, avec laquelle j’ai une vraie relation',
+      low: {
+        story: 'Ton sexe peut être surtout associé à l’efficacité, à la comparaison, à l’érection ou à l’éjaculation.',
+        exo: 'Prendre un temps sans objectif orgasmique : observer, toucher, masser et nommer les sensations de ton sexe avec curiosité. Tester différentes textures — huiles, gels, lubrifiants — pour le plaisir de sentir, pas pour “finir efficacement”.'
+      },
+      mid: {
+        story: 'Tu peux avoir du plaisir avec ton sexe, tout en gardant des zones de gêne, de jugement ou de déconnexion.',
+        exo: 'Faire une cartographie des sensations : où ressens-tu le plus, le moins, avec quelles intensités ? Explorer la base de la verge, la zone sous le gland, le gland, les testicules, le périnée, en faisant varier rythme et pression.'
+      },
+      high: {
+        story: 'Tu as déjà une relation plutôt vivante et positive à ton sexe.',
+        exo: 'Érotiser ton corps au-delà du sexe : prendre des photos de ton corps qui te plaisent, écrire un texte érotique centré sur tes sensations, ou te faire un auto-massage non génital avec une ambiance qui te plaît.'
+      }
+    },
+    {
+      name: 'Plaisir au-delà de l’éjaculation',
+      lines: ['Plaisir au-delà', 'de l’éjaculation'],
+      short: 'Après l’éjac.',
+      q: 'Après une éjaculation rapide, la possibilité de continuer à vivre du plaisir autrement (autres pratiques, autres zones, autre rythme) te paraît :',
+      left: 'Très limitée / j’ai l’impression que c’est foutu',
+      right: 'Très possible / le rapport peut rester nourrissant autrement',
+      low: {
+        story: 'Ton éjaculation peut fonctionner comme un point final automatique, même lorsque toi ou l’autre avez encore envie de contact ou de plaisir.',
+        exo: 'Prévoir à l’avance une “suite” après l’éjaculation : caresses, sexe oral, doigts, sextoy, massage, câlins, parler de ce qui donne envie… L’exercice est de continuer le rapport avec les autres outils disponibles, sans voir l’éjaculation comme le clap de fin.'
+      },
+      mid: {
+        story: 'Tu peux parfois rester présent après l’éjaculation, mais c’est peut-être irrégulier ou tu manques de repères sur quoi proposer.',
+        exo: 'Explorer une soirée centrée sur le plaisir de l’autre (mains, bouche, massage, sextoy…) sans faire de la pénétration ton objectif. Développer une compétence précise : massage de la vulve ou du pénis, stimulation manuelle ou orale inspirée d’un sextoy…'
+      },
+      high: {
+        story: 'Tu sais déjà que le sexe ne s’arrête pas automatiquement avec ton éjaculation.',
+        exo: 'Choisir un sens à développer (toucher, son, odeur, vue, goût) et créer un moment spécifiquement dédié à ce sens.'
+      }
+    },
+    {
+      name: 'Expression de ton désir',
+      lines: ['Expression', 'de ton désir'],
+      short: 'Désir',
+      q: 'En général, tu exprimes ton désir :',
+      left: 'Surtout en réponse au désir de l’autre / quand je suis sûr que c’est ok',
+      right: 'Depuis mon propre élan, même si l’autre ne l’a pas encore exprimé',
+      low: {
+        story: 'Tu peux t’adapter, performer ou te taire pour éviter de décevoir, sans vraiment savoir ce que tu veux réellement.',
+        exo: 'Écrire trois listes : “j’ai envie de…”, “peut-être que j’aimerais…”, “je ne veux pas / pas comme ça”. Commencer seul : le but est de trouver tes mots avant de les partager.'
+      },
+      mid: {
+        story: 'Tu connais une partie de tes envies, mais les exprimer à voix haute ou les demander dans le feu du moment reste parfois difficile.',
+        exo: 'Écrire ton scénario idéal de rapport, en décrivant les sensations et pas seulement les actes. Puis choisir une phrase simple à partager : “J’aimerais qu’on teste…”, “J’aime quand…”, “J’ai besoin de ralentir / changer de rythme”.'
+      },
+      high: {
+        story: 'Tu peux exprimer ton désir avec une certaine liberté.',
+        exo: 'Choisis une envie précise que tu aimerais vivre dans les prochains jours, pas un fantasme immense, juste une chose concrète (“j’aimerais que tu me touches plus lentement”, “J’ai envie qu’on prenne dix minutes sans pénétration”, “J’aimerais te regarder me toucher”…). Formule-la à la première personne, sans te justifier, puis observe ce que ça te fait de l’avoir dit : est-ce que tu te sens libre, gêné, excité, vulnérable ?'
+      }
+    },
+    {
+      name: 'Alignement avec ton moi sexuel',
+      lines: ['Alignement avec', 'ton moi sexuel'],
+      short: 'Alignement',
+      q: 'Sur une échelle de 1 à 10, aujourd’hui tu te sens :',
+      left: 'Très loin de la sexualité que tu aimerais vraiment vivre',
+      right: 'Très proche / déjà en train de vivre ton “moi sexuel” désiré',
+      low: {
+        story: 'Ta sexualité peut être très guidée par les injonctions : performer, être viril, dominer, savoir quoi faire, ne pas avoir peur, toujours vouloir.',
+        exo: 'Identifier les messages sexuels reçus et ce qu’ils t’ont appris à croire. Puis noter : “Qu’est-ce qu’ils me servent ? Qu’est-ce qu’ils me coûtent ? Qu’aurais-je aimé apprendre à la place ?”'
+      },
+      mid: {
+        story: 'Tu as commencé à distinguer tes envies des rôles que tu endosses, mais certains réflexes sont encore puissants.',
+        exo: 'Identifier les rôles que tu joues (dominant, sauveur, guide, “mâle alpha”, prof, “enfant”…) puis répondre : “Est-ce que ce rôle me sert ? Qu’est-ce qu’il m’empêche de montrer ou de ressentir ?”'
+      },
+      high: {
+        story: 'Tu te sens globalement aligné avec ton identité sexuelle et tes choix.',
+        exo: 'Nourrir cet alignement : créer un texte, une playlist ou une scène érotique qui te ressemble ; explorer de nouvelles représentations de la sexualité (films, livres, podcasts, imaginaires, personnes et orientations différentes…) pas pour te changer, mais pour rester curieux.'
+      }
+    }
+  ];
+
+  /* Lecture générale du radar, par zone de score */
+  var BANDS = {
+    low:  { range: '1–3',  read: 'Un axe peu présent, peu confortable, peu exploré ou très chargé.', go: 'Revenir à la curiosité, à l’observation et à une première expérience simple.' },
+    mid:  { range: '4–7',  read: 'Un axe déjà présent, mais perfectible ou irrégulier.', go: 'Tester une variation, mettre des mots sur ce qui marche, élargir.' },
+    high: { range: '8–10', read: 'Un axe très présent ou très central.', go: 'Conserver ce qui nourrit, tout en vérifiant que cela reste un choix et non une obligation.' }
+  };
+
+  function bandOf(v) { return v <= 3 ? 'low' : (v <= 7 ? 'mid' : 'high'); }
+
+  /* ---------------- état ---------------- */
+  var N = AXES.length;
+  var state = { index: 0, values: [], touched: [] };
+  function resetState() {
+    state.index = 0;
+    state.values = AXES.map(function () { return 5; });
+    state.touched = AXES.map(function () { return false; });
+  }
+  resetState();
+
+  var elIntro = document.getElementById('qt-intro');
+  var elQuiz = document.getElementById('qt-quiz');
+  var elResults = document.getElementById('qt-results');
+
+  document.getElementById('qt-start-btn').addEventListener('click', function () {
+    elIntro.classList.add('qt-hidden');
+    elQuiz.classList.remove('qt-hidden');
+    renderQuestion();
+  });
+
+  /* ---------------- question + curseur ---------------- */
+  function pct(v) { return (v - 1) / 9; }
+
+  function renderQuestion() {
+    var i = state.index, a = AXES[i];
+    var v = state.values[i], touched = state.touched[i];
+    document.getElementById('qt-progress-label').textContent = 'Question ' + (i + 1) + ' / ' + N;
+    document.getElementById('qt-progress-bar').style.width = (((i + 1) / N) * 100) + '%';
+
+    var ticks = '';
+    for (var t = 1; t <= 10; t++) {
+      ticks += '<span class="qt-tick" data-v="' + t + '" style="--t:' + pct(t).toFixed(4) + '">' + t + '</span>';
+    }
+
+    var html = '';
+    html += '<span class="qt-axis-name">' + (i + 1) + ' · ' + a.name + '</span>';
+    html += '<p class="qt-q-text">' + a.q + '</p>';
+    html += '<div class="qt-slider-box">'
+      + '<div class="qt-slider' + (touched ? '' : ' qt-untouched') + '" id="qt-slider" style="--p:' + pct(v).toFixed(4) + '">'
+      +   '<div class="qt-bubble" id="qt-bubble">' + (touched ? v : 'Déplace-moi') + '</div>'
+      +   '<div class="qt-track"><div class="qt-track-fill"></div></div>'
+      +   '<input type="range" class="qt-range" id="qt-range" min="1" max="10" step="1" value="' + v + '" aria-label="' + a.name + ', de 1 à 10">'
+      + '</div>'
+      + '<div class="qt-ticks" id="qt-ticks">' + ticks + '</div>'
+      + '<div class="qt-extremes">'
+      +   '<div class="qt-extreme" id="qt-ext-l"><strong>1 · À gauche</strong>' + a.left + '</div>'
+      +   '<div class="qt-extreme qt-extreme-right" id="qt-ext-r"><strong>10 · À droite</strong>' + a.right + '</div>'
+      + '</div>'
+      + '</div>';
+    html += '<div class="qt-hint" id="qt-hint"></div>';
+    html += '<div class="qt-nav">'
+      + '<div class="qt-nav-left">'
+      +   (i > 0 ? '<button type="button" class="qt-btn-text" id="qt-prev">← Précédent</button>' : '<button type="button" class="qt-btn-text" id="qt-intro-back">← Retour</button>')
+      + '</div>'
+      + '<button type="button" class="qt-btn" id="qt-next"' + (touched ? '' : ' disabled') + '><span>' + (i === N - 1 ? 'Voir ma map' : 'Suivant') + '</span><span class="qt-arrow">→</span></button>'
+      + '</div>';
+    document.getElementById('qt-q-container').innerHTML = html;
+
+    var range = document.getElementById('qt-range');
+    var slider = document.getElementById('qt-slider');
+    var bubble = document.getElementById('qt-bubble');
+    var next = document.getElementById('qt-next');
+
+    function paint() {
+      var val = parseInt(range.value, 10);
+      slider.style.setProperty('--p', pct(val).toFixed(4));
+      document.querySelectorAll('.qt-tick').forEach(function (el) {
+        el.classList.toggle('qt-tick-on', state.touched[i] && parseInt(el.dataset.v, 10) === val);
+      });
+      document.getElementById('qt-ext-l').classList.toggle('qt-extreme-on', state.touched[i] && val <= 4);
+      document.getElementById('qt-ext-r').classList.toggle('qt-extreme-on', state.touched[i] && val >= 7);
+    }
+    function touch() {
+      if (!state.touched[i]) {
+        state.touched[i] = true;
+        slider.classList.remove('qt-untouched');
+        next.disabled = false;
+        document.getElementById('qt-hint').textContent = '';
+      }
+      bubble.textContent = range.value;
+    }
+    range.addEventListener('input', function () {
+      state.values[i] = parseInt(range.value, 10);
+      touch(); paint();
+    });
+    range.addEventListener('pointerdown', function () { touch(); paint(); });
+    range.addEventListener('keydown', function (e) {
+      if (e.key.indexOf('Arrow') === 0 || e.key === 'Home' || e.key === 'End') { touch(); paint(); }
+    });
+    paint();
+
+    next.addEventListener('click', function () {
+      if (!state.touched[i]) return;
+      if (i < N - 1) { state.index++; renderQuestion(); } else { showResults(); }
+    });
+    var prev = document.getElementById('qt-prev');
+    if (prev) prev.addEventListener('click', function () { state.index--; renderQuestion(); });
+    var back = document.getElementById('qt-intro-back');
+    if (back) back.addEventListener('click', function () { elQuiz.classList.add('qt-hidden'); elIntro.classList.remove('qt-hidden'); });
+  }
+
+  /* ---------------- radar ---------------- */
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+  function radarSVG(W) {
+    var wide = W >= 470;
+    var R = wide ? Math.min(W * 0.27, 165) : W * 0.27;
+    var cx = W / 2;
+    var topPad = wide ? 58 : 34;
+    var cy = R + topPad;
+    var H = cy + R * 0.9 + (wide ? 62 : 38);
+    var fs = wide ? 12.5 : 10.5;
+    var lh = fs * 1.25;
+
+    // 1 = petit disque central (pas écrasé au centre), 10 = bord extérieur
+    function f(v) { return 0.16 + 0.84 * (v - 1) / 9; }
+    function pt(k, frac) {
+      var th = (2 * Math.PI * k) / N;
+      return [cx + R * frac * Math.sin(th), cy - R * frac * Math.cos(th)];
+    }
+    function poly(frac) {
+      var p = [];
+      for (var k = 0; k < N; k++) { var q = pt(k, frac); p.push(q[0].toFixed(1) + ',' + q[1].toFixed(1)); }
+      return p.join(' ');
+    }
+
+    var s = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H.toFixed(0) + '" viewBox="0 0 ' + W + ' ' + H.toFixed(0) + '" role="img" aria-label="Map sexuelle : '
+      + AXES.map(function (a, k) { return a.name + ' ' + state.values[k] + ' sur 10'; }).join(', ') + '" font-family="Raleway, Arial, sans-serif">';
+
+    // zones de score : 1–3 / 4–7 / 8–10
+    s += '<polygon points="' + poly(1) + '" fill="#2F6FE4" fill-opacity="0.035" stroke="#2F6FE4" stroke-opacity="0.35" stroke-width="1.5"/>';
+    s += '<polygon points="' + poly(f(7.5)) + '" fill="none" stroke="#2F6FE4" stroke-opacity="0.28" stroke-width="1" stroke-dasharray="4 4"/>';
+    s += '<polygon points="' + poly(f(3.5)) + '" fill="none" stroke="#2F6FE4" stroke-opacity="0.28" stroke-width="1" stroke-dasharray="4 4"/>';
+
+    // axes
+    for (var k = 0; k < N; k++) {
+      var e = pt(k, 1);
+      s += '<line x1="' + cx.toFixed(1) + '" y1="' + cy.toFixed(1) + '" x2="' + e[0].toFixed(1) + '" y2="' + e[1].toFixed(1) + '" stroke="#2F6FE4" stroke-opacity="0.25" stroke-width="1"/>';
+    }
+
+    // profil
+    var prof = [];
+    for (k = 0; k < N; k++) { var q = pt(k, f(state.values[k])); prof.push(q[0].toFixed(1) + ',' + q[1].toFixed(1)); }
+    s += '<polygon points="' + prof.join(' ') + '" fill="#2F6FE4" fill-opacity="0.2" stroke="#2F6FE4" stroke-width="2.5" stroke-linejoin="round"/>';
+
+    // labels d'axes
+    for (k = 0; k < N; k++) {
+      var th = (2 * Math.PI * k) / N, sn = Math.sin(th), cs = Math.cos(th);
+      var lp = pt(k, 1);
+      var gap = 16;
+      var lx = lp[0] + sn * gap, ly = lp[1] - cs * gap;
+      var anchor = sn > 0.3 ? 'start' : (sn < -0.3 ? 'end' : 'middle');
+      var lines = wide ? AXES[k].lines : [AXES[k].short];
+      var n = lines.length;
+      var y0;
+      if (cs > 0.9) y0 = ly - (n - 1) * lh - 2;           // haut : on remonte
+      else if (cs < -0.2) y0 = ly + fs * 0.6;              // bas : on descend
+      else y0 = ly - ((n - 1) * lh) / 2 + fs * 0.35;       // côtés : centré
+      s += '<text x="' + lx.toFixed(1) + '" y="' + y0.toFixed(1) + '" text-anchor="' + anchor + '" font-size="' + fs + '" font-weight="700" fill="#1c1c1c">';
+      lines.forEach(function (ln, j) {
+        s += '<tspan x="' + lx.toFixed(1) + '"' + (j ? ' dy="' + lh.toFixed(1) + '"' : '') + '>' + esc(ln) + '</tspan>';
+      });
+      s += '</text>';
+    }
+
+    // points + scores
+    var rad = wide ? 12 : 9.5;
+    for (k = 0; k < N; k++) {
+      var p2 = pt(k, f(state.values[k]));
+      s += '<circle cx="' + p2[0].toFixed(1) + '" cy="' + p2[1].toFixed(1) + '" r="' + rad + '" fill="#F7FF59" stroke="#2F6FE4" stroke-width="2"/>';
+      s += '<text x="' + p2[0].toFixed(1) + '" y="' + (p2[1] + 4).toFixed(1) + '" text-anchor="middle" font-size="' + (wide ? 11.5 : 10) + '" font-weight="800" fill="#2F6FE4">' + state.values[k] + '</text>';
+    }
+    s += '</svg>';
+    return s;
+  }
+
+  function drawRadar() {
+    var host = document.getElementById('qt-radar');
+    if (!host) return;
+    var W = Math.max(280, Math.min(host.clientWidth || 560, 600));
+    host.innerHTML = radarSVG(W);
+  }
+
+  /* Axes prioritaires : ceux dont la zone « chargée » ressort le plus.
+     Axes 1 et 2 (pénétration, éjaculation) : un score élevé = beaucoup de poids.
+     Axes 3 à 7 : un score bas = axe peu présent. Tous les axes concernés sont listés (tension >= 7). */
+  function priorities() {
+    var arr = AXES.map(function (a, k) {
+      var v = state.values[k];
+      return { k: k, t: k < 2 ? v : 11 - v };
+    }).filter(function (x) { return x.t >= 7; });
+    arr.sort(function (a, b) { return b.t - a.t || a.k - b.k; });
+    return arr.map(function (x) { return x.k; });
+  }
+
+  /* ---------------- résultats ---------------- */
+  function showResults() {
+    elQuiz.classList.add('qt-hidden');
+    elResults.classList.remove('qt-hidden');
+    var html = '';
+
+    html += '<div class="qt-result-kicker">Ton résultat</div>';
+    html += '<h2 class="qt-result-title">Ta map sexuelle</h2>';
+    html += '<p class="qt-result-desc"><strong>Ta carte ne te juge pas : elle te montre où tu peux choisir.</strong></p>';
+    html += '<p class="qt-result-desc">Choisis une zone qui te surprend, te frustre ou t’attire. Ne cherche pas à “corriger” tout ton radar. Prends un exercice, fais-le une fois, puis note : qu’est-ce qui m’a plu ? Où est-ce qu’il y a de la résistance ? Qu’est-ce que j’ai envie de garder pour la suite ?</p>';
+
+    html += '<div class="qt-radar-card"><div class="qt-radar" id="qt-radar"></div>'
+      + '<p class="qt-radar-note">Plus le point s’éloigne du centre, plus l’axe est présent. Zones : 1–3, 4–7, 8–10.</p></div>';
+
+    // tableau de lecture (page Notion), une seule fois sous la map
+    html += '<div class="qt-table-wrap"><table class="qt-table">'
+      + '<colgroup><col style="width:17%"><col style="width:41%"><col style="width:42%"></colgroup>'
+      + '<thead><tr><th>Score</th><th>Lecture</th><th>Ce que le radar propose</th></tr></thead><tbody>';
+    ['low', 'mid', 'high'].forEach(function (b) {
+      html += '<tr><td class="qt-score-cell">' + BANDS[b].range + '</td><td>' + BANDS[b].read + '</td><td>' + BANDS[b].go + '</td></tr>';
+    });
+    html += '</tbody></table></div>';
+
+    // encadré : axes à travailler en priorité
+    var prio = priorities();
+    html += '<div class="qt-prio"><div class="qt-prio-title">On te conseille de travailler en priorité sur</div>';
+    if (prio.length) {
+      html += '<div class="qt-prio-list">';
+      prio.forEach(function (k) {
+        html += '<button type="button" class="qt-prio-chip" data-axis="' + k + '">' + AXES[k].name + '<small>' + state.values[k] + '/10</small></button>';
+      });
+      html += '</div><p class="qt-prio-note">Clique sur un axe pour ouvrir son exercice. Rien d’obligatoire : choisis celui qui te parle le plus.</p>';
+    } else {
+      html += '<p class="qt-prio-note" style="margin-top:0">Aucun axe ne ressort comme prioritaire. Choisis simplement la zone qui t’attire ou te surprend le plus.</p>';
+    }
+    html += '</div>';
+
+    // exercices : un toggle par axe, dans l'ordre
+    html += '<hr class="qt-divider">';
+    html += '<div class="qt-section-title">Les exercices à explorer</div>';
+    html += '<p class="qt-section-sub">Clique sur un axe : la réponse qui correspond à ton placement se déroule.</p>';
+    html += '<div class="qt-accordion-list">';
+    AXES.forEach(function (a, k) {
+      var v = state.values[k], b = bandOf(v), c = a[b];
+      html += '<div class="qt-accordion" id="qt-acc-' + k + '">'
+        + '<button type="button" class="qt-accordion-header" aria-expanded="false">'
+        +   '<span class="qt-card-num">' + (k + 1) + '</span>'
+        +   '<span class="qt-accordion-title">' + a.name + (prio.indexOf(k) > -1 ? '<em>Prioritaire</em>' : '') + '</span>'
+        +   '<span class="qt-card-score">' + v + ' <small>/ 10</small></span>'
+        +   '<span class="qt-accordion-chevron">▾</span>'
+        + '</button>'
+        + '<div class="qt-accordion-panel">'
+        +   '<span class="qt-label">Ce que cela peut raconter</span>'
+        +   '<p class="qt-story">' + c.story + '</p>'
+        +   '<span class="qt-label">Exercice à explorer</span>'
+        +   '<div class="qt-exo"><p>' + c.exo + '</p></div>'
+        + '</div></div>';
+    });
+    html += '</div>';
+
+    html += '<div class="qt-print-box">'
+      + '<div class="qt-print-title">Garde ta map</div>'
+      + '<p class="qt-print-text">Imprime cette page ou garde-la en PDF pour retrouver ta map et tes exercices au fil du programme.</p>'
+      + '<button type="button" class="qt-btn" id="qt-print-btn"><span>Imprimer ma map / PDF</span></button>'
+      + '</div>';
+
+    html += '<div class="qt-actions">'
+      + '<button type="button" class="qt-btn qt-btn-outline" id="qt-edit-btn"><span>Modifier mes curseurs</span></button>'
+      + '<button type="button" class="qt-btn-text" id="qt-retry-btn">↺ Recommencer</button>'
+      + '</div>';
+
+    document.getElementById('qt-results-container').innerHTML = html;
+    drawRadar();
+    window.scrollTo(0, 0);
+    document.querySelectorAll('.qt-accordion-header').forEach(function (h) {
+      h.addEventListener('click', function () {
+        var acc = h.parentNode;
+        var open = acc.classList.toggle('qt-accordion-open');
+        h.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    });
+    document.querySelectorAll('.qt-prio-chip').forEach(function (c) {
+      c.addEventListener('click', function () {
+        var acc = document.getElementById('qt-acc-' + c.dataset.axis);
+        acc.classList.add('qt-accordion-open');
+        acc.querySelector('.qt-accordion-header').setAttribute('aria-expanded', 'true');
+        acc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.getElementById('qt-print-btn').addEventListener('click', function () { window.print(); });
+    document.getElementById('qt-edit-btn').addEventListener('click', function () {
+      state.index = 0;
+      elResults.classList.add('qt-hidden');
+      elQuiz.classList.remove('qt-hidden');
+      renderQuestion();
+    });
+    document.getElementById('qt-retry-btn').addEventListener('click', function () {
+      resetState();
+      elResults.classList.add('qt-hidden');
+      elIntro.classList.remove('qt-hidden');
+    });
+  }
+
+  var rt;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () { if (!elResults.classList.contains('qt-hidden')) drawRadar(); }, 120);
+  });
+
+  /* ---------------- auto-hauteur (iframe Kajabi) ---------------- */
+  (function () {
+    function post() {
+      try {
+        window.parent.postMessage({ type: 'come-quiz-height', height: Math.ceil(document.body.getBoundingClientRect().height) }, '*');
+      } catch (e) {}
+    }
+    window.addEventListener('load', post);
+    window.addEventListener('resize', post);
+    if (window.ResizeObserver) { new ResizeObserver(post).observe(document.body); }
+    else { setInterval(post, 600); }
+  })();
+
+})();
+</script>
+<script id="qt-textarea-fit">
+/* Champs texte : la case grandit avec le texte, jamais de barre de défilement interne */
+(function(){
+  function fit(t){ if(!t.getClientRects().length) return; if(t.scrollHeight>t.clientHeight+1){t.style.height=(t.scrollHeight+2)+'px';} }
+  function fitAll(){ document.querySelectorAll('textarea').forEach(fit); }
+  document.addEventListener('input',function(e){ if(e.target&&e.target.tagName==='TEXTAREA') fit(e.target); });
+  window.addEventListener('resize',fitAll); window.addEventListener('load',fitAll);
+  if(window.MutationObserver) new MutationObserver(fitAll).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+  fitAll();
+})();
+</script>
+</body>
+</html>
