@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz - Mes besoins — Programme C.O.M.E.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    --blue: #2F6FE4;
+    --blue-soft: rgba(47,111,228,0.18);
+    --blue-line: rgba(47,111,228,0.4);
+    --blue-faint: rgba(47,111,228,0.06);
+    --yellow: #F7FF59;
+    --yellow-soft: rgba(247,255,89,0.35);
+    --ink: #1c1c1c;
+    --muted: #5b6273;
+    font-family: 'Raleway', Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a, button { cursor: pointer; font-family: inherit; }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+  .qt-wrap { min-height: 100vh; }
+  .qt-shell { max-width: 640px; margin: 0 auto; padding: 56px 24px 70px; }
+  .qt-hidden { display: none !important; }
+
+  .qt-eyebrow {
+    display: inline-block;
+    color: var(--blue);
+    border: 1px solid var(--blue-soft);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  /* ---------- CTA façon Mimétique ---------- */
+  .qt-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    overflow: hidden;
+    background: var(--yellow);
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    padding: 0.85rem 2.2rem;
+    border: 1.5px solid var(--blue);
+    border-radius: 10rem;
+    transition: color 450ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qt-btn::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    top: 102%;
+    background: var(--blue);
+    transition: top 450ms ease;
+    z-index: 0;
+  }
+  .qt-btn span { position: relative; z-index: 1; }
+  .qt-btn .qt-arrow { display: inline-block; transition: transform 450ms ease; }
+  .qt-btn:hover { color: var(--yellow); }
+  .qt-btn:hover::before { top: 0; }
+  .qt-btn:hover .qt-arrow { transform: translateX(5px); }
+  .qt-btn:disabled { opacity: 0.4; pointer-events: none; }
+
+  .qt-btn-text { background: none; border: none; color: var(--muted); font-size: 13.5px; font-family: inherit; padding: 8px 4px; }
+  .qt-btn-text:hover { color: var(--blue); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qt-btn, .qt-btn::before, .qt-btn .qt-arrow, .qt-progress-bar { transition: none; }
+    .qt-screen { animation: none; }
+  }
+
+  .qt-screen { animation: qtFadeUp 0.45s ease both; }
+  @keyframes qtFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .qt-shell h1 {
+    font-size: clamp(30px, 6vw, 44px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin-bottom: 20px;
+  }
+  .qt-shell h1 em {
+    font-style: normal;
+    color: var(--blue);
+    background: linear-gradient(transparent 62%, var(--yellow) 62%);
+    padding: 0 4px;
+  }
+  .qt-intro-text { font-size: 16px; color: var(--muted); max-width: 520px; margin-bottom: 12px; text-wrap: pretty; }
+  .qt-intro-lead { font-size: 17px; font-weight: 700; color: var(--ink); max-width: 520px; margin-bottom: 14px; text-wrap: balance; }
+
+  /* ---------- parcours ---------- */
+  .qt-topbar { display: flex; justify-content: flex-start; align-items: center; margin-bottom: 10px; gap: 12px; }
+  .qt-progress-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); text-align: left; }
+  .qt-progress-track { height: 4px; background: var(--blue-soft); border-radius: 4px; overflow: hidden; margin-bottom: 34px; }
+  .qt-progress-bar { height: 100%; background: var(--blue); border-radius: 4px; transition: width 350ms ease; width: 0%; }
+
+  .qt-door-tag {
+    display: inline-block;
+    background: var(--blue); color: #fff;
+    font-size: 10.5px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;
+    padding: 5px 13px; border-radius: 100px; margin-bottom: 14px;
+  }
+  .qt-q-text { font-weight: 700; font-size: clamp(20px, 3.2vw, 25px); line-height: 1.3; color: var(--blue); margin-bottom: 26px; text-wrap: balance; }
+  .qt-sub { font-size: 14px; font-style: italic; color: var(--muted); margin: -12px 0 22px; text-wrap: pretty; }
+  .qt-hint { font-size: 12.5px; color: var(--muted); margin-top: 12px; }
+
+  .qt-options { display: flex; flex-direction: column; gap: 10px; }
+  .qt-opt {
+    display: flex; align-items: flex-start; gap: 14px;
+    text-align: left;
+    background: #fff;
+    border: 1.5px solid var(--blue-soft);
+    border-radius: 16px;
+    padding: 14px 16px;
+    font-size: 15px; line-height: 1.5; color: var(--ink);
+    transition: border-color 180ms ease, background 180ms ease, opacity 180ms ease;
+  }
+  .qt-opt:hover:not(.qt-opt-disabled) { border-color: var(--blue); background: var(--blue-faint); }
+  .qt-opt.qt-selected { border-color: var(--blue); background: var(--yellow-soft); }
+  .qt-opt-disabled { opacity: 0.4; cursor: not-allowed; }
+  .qt-opt-mark {
+    flex: 0 0 22px; width: 22px; height: 22px; margin-top: 1px;
+    border: 1.5px solid var(--blue-line);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; line-height: 1; color: transparent;
+    background: #fff;
+    transition: all 150ms ease;
+  }
+  .qt-opt.qt-multi .qt-opt-mark { border-radius: 7px; }
+  .qt-opt.qt-selected .qt-opt-mark { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .qt-opt-text { flex: 1; min-width: 0; padding-top: 1px; text-wrap: pretty; }
+
+  .qt-input, .qt-textarea {
+    width: 100%;
+    border: 1.5px solid var(--blue-soft);
+    border-radius: 12px;
+    background: #fff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14.5px;
+    color: var(--ink);
+    padding: 11px 14px;
+    transition: border-color 180ms ease;
+  }
+  .qt-input::placeholder, .qt-textarea::placeholder { color: #9aa1b0; font-style: italic; }
+  .qt-input:focus, .qt-textarea:focus { outline: none; border-color: var(--blue); }
+  .qt-textarea { resize: none; min-height: 47px; line-height: 1.5; overflow: hidden; }
+  .qt-other { margin-top: 12px; }
+
+  .qt-field { margin-bottom: 18px; }
+  .qt-field:last-child { margin-bottom: 0; }
+  .qt-field-label {
+    display: block;
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 7px;
+  }
+  .qt-sent-label { display: block; font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 8px; line-height: 1.45; }
+  .qt-sent-suffix { font-size: 15px; font-weight: 700; color: var(--ink); margin-top: 8px; }
+
+  .qt-card {
+    background: #fff;
+    border: 1.5px solid var(--blue);
+    border-radius: 20px;
+    padding: 22px 20px 24px;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  .qt-callout {
+    background: var(--yellow-soft);
+    border: 1.5px solid var(--blue);
+    border-radius: 18px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+    font-size: 15px; color: var(--ink); text-wrap: pretty;
+  }
+  .qt-callout-label { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--blue); margin-bottom: 6px; }
+  .qt-callout em { font-style: italic; color: var(--muted); }
+  .qt-sentence-card { margin-top: 22px; }
+  .qt-prefix { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .qt-prefix:last-child { margin-bottom: 0; }
+  .qt-prefix > span { font-size: 14.5px; color: var(--ink); font-weight: 600; }
+  .qt-prefix .qt-input { flex: 1; min-width: 180px; }
+
+  .qt-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 34px; gap: 12px; flex-wrap: wrap; }
+
+  /* ---------- écran de sortie ---------- */
+  .qt-result-kicker { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .qt-result-title { font-weight: 800; font-size: clamp(26px, 4.6vw, 34px); color: var(--blue); line-height: 1.15; margin-bottom: 16px; }
+  .qt-result-desc { font-size: 15.5px; color: var(--muted); margin-bottom: 14px; text-wrap: pretty; }
+  .qt-recap-title { font-weight: 800; font-size: 18px; color: var(--blue); margin: 34px 0 14px; }
+  .qt-carte-line { padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid var(--blue-soft); }
+  .qt-carte-line:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .qt-carte-tag { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; color: var(--blue); margin-bottom: 6px; }
+  .qt-carte-text { font-weight: 700; font-size: 16px; line-height: 1.45; color: var(--ink); text-wrap: pretty; }
+  .qt-carte-text .qt-carte-sub { display: block; font-weight: 500; font-size: 14px; color: var(--muted); margin-top: 6px; }
+
+  /* tableau « Mes besoins » */
+  .qt-table {
+    background: #fff;
+    border: 1.5px solid var(--blue);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  .qt-tr { display: grid; grid-template-columns: 5fr 6fr; gap: 18px; align-items: start; padding: 16px 20px; border-top: 1px solid var(--blue-soft); }
+  .qt-tr.qt-th {
+    background: var(--yellow-soft); border-top: none; align-items: center;
+    padding: 12px 20px;
+    font-size: 11.5px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--blue);
+  }
+  .qt-td-label { font-size: 14.5px; font-weight: 600; line-height: 1.45; text-wrap: pretty; padding-top: 8px; }
+  .qt-td-label strong { color: var(--blue); font-weight: 800; }
+
+  .qt-print-box {
+    background: #fff;
+    border: 1.5px solid var(--blue);
+    border-radius: 22px;
+    padding: 26px 24px;
+    margin-top: 34px;
+    text-align: center;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  .qt-print-title { font-size: 11px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+  .qt-print-text { font-size: 14px; color: var(--muted); max-width: 380px; margin: 0 auto 16px; }
+  .qt-actions { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 30px; }
+
+  @media (max-width: 520px) {
+    .qt-shell { padding: 40px 18px 56px; }
+    .qt-card { padding: 18px 16px 20px; }
+    .qt-btn { padding: 0.85rem 1.7rem; }
+    .qt-prefix > span { width: 100%; }
+    .qt-tr { grid-template-columns: 1fr; gap: 8px; padding: 16px; }
+    .qt-tr.qt-th { display: none; }
+    .qt-td-label { padding-top: 0; }
+  }
+
+  @media print {
+    body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    #qt-intro, #qt-quiz, .qt-print-box, .qt-actions { display: none !important; }
+    #qt-results { display: block !important; }
+    .qt-screen { animation: none; }
+    .qt-shell { padding-top: 16px; }
+    .qt-card, .qt-callout, .qt-tr { break-inside: avoid; page-break-inside: avoid; }
+    .qt-recap-title { break-after: avoid; page-break-after: avoid; }
+    .qt-tr.qt-th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+<style id="qt-noscroll">
+  /* Pas de barre de défilement interne : dans l'iframe Kajabi, c'est la page parente qui défile */
+  html.qt-embedded, html.qt-embedded body { overflow: hidden !important; }
+  html.qt-embedded .qt-wrap { min-height: 0 !important; }
+  textarea { overflow: hidden !important; }
+</style>
+<script>try{if(window.self!==window.top)document.documentElement.classList.add('qt-embedded');}catch(e){document.documentElement.classList.add('qt-embedded');}</script>
+</head>
+<body>
+<div class="qt-wrap">
+  <div class="qt-shell">
+
+    <!-- ============ INTRO ============ -->
+    <div id="qt-intro" class="qt-screen">
+      <span class="qt-eyebrow">Semaine 2 — Redéfinir</span>
+      <h1>Quiz - Mes <em>besoins</em></h1>
+      <p class="qt-intro-lead">De quoi ai-je besoin dans ma sexualité en ce moment ?</p>
+      <p class="qt-intro-text">Avant de chercher ce que tu pourrais changer pendant les rapports, prends un moment pour identifier tes besoins.</p>
+      <p class="qt-intro-text">Pense à un rapprochement ou à un rapport récent : avec quoi arrivais-tu ? Comment te sentais-tu dans ton corps ? Qu’est-ce qui t’aurait aidé à vivre ce moment davantage à ta façon ?</p>
+      <p class="qt-intro-text">Il n’y a pas de bonne réponse. Tu peux avoir envie de sexe et avoir besoin de repos, vouloir de la proximité sans pénétration, ou souhaiter explorer tout en ayant besoin de temps. Ce quiz ne te donne pas un profil : il t’aide à choisir un ou deux besoins à faire compter cette semaine.</p>
+      <div class="qt-nav" style="justify-content:flex-start;margin-top:30px;">
+        <button type="button" class="qt-btn" id="qt-start"><span>Commencer</span><span class="qt-arrow" aria-hidden="true">→</span></button>
+      </div>
+    </div>
+
+    <!-- ============ QUESTIONS ============ -->
+    <div id="qt-quiz" class="qt-screen qt-hidden">
+      <div class="qt-topbar"><div class="qt-progress-label" id="qt-progress-label"></div></div>
+      <div class="qt-progress-track"><div class="qt-progress-bar" id="qt-progress-bar"></div></div>
+      <div id="qt-q-container"></div>
+    </div>
+
+    <!-- ============ ÉCRAN DE SORTIE ============ -->
+    <div id="qt-results" class="qt-screen qt-hidden">
+      <div id="qt-results-container"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+
+  /* ================= Contenu ================= */
+  var X = function (t) { return t; };   /* (plus d'option exclusive : toutes les options se cochent librement) */
+
+  var Q = [
+    { id: 'q1', tag: 'Ton contexte', type: 'single', hasOther: true,
+      prompt: 'Est-ce qu’il y a quelque chose en ce moment qui prend beaucoup de place dans ta vie ?',
+      sub: 'Choisis une réponse principale.',
+      options: ['Une pression au travail : échéance, conflit, peur de mal faire.', 'Beaucoup de choses à organiser ou à ne pas oublier.', 'De la fatigue ou un manque de repos.', 'Un événement marquant, un changement ou une inquiétude personnelle.', 'Une tension, une distance ou un non-dit dans ma relation.', 'Un manque de temps, d’intimité ou la peur d’être interrompu.', 'Rien de particulièrement pesant.'] },
+
+    { id: 'q2', tag: 'Ton contexte', type: 'multi', max: 2,
+      prompt: 'Est-ce que c’est encore présent pendant le rapprochement ou le rapport ?',
+      sub: 'Choisis jusqu’à deux réponses.',
+      options: ['Oui j’y pense encore directement.', 'Oui j’ai du mal à décrocher, même sans y penser précisément.', 'Je me sens pressé : faut profiter du moment ou terminer rapidement.', 'Je me sens déjà tendu ou fatigué avant les premières caresses.', 'J’ai envie de proximité, mais peu de disponibilité pour le sexe.', 'Je sens une distance avec l’autre que j’ai pas encore exprimée.', X('Non, j’ai l’impression de laisser ça de côté.'), X('Je sais pas.')] },
+
+    { id: 'q3', tag: 'Ton corps', type: 'multi', max: 3, hasOther: true,
+      prompt: 'Dans ce contexte précis, qu’as-tu remarqué dans ton corps au lit ?',
+      sub: 'Choisis jusqu’à trois réponses. Coche seulement ce que tu reconnais.',
+      options: ['Mon souffle est + court ou je retiens ma respi', 'J’ai la mâchoire serrée, les épaules, le ventre, les cuisses ou le bassin.', 'Je sens peu les caresses ou mon attention part ailleurs.', 'Mon excitation ou mon érection varie.', 'Je sens l’excitation monter vite et j’ai du mal à ralentir, j’éjacule + vite.', 'Mon corps est lourd, avec peu d’élan pour bouger.', 'Je me raidis au contact.', 'Je fais les gestes, mais sans vraiment sentir mon envie.', 'Le contact m’aide à me détendre et à me sentir plus présent.', X('Je n’ai pas remarqué de différence particulière.')] },
+
+    { id: 'q4', tag: 'Ton corps', type: 'multi', hasOther: true,
+      prompt: 'Quand cette pression prend moins de place, remarques-tu une différence dans ta façon de vivre le sexe ?',
+      sub: 'Pense, par exemple, à un jour plus calme, à un moment où une responsabilité était partagée ou à un rapprochement après une discussion.',
+      options: ['Je respire plus librement et je me sens moins crispé.', 'Je remarque davantage les caresses et ce qui me plaît.', 'J’ai plus d’élan, de curiosité ou d’envie de proposer.', 'Je surveille moins mon érection ou mon éjaculation.', 'Je peux davantage recevoir et me laisser guider.', 'J’arrive plus facilement à dire « plus lentement », « autrement » ou « stop ».', 'Je me sens plus proche de l’autre.', X('Je ne remarque pas de différence nette.'), X('Je n’ai pas encore de point de comparaison.')] },
+
+    { id: 'q5', tag: 'Vie quotidienne ↔ sexualité', type: 'multi', max: 2, hasOther: true, otherLabel: 'Mon propre lien',
+      prompt: 'Quel lien vie quotidienne ↔ sexualité reconnais-tu le mieux dans ton expérience ?',
+      sub: 'Choisis jusqu’à deux réponses, sans chercher à tout expliquer.',
+      options: ['Quand je suis sous pression ailleurs, je me mets aussi à devoir « réussir » le rapport.', 'Quand j’ai tout à gérer, je continue à organiser le moment plutôt qu’à recevoir.', 'Quand je suis fatigué, je me force parfois au lieu d’adapter ce que nous faisons.', 'Quand quelque chose me préoccupe, je suis moins attentif aux sensations.', 'Quand il reste une tension entre nous, j’ai du mal à me laisser approcher.', 'Quand je manque de temps ou d’intimité, je me presse et je profite moins.', 'Le rapprochement peut aussi m’aider à laisser mes préoccupations de côté.', X('Je ne reconnais pas encore de lien : j’aimerais observer davantage.')] },
+
+    { id: 'q6', tag: 'Avec tes mots', type: 'sentence',
+      prompt: 'Complète avec tes mots' },
+
+    { id: 'q7', tag: 'Tes besoins · Avant', type: 'multi', max: 2, hasOther: true,
+      prompt: 'Avant un moment sexuel, qu’est-ce qui te ferait le plus de bien ?',
+      sub: 'Choisis jusqu’à deux réponses.',
+      options: ['Un temps pour sortir de ma journée et ne pas enchaîner immédiatement.', 'Davantage de repos ou un horaire qui me convient mieux.', 'Une aide concrète pour alléger ce que j’ai à gérer.', 'Du temps et un lieu où je ne me sens pas pressé ou interrompu.', 'Un échange pour clarifier une tension ou un non-dit.', 'De la tendresse, sans savoir à l’avance si cela mènera au sexe.', 'Pouvoir dire si j’en ai envie, sans devoir accepter ni me justifier.', X('Rien à préparer : j’aime aussi la spontanéité.')] },
+
+    { id: 'q8', tag: 'Tes besoins · Pendant', type: 'multi', max: 3, hasOther: true,
+      prompt: 'Pendant le rapport, de quoi aurais-tu le plus besoin ?',
+      sub: 'Choisis jusqu’à trois réponses.',
+      options: ['De lenteur, pour avoir le temps de sentir ce qui me plaît.', 'De douceur ou d’une intensité différente.', 'De pouvoir guider : rythme, pression, gestes, zones touchées.', 'De pouvoir faire une pause ou changer de pratique.', 'De ne pas avoir à diriger ou à tout organiser.', 'De pouvoir recevoir du plaisir sans devoir immédiatement en donner.', 'De pouvoir bouger, parler ou réagir sans me sentir jugé.', 'De pouvoir arrêter, même si nous avons déjà commencé.', 'De plus de jeu, de nouveauté ou de spontanéité.'] },
+
+    { id: 'q9', tag: 'Tes attentes', type: 'multi', max: 2, hasOther: true,
+      prompt: 'Quelle attente aimerais-tu pouvoir déposer un peu ?',
+      sub: 'Choisis jusqu’à deux réponses.',
+      options: ['« Je dois être excité dès le début. »', '« Je dois avoir une érection et la garder. »', '« Je dois tenir longtemps. »', '« Je dois faire jouir l’autre. »', '« Je dois savoir quoi faire sans demander. »', '« Je dois accepter pour ne pas décevoir. »', '« Un vrai rapport doit inclure une pénétration. »', '« Il faut un orgasme pour que le moment compte. »', '« Je dois avoir envie même quand ma vie est chargée. »', X('Aucune de ces attentes ne me correspond.')] },
+
+    { id: 'q10', tag: 'Dans la relation', type: 'multi', max: 2, hasOther: true, optional: true,
+      prompt: 'Dans la relation, qu’aimerais-tu pouvoir vivre davantage ?',
+      sub: 'Choisis jusqu’à deux réponses. Si tu explores en solo, tu peux passer cette question.',
+      options: ['Me sentir écouté quand je parle de mes envies ou de mes difficultés.', 'Sentir que mes limites sont accueillies sans insistance.', 'Pouvoir demander un changement sans craindre de vexer l’autre.', 'Partager l’initiative et ne pas porter tout le moment.', 'Pouvoir parler de ce qui pèse dans notre relation, hors du sexe.', 'Me sentir désiré sans me sentir obligé de répondre par un rapport.', 'Donner et recevoir des indications simples sur ce qui plaît.', 'Garder une place pour la tendresse même quand nous n’avons pas les mêmes envies.', X('Je me sens déjà bien dans ces dimensions.')] },
+
+    { id: 'q11', tag: 'Tes besoins · Après', type: 'multi', max: 2, hasOther: true,
+      prompt: 'Après un moment sexuel, qu’est-ce qui te ferait du bien ?',
+      sub: 'Choisis jusqu’à deux réponses.',
+      options: ['Rester proches : contact, câlin, présence.', 'Pouvoir poursuivre autrement, si nous en avons envie.', 'Avoir un peu d’espace ou de calme.', 'Échanger simplement sur ce qui a plu ou moins plu.', 'Ne pas transformer le moment en bilan de performance.', 'Pouvoir dire une émotion sans devoir la cacher ou la résoudre tout de suite.', X('Rien de particulier : je préfère laisser le moment se terminer naturellement.')] },
+
+    { id: 'q12', tag: 'Tes priorités', type: 'multi', max: 2, hasOther: true, otherLabel: 'Un autre besoin, avec mes mots', hintExtra: 'le premier choisi est ton besoin principal',
+      prompt: 'Aujourd’hui, quels sont tes deux besoins prioritaires ?',
+      sub: 'Relis tes réponses, puis choisis un besoin principal et, si tu le souhaites, un second.',
+      options: ['Du repos.', 'Une charge mieux partagée.', 'Du temps de transition et de la disponibilité.', 'Un cadre plus tranquille ou plus intime.', 'De la lenteur et de la place pour les sensations.', 'La liberté de choisir, de ralentir ou d’arrêter.', 'Moins d’attentes de performance.', 'De l’écoute et de la clarté dans la relation.', 'De la tendresse et de la proximité.', 'Un meilleur équilibre entre donner, recevoir et prendre l’initiative.', 'Du jeu, de l’exploration ou de la nouveauté.', X('Je ne sais pas encore : mon besoin est d’observer sans me presser.')] },
+
+    { id: 'q13', tag: 'Ton premier pas', type: 'single', hasOther: true, withSentence: true,
+      prompt: 'Quelle serait une première façon de faire compter ce besoin ?',
+      sub: 'Choisis une réponse, puis précise-la.',
+      options: ['Ajuster le moment ou les conditions du rapprochement.', 'Alléger une responsabilité concrète.', 'Dire ce que je souhaite avant de commencer.', 'Demander un changement pendant le rapport.', 'Prendre un temps d’échange hors du sexe.', 'Choisir une forme de proximité différente.', 'Observer encore, sans chercher à changer tout de suite.'] }
+  ];
+  Q.forEach(function (s, i) { s.n = i + 1; });
+
+  /* ================= Outils ================= */
+  var state = { index: 0, answers: {}, tblEdited: {} };
+
+  var elIntro = document.getElementById('qt-intro');
+  var elQuiz = document.getElementById('qt-quiz');
+  var elResults = document.getElementById('qt-results');
+  var elContainer = document.getElementById('qt-q-container');
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function stripDot(x) { return String(x).replace(/\.$/, ''); }
+  function opt(o) { return typeof o === 'string' ? { t: o } : o; }
+  function stepById(id) { return Q.filter(function (s) { return s.id === id; })[0]; }
+
+  /* réponse « résolue » : « Autre » remplacé par le texte précisé */
+  function answerOf(id) {
+    var v = state.answers[id];
+    var other = state.answers[id + '_other'] || '';
+    function fix(x) { return x === 'Autre' ? other : x; }
+    if (Array.isArray(v)) return v.map(fix).filter(Boolean);
+    if (!v) return [];
+    return [fix(v)].filter(Boolean);
+  }
+
+  function fit(t) {
+    if (!t.getClientRects().length) return;
+    t.style.height = 'auto';
+    t.style.height = (t.scrollHeight + 2) + 'px';
+  }
+
+  /* ================= Navigation ================= */
+  function showIntro() {
+    elQuiz.classList.add('qt-hidden');
+    elResults.classList.add('qt-hidden');
+    elIntro.classList.remove('qt-hidden');
+    window.scrollTo(0, 0);
+  }
+  function go(dir) {
+    var i = state.index + dir;
+    if (i < 0) { showIntro(); return; }
+    if (i >= Q.length) { showResults(); return; }
+    state.index = i;
+    renderStep();
+  }
+  document.getElementById('qt-start').addEventListener('click', function () {
+    state.index = 0;
+    elIntro.classList.add('qt-hidden');
+    elResults.classList.add('qt-hidden');
+    elQuiz.classList.remove('qt-hidden');
+    renderStep();
+  });
+
+  function renderStep() {
+    var step = Q[state.index];
+    document.getElementById('qt-progress-label').textContent = 'Question ' + step.n + ' / ' + Q.length;
+    document.getElementById('qt-progress-bar').style.width = ((step.n / Q.length) * 100) + '%';
+    window.scrollTo(0, 0);
+    elContainer.innerHTML = '<span class="qt-door-tag">' + esc(step.tag) + '</span>'
+      + '<p class="qt-q-text">' + esc(step.prompt) + '</p>'
+      + (step.sub ? '<p class="qt-sub">' + esc(step.sub) + '</p>' : '')
+      + '<div id="qt-field"></div>';
+    var field = document.getElementById('qt-field');
+    if (step.type === 'sentence') renderSentence(step, field);
+    else renderChoice(step, field);
+  }
+
+  function addNav(field, label) {
+    field.insertAdjacentHTML('afterend',
+      '<div class="qt-nav"><button type="button" class="qt-btn-text" id="qt-back">← Retour</button>'
+      + '<button type="button" class="qt-btn" id="qt-next"><span>' + label + '</span><span class="qt-arrow" aria-hidden="true">→</span></button></div>');
+    document.getElementById('qt-back').addEventListener('click', function () { go(-1); });
+    var next = document.getElementById('qt-next');
+    next.addEventListener('click', function () { go(1); });
+    return next;
+  }
+
+  /* ---- Q6 : phrase à compléter ---- */
+  function renderSentence(step, field) {
+    var an = state.answers;
+    var rows = [
+      { k: 'q6a', pre: 'Quand j’arrive dans un moment sexuel avec…', ph: 'ex : une journée de travail encore dans la tête' },
+      { k: 'q6b', pre: '…je remarque souvent', ph: 'ex : mes épaules restent tendues, je sens peu les caresses', suf: 'dans mon corps.' },
+      { k: 'q6c', pre: 'Mon réflexe est alors de…', ph: 'ex : chercher à m’exciter rapidement' }
+    ];
+    var h = '<div class="qt-card">';
+    rows.forEach(function (r) {
+      h += '<div class="qt-field"><label class="qt-sent-label" for="' + r.k + '">' + r.pre + '</label>'
+        + '<textarea class="qt-textarea" id="' + r.k + '" rows="1" placeholder="' + esc(r.ph) + '"></textarea>'
+        + (r.suf ? '<p class="qt-sent-suffix">' + r.suf + '</p>' : '') + '</div>';
+    });
+    h += '</div>'
+      + '<div class="qt-callout qt-sentence-card"><span class="qt-callout-label">Exemple</span>'
+      + '<em>« Quand j’arrive avec une journée de travail encore dans la tête, je remarque que mes épaules restent tendues et que je sens peu les caresses. Mon réflexe est de chercher à m’exciter rapidement. »</em></div>';
+    field.innerHTML = h;
+    rows.forEach(function (r) {
+      var ta = document.getElementById(r.k);
+      ta.value = an[r.k] || '';
+      ta.addEventListener('input', function () { an[r.k] = ta.value; fit(ta); });
+      fit(ta);
+    });
+    addNav(field, 'Continuer');
+  }
+
+  /* ---- choix unique / multiple ---- */
+  function renderChoice(step, field) {
+    var an = state.answers;
+    var multi = step.type === 'multi';
+    var otherName = step.otherLabel || 'Autre';
+    var all = step.options.map(opt);
+    if (step.hasOther) all.push({ t: 'Autre', other: true });
+    var box = document.createElement('div');
+    box.className = 'qt-options';
+    field.appendChild(box);
+    var hint = null, otherBox = null, next;
+
+    if (multi) {
+      hint = document.createElement('p');
+      hint.className = 'qt-hint';
+      field.appendChild(hint);
+    }
+    var sel = new Set(multi ? (an[step.id] || []) : []);
+    var max = step.max || null;
+
+    var sentenceHost = null;
+    if (step.withSentence) {
+      sentenceHost = document.createElement('div');
+      sentenceHost.className = 'qt-card qt-sentence-card';
+      sentenceHost.innerHTML = '<div class="qt-prefix"><span>Cette semaine, pour faire davantage de place à mon besoin de</span><input type="text" class="qt-input" id="q13a" placeholder="…"></div>'
+        + '<div class="qt-prefix"><span>je vais essayer</span><input type="text" class="qt-input" id="q13b" placeholder="…"></div>';
+      field.appendChild(sentenceHost);
+      ['q13a', 'q13b'].forEach(function (k) {
+        var inp = document.getElementById(k);
+        inp.value = an[k] || '';
+        inp.addEventListener('input', function () { an[k] = inp.value.trim(); });
+      });
+    }
+
+    next = addNav(sentenceHost || (hint || box), step.withSentence ? 'Voir mon point de départ' : 'Continuer');
+
+    function otherField(anchor) {
+      var o = document.createElement('div');
+      o.className = 'qt-other';
+      o.innerHTML = '<span class="qt-field-label">Précise</span><input type="text" class="qt-input" placeholder="…">';
+      var inp = o.querySelector('input');
+      inp.value = an[step.id + '_other'] || '';
+      inp.addEventListener('input', function () { an[step.id + '_other'] = inp.value.trim(); refresh(); });
+      anchor.insertAdjacentElement('afterend', o);
+      setTimeout(function () { inp.focus(); }, 40);
+      return o;
+    }
+    function removeOther() { if (otherBox) { otherBox.remove(); otherBox = null; } }
+
+    function refresh() {
+      var chosen = multi ? sel.size : (an[step.id] ? 1 : 0);
+      var hasOther = multi ? sel.has('Autre') : an[step.id] === 'Autre';
+      box.querySelectorAll('.qt-opt').forEach(function (c) {
+        var on = c.classList.contains('qt-selected');
+        var full = multi && max && sel.size >= max && !on;
+        c.classList.toggle('qt-opt-disabled', !!full);
+      });
+      if (hint) {
+        var txt = max ? (sel.size + '/' + max + ' choix') : (sel.size ? sel.size + ' choisi' + (sel.size > 1 ? 's' : '') : 'Plusieurs réponses possibles');
+        if (step.hintExtra) txt += ' · ' + step.hintExtra;
+        hint.textContent = txt;
+      }
+      next.disabled = (!chosen && !step.optional) || (hasOther && !an[step.id + '_other']);
+    }
+
+    all.forEach(function (o) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      var isOn = multi ? sel.has(o.t) : an[step.id] === o.t;
+      btn.className = 'qt-opt' + (multi ? ' qt-multi' : '') + (isOn ? ' qt-selected' : '');
+      btn.dataset.v = o.t;
+      btn.innerHTML = '<span class="qt-opt-mark" aria-hidden="true">✓</span><span class="qt-opt-text">' + (o.other ? esc(otherName) + ' :' : esc(o.t)) + '</span>';
+      btn.addEventListener('click', function () {
+        if (btn.classList.contains('qt-opt-disabled')) return;
+        if (!multi) {
+          an[step.id] = o.t;
+          box.querySelectorAll('.qt-opt').forEach(function (c) { c.classList.remove('qt-selected'); });
+          btn.classList.add('qt-selected');
+          if (o.other) { if (!otherBox) otherBox = otherField(box); }
+          else { removeOther(); if (!step.withSentence) setTimeout(function () { if (an[step.id] === o.t) go(1); }, 320); }
+          refresh();
+          return;
+        }
+        if (sel.has(o.t)) { sel.delete(o.t); btn.classList.remove('qt-selected'); }
+        else { sel.add(o.t); btn.classList.add('qt-selected'); }
+        an[step.id] = Array.from(sel);
+        if (sel.has('Autre')) { if (!otherBox) otherBox = otherField(hint); }
+        else removeOther();
+        refresh();
+      });
+      box.appendChild(btn);
+    });
+    if ((multi && sel.has('Autre')) || (!multi && an[step.id] === 'Autre')) otherBox = otherField(multi ? hint : box);
+    refresh();
+  }
+
+  /* ================= Écran de sortie ================= */
+  function ensureDot(x) { return /[.!?…»]$/.test(x) ? x : x + '.'; }
+
+  function tableRows() {
+    var q3 = answerOf('q3').map(ensureDot);
+    var needs = answerOf('q12').map(stripDot);
+    var q1 = answerOf('q1').map(stripDot);
+    return [
+      { label: 'La situation ou le contexte qui prend de la place en ce moment', pre: q1.join('\n') },
+      { label: 'Les sensations que je remarque dans mon corps pendant les rapports', pre: q3.join('\n') },
+      { label: 'Mon besoin principal à partir de ce que je ressens', pre: needs[0] || '' },
+      { label: 'Mon second besoin, si j’en ai choisi un', pre: needs[1] || '' },
+      { label: 'Le petit ajustement que je souhaite essayer pour faire davantage de place à ce besoin, seul ou à deux, <strong>dans la vie de tous les jours</strong>', pre: '' },
+      { label: 'Le petit ajustement que je souhaite essayer pour faire davantage de place à ce besoin, seul ou à deux, <strong>dans la sexualité</strong>', pre: '' }
+    ];
+  }
+
+  function line(tag, text, sub) {
+    if (!text) return '';
+    return '<div class="qt-carte-line"><span class="qt-carte-tag">' + tag + '</span><p class="qt-carte-text">' + esc(text)
+      + (sub ? '<span class="qt-carte-sub">' + sub + '</span>' : '') + '</p></div>';
+  }
+
+  function showResults() {
+    elQuiz.classList.add('qt-hidden');
+    elIntro.classList.add('qt-hidden');
+    elResults.classList.remove('qt-hidden');
+    var an = state.answers;
+    var needs = answerOf('q12').map(stripDot);
+    var first = answerOf('q13').map(stripDot)[0] || '';
+    var a13 = (an.q13a || '').trim(), b13 = (an.q13b || '').trim();
+    var sentence = (a13 || b13)
+      ? 'Cette semaine, pour faire davantage de place à mon besoin de ' + (a13 || '…') + ', je vais essayer ' + (b13 || '…') + '.'
+      : '';
+    var s6 = [an.q6a, an.q6b, an.q6c].map(function (x) { return (x || '').trim(); });
+    var has6 = s6[0] || s6[1] || s6[2];
+    var phrase6 = has6
+      ? 'Quand j’arrive dans un moment sexuel avec ' + (s6[0] || '…') + ', je remarque souvent ' + (s6[1] || '…') + ' dans mon corps. Mon réflexe est alors de ' + (s6[2] || '…') + '.'
+      : '';
+
+    var html = '<div class="qt-result-kicker">Fin du quiz</div>'
+      + '<h2 class="qt-result-title">Ton point de départ</h2>'
+      + '<p class="qt-result-desc">Ce besoin n’est pas une consigne que ton corps doit réussir à suivre, ni une obligation pour ton/ta partenaire. C’est un point de départ pour choisir ce que tu peux ajuster et ce que tu souhaites discuter.</p>'
+      + '<p class="qt-result-desc">Tu peux maintenant passer au tableau « Mes besoins » : reprends une situation concrète, ce que tu as remarqué dans ton corps et le besoin que tu viens de choisir.</p>'
+      + '<div class="qt-card" style="margin-top:26px;">'
+      +   line('Besoin principal', needs[0] || '')
+      +   line('Second besoin', needs[1] || '')
+      +   line('Première façon de le faire compter', first, sentence ? '<em>' + esc(sentence) + '</em>' : '')
+      +   line('Ta situation type', phrase6)
+      + '</div>'
+      + '<h3 class="qt-recap-title">Mes besoins</h3>'
+      + '<div class="qt-table" id="qt-table">'
+      +   '<div class="qt-tr qt-th"><span>Mes repères</span><span>Ma réponse</span></div>'
+      +   tableRows().map(function (r, i) {
+            return '<div class="qt-tr"><label class="qt-td-label" for="qt-t' + i + '">' + r.label + '</label>'
+              + '<textarea class="qt-textarea" id="qt-t' + i + '" rows="1" placeholder="…"></textarea></div>';
+          }).join('')
+      + '</div>'
+      + '<div class="qt-print-box">'
+      +   '<div class="qt-print-title">Garde ton point de départ</div>'
+      +   '<p class="qt-print-text">Imprime cette page ou garde-la en PDF pour retrouver tes besoins et tes réponses au fil du programme.</p>'
+      +   '<button type="button" class="qt-btn" id="qt-print-btn"><span>Imprimer / PDF</span></button>'
+      + '</div>'
+      + '<div class="qt-actions">'
+      +   '<button type="button" class="qt-btn-text" id="qt-edit">← Modifier mes choix</button>'
+      +   '<button type="button" class="qt-btn-text" id="qt-reset">↺ Tout effacer et recommencer</button>'
+      + '</div>';
+    document.getElementById('qt-results-container').innerHTML = html;
+    window.scrollTo(0, 0);
+
+    tableRows().forEach(function (r, i) {
+      var ta = document.getElementById('qt-t' + i);
+      ta.value = state.tblEdited[i] !== undefined ? state.tblEdited[i] : r.pre;
+      ta.addEventListener('input', function () { state.tblEdited[i] = ta.value; fit(ta); });
+      fit(ta);
+    });
+    document.getElementById('qt-print-btn').addEventListener('click', function () {
+      document.querySelectorAll('#qt-results textarea').forEach(fit);
+      window.print();
+    });
+    document.getElementById('qt-edit').addEventListener('click', function () {
+      state.index = Q.length - 1;
+      elResults.classList.add('qt-hidden');
+      elQuiz.classList.remove('qt-hidden');
+      renderStep();
+    });
+    document.getElementById('qt-reset').addEventListener('click', function () {
+      state = { index: 0, answers: {}, tblEdited: {} };
+      showIntro();
+    });
+  }
+
+  /* ================= auto-hauteur (iframe Kajabi) ================= */
+  (function () {
+    function post() {
+      try {
+        window.parent.postMessage({ type: 'come-quiz-height', height: Math.ceil(document.body.getBoundingClientRect().height) }, '*');
+      } catch (e) {}
+    }
+    window.addEventListener('load', post);
+    window.addEventListener('resize', post);
+    if (window.ResizeObserver) { new ResizeObserver(post).observe(document.body); }
+    else { setInterval(post, 600); }
+  })();
+
+})();
+</script>
+<script id="qt-textarea-fit">
+/* Champs texte : la case grandit avec le texte, jamais de barre de défilement interne */
+(function(){
+  function fit(t){ if(!t.getClientRects().length) return; t.style.height='auto'; t.style.height=(t.scrollHeight+2)+'px'; }
+  function fitAll(){ document.querySelectorAll('textarea').forEach(fit); }
+  window.addEventListener('resize',fitAll); window.addEventListener('load',fitAll);
+  if(window.MutationObserver) new MutationObserver(fitAll).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+  fitAll();
+})();
+</script>
+</body>
+</html>
