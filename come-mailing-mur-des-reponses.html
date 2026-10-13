@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vos mots, tels quels | Merci Beaucul</title>
+<meta name="description" content="1 210 personnes ont répondu au sondage. Voilà leurs mots, bruts et anonymes. Ajoute les tiens si tu veux.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;700;800&family=Lora:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --beige:#fffafd; --blanc:#fff; --noir:#000;
+    --rouge-fonce:#8a1b1a; --rose:crimson;
+    --jaune:#f7ff59; --jaune-fonce:#ffde59;
+    --rose-fonce:hsla(337,55%,22%,1);
+    --trait:#f0d8df;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--blanc);color:var(--noir);font-family:'Raleway',sans-serif;font-weight:300;font-size:1.1rem;line-height:1.4;}
+  ::selection{background:var(--jaune);color:var(--rouge-fonce);}
+
+  /* NAV */
+  nav{display:flex;justify-content:space-between;align-items:center;padding:16px 30px;background:var(--blanc);position:sticky;top:0;z-index:90;}
+  .logo{font-weight:800;color:var(--rose);font-size:1.3rem;letter-spacing:-1px;text-transform:uppercase;text-decoration:none;}
+  .count-pill{font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--rose);
+              border:1.5px solid #e5b8c2;border-radius:10rem;padding:.45rem 1.1rem;white-space:nowrap;}
+
+  /* HERO */
+  .hero{padding:72px 24px 40px;text-align:center;}
+  .hero h1{font-weight:800;color:var(--rose);font-size:clamp(2.4rem,6.4vw,4.4rem);line-height:1.02;letter-spacing:-2px;max-width:900px;margin:0 auto;}
+  .hero .sub{max-width:680px;margin:24px auto 0;font-size:1.22rem;font-weight:400;line-height:1.5;}
+  .hero .arrow{margin-top:34px;font-size:1.6rem;color:var(--rose);}
+
+
+  /* STATS */
+  .stats{background:var(--beige);padding:70px 24px;}
+  .statswrap{max-width:1040px;margin:0 auto;}
+  .stats h2{font-weight:800;color:var(--rose);font-size:clamp(1.7rem,3.6vw,2.6rem);letter-spacing:-1px;text-align:center;margin-bottom:44px;}
+  .statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  @media(max-width:860px){.statgrid{grid-template-columns:1fr;}}
+  .statcard{background:var(--blanc);border:1.5px solid #f0c8d0;border-radius:18px;padding:30px 26px;}
+  .statq{display:block;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a08a91;margin-bottom:14px;}
+  .statnum{display:block;font-weight:800;color:var(--rose);font-size:3.2rem;letter-spacing:-2px;line-height:1;}
+  .statanswer{font-family:'Lora',serif;font-size:1.05rem;color:var(--rouge-fonce);margin-top:8px;}
+  .statnote{margin-top:14px;font-size:.95rem;font-weight:400;line-height:1.5;}
+
+  /* FILTRES */
+  .filters{position:sticky;top:64px;z-index:80;background:rgba(255,255,255,.94);backdrop-filter:blur(6px);
+           padding:14px 24px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;border-bottom:1px solid var(--trait);}
+  .filters button{font-family:'Raleway',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+                  border:1.5px solid #e5b8c2;background:var(--blanc);color:var(--rouge-fonce);border-radius:10rem;
+                  padding:.5rem 1.15rem;cursor:pointer;transition:all .25s ease;}
+  .filters button:hover{border-color:var(--rose);}
+  .filters button.on{background:var(--rose);border-color:var(--rose);color:#fff;}
+
+  /* MUR */
+  .mur{padding:56px 24px 30px;}
+  .wall{max-width:1120px;margin:0 auto;columns:3;column-gap:22px;}
+  @media(max-width:980px){.wall{columns:2;}}
+  @media(max-width:640px){.wall{columns:1;}}
+  .card{break-inside:avoid;margin:0 0 22px;background:var(--beige);border:1px solid var(--trait);border-radius:18px;
+        padding:28px 26px 22px;transition:transform .25s ease, box-shadow .25s ease;}
+  .card:hover{transform:translateY(-3px);box-shadow:0 16px 38px rgba(138,27,26,.08);}
+  .card p{font-family:'Lora',serif;font-weight:500;font-size:1.08rem;line-height:1.5;color:#2b2b2b;}
+  .card p:before{content:"«\00a0";color:var(--rose);font-weight:600;}
+  .card p:after{content:"\00a0»";color:var(--rose);font-weight:600;}
+  .card .tag{display:inline-block;margin-top:16px;font-family:'Raleway',sans-serif;font-size:.68rem;font-weight:700;
+             letter-spacing:.12em;text-transform:uppercase;color:#a08a91;}
+  .card.hide{display:none;}
+  .card.aide-card{background:var(--blanc);border:1.5px solid #e9f3d8;}
+  .card.aide-card .tag{color:#7c9a4e;}
+
+  .mur-foot{max-width:680px;margin:26px auto 0;text-align:center;font-size:.92rem;font-weight:400;color:#a08a91;}
+
+  /* AJOUTE LA TIENNE */
+  .ajoute{background:var(--beige);padding:90px 24px;margin-top:50px;}
+  .ajoute .wrap{max-width:760px;margin:0 auto;text-align:center;}
+  .ajoute h2{font-weight:800;color:var(--rose);font-size:clamp(2rem,4.6vw,3.2rem);line-height:1.08;letter-spacing:-1.5px;}
+  .ajoute .lead{margin:22px auto 0;font-size:1.18rem;font-weight:400;line-height:1.55;max-width:640px;}
+  .ajoute .compteur{margin:26px auto 0;font-family:'Lora',serif;font-size:1.1rem;color:var(--rouge-fonce);}
+  .ajoute .compteur b{font-weight:600;}
+  .cta-row{margin-top:34px;}
+  .cta{display:inline-block;position:relative;overflow:hidden;padding:.85rem 3.2rem;border:1px solid var(--rouge-fonce);
+       border-radius:10rem;background:var(--rose);color:#fff;font-size:.95rem;font-weight:500;text-transform:uppercase;
+       text-decoration:none;letter-spacing:.02em;transition:all 450ms ease;z-index:1;}
+  .cta:after{content:"";position:absolute;inset:auto 0 100% 0;height:102%;background:var(--rouge-fonce);z-index:-1;transition:all 450ms ease;}
+  .cta:hover:after{inset:0;}
+  .ajoute .anonyme{margin-top:18px;font-size:.88rem;font-weight:400;color:#a08a91;}
+
+  /* OUVERTURE */
+  .suite{padding:90px 24px 70px;text-align:center;}
+  .suite p{max-width:560px;margin:0 auto;font-size:1.22rem;font-weight:400;line-height:1.6;}
+  .suite .sign{margin-top:26px;font-family:'Lora',serif;font-size:1.15rem;color:var(--rose);}
+
+  footer{border-top:1px solid var(--trait);padding:30px 24px 40px;text-align:center;font-size:.8rem;font-weight:400;color:#a08a91;line-height:1.7;}
+  footer b{font-weight:700;color:var(--rouge-fonce);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">Merci Beaucul</a>
+  <span class="count-pill">1 210 réponses · anonymes</span>
+</nav>
+
+<header class="hero">
+  <h1>Vous avez été 1 210 à me répondre.</h1>
+  <p class="sub">Sur les 1 210 personnes qui ont répondu au sondage, certaines ont laissé leur avis en partant. J'ai passé l'été à tout lire. Voilà leurs mots. Bruts, anonymes, pas corrigés. Les fautes aussi, c'est eux.</p>
+  <div class="arrow">↓</div>
+</header>
+
+<section class="stats">
+  <div class="statswrap">
+    <h2>Ce que vos réponses racontent, en chiffres</h2>
+    <div class="statgrid">
+      <div class="statcard">
+        <span class="statq">Quand ça arrive, qu'est-ce qui te dérange le plus ?</span>
+        <span class="statnum">38 %</span>
+        <p class="statanswer">« Mon·ma partenaire qui reste sur sa faim »</p>
+        <p class="statnote">Et juste derrière, 31 % : « l'impression de pas contrôler mon propre corps ». La peur de décevoir passe devant tout le reste.</p>
+      </div>
+      <div class="statcard">
+        <span class="statq">À part avec ton·ta partenaire, t'en as déjà parlé à qui ?</span>
+        <span class="statnum">61 %</span>
+        <p class="statanswer">« À personne »</p>
+        <p class="statnote">Six sur dix n'en ont jamais parlé à personne d'autre. C'est exactement pour ça que ce mur existe.</p>
+      </div>
+      <div class="statcard">
+        <span class="statq">Est-ce que tu associes l'éjaculation à l'orgasme ?</span>
+        <span class="statnum">53 %</span>
+        <p class="statanswer">« Oui »</p>
+        <p class="statnote">Et 47 % de non. Spoiler : c'est pas la même chose, et cette confusion fait beaucoup de dégâts. On en reparle très vite.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="filters" id="filters">
+  <button class="on" data-f="tout">Tout</button>
+  <button data-f="mental">Le mental</button>
+  <button data-f="partenaire">La peur de décevoir</button>
+  <button data-f="frustration">La frustration</button>
+  <button data-f="apres">Le moment d'après</button>
+  <button data-f="declencheur">Les déclencheurs</button>
+  <button data-f="aide">Ce qui aide</button>
+</div>
+
+<section class="mur">
+  <div class="wall" id="wall">
+
+    <div class="card" data-cat="frustration"><p>ça serait intéressant de savoir si il y a un rapport avec la frustration sexuelle dans un couple</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>Bravo pour le taff. <br>Ma sexualité a tellement changé sur les 5 dernières années, j&#x27;ai la partenaire qu&#x27;il me faut. Elle se redécouvre et moi aussi. Je prends énormément soin d&#x27;elle, j&#x27;adore le cunni c&#x27;est un truc que je fais a chaque fois et apparemment je me débrouille très bien.</p></div>
+
+    <div class="card" data-cat="frustration"><p>C partie trop vite</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>C’est un sujet tabou pour les hommes … même entre potes</p></div>
+
+    <div class="card" data-cat="apres"><p>Les exercices type edging et autre amènent des résultats, mais me donnent l’impression de vivre une sexualité hors du couple et me fait parfois culpabiliser</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="autre"><p>Fait ton programme</p></div>
+
+    <div class="card" data-cat="declencheur"><p>Les éjaculations rapides arrivent le plus souvent quand je ai Pas eu de rapports depuis un certain temps (une à deux semaines environs) <br>L excitation est tellement forte que ça montre très vite.<br>J essaye de gérer et de faire redescendre cette excitation mais j ai peur de la faire descendre chez ma copine également. <br>Et lors de l ejaculation j ai un sentiment de culpabilité car je sais que ma partenaire aurais aimé […]</p><span class="tag">Les déclencheurs</span></div>
+
+    <div class="card" data-cat="autre"><p>D&#x27;abord merci pour votre travail, et c&#x27;est toujours un plaisir de se remettre en question et d&#x27;apprendre ou consolider de nouvelles choses</p></div>
+
+    <div class="card" data-cat="mental"><p>Ce qui met bcp la pression c’est quand l’éjaculation est synonyme de fin de rapport sexuel aux yeux de la partenaire, du coup stress à l’idée de finir par peur qu’elle n’ait pas été satisfaite. Dans le cas où elle est ouverte à l’idée de continuer le rapport même si j’ai ejac (doigts, sexe oral, toys etc) là j’ai plus aucune pression (et je tiens même + longtemps en général) car je sais que la durée du rapport ne […]</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="frustration"><p>C’est pas parce qu’on a ejaculé « trop vite » que le rapport est terminé et que la notion de temps est purement subjective</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>Personnellement ça peut venir vite au 1er rapport mais au 2eme ça revient à la normale</p></div>
+
+    <div class="card" data-cat="mental"><p>Cas perso : Aucun problème sur les préliminaires, cela peut-il durer assez longtemps<br>Par contre pendant le rapport, mon cerveau prend le dessus, l’excitation monte trop et c’est là que cela devient compliqué de « tenir »</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Que ce n&#x27;est pas une fatalité, qu&#x27;il faut en parle. Personnellement, j&#x27;avais trouvé la solution avec ma partenaire de l&#x27;époque et on s&#x27;eclatait énormément</p></div>
+
+    <div class="card" data-cat="autre"><p>Félicitations pour tout ce que tu fais Léa</p></div>
+
+    <div class="card" data-cat="autre"><p>Que les exercices puis être fait seul. Car le partenaire n&#x27;ai pas toujours&#x27;&#x27;aidant&#x27;&#x27;</p></div>
+
+    <div class="card" data-cat="frustration"><p>Comment faire pour mieux contrôler et donc éviter la frustration</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="mental"><p>L’importance de l’impact psychologique sur cet aspect</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="apres"><p>Un petit mot de remerciement pour aussi penser au hommes de manière super étique sans les culpabiliser de tout et de rien</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="autre"><p>Ça fait du bien de voir que c’est un sujet d’actualité et qu’on ne doit pas le garder pour nous</p></div>
+
+    <div class="card" data-cat="mental"><p>Comment on se débarrasse de la pression sociale lié à ça car c&#x27;est relou <br>Même quand on sait que c&#x27;est pas grave <br><br>Même quand on se débrouille autrement après.<br><br>Et d&#x27;une manière générale....contrôler son éjaculation ça serait le feu</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Comment regeler une ejaculation trop rapide, alors que je pense beaucoup trop avec ma tête et desfois je suis trop loin par rapport au moment présent.<br>Puis je suis tdah avec hyper activité</p></div>
+
+    <div class="card" data-cat="autre"><p>C’est agréable d’avoir quelqu’un qui en parle</p></div>
+
+    <div class="card" data-cat="partenaire"><p>Que j&#x27;ai découvert que c était variable. Habituellement assez long à venir, avec ma dernière relation de pré de 3 ans, il m est arrivé d&#x27;être extrêmement sensible, moins de 5 fois, chose très contrasté. En soit, je ne m&#x27;en faisais pas, j&#x27;essayais de retarder au maximum, ma compagne me rassurait et au pire, je m&#x27;occupe d&#x27;elle le temps qu&#x27;on retourne à deux ou juste sur moi si le besoin se fait sentir 🤌. Je sais que […]</p><span class="tag">La peur de décevoir</span></div>
+
+    <div class="card" data-cat="mental"><p>J’ai jamais eu de pression de mes partenaires à ce sujet (merci les queens). Ça a surtout l’air d’être frustrant pour moi qui n&#x27;ai pas le temps de faire monter mon plaisir avant de finir. Il y a aussi le côté &quot;logistique&quot; de gestion du préservatif/sperme qui peut couper le moment.</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Je pense que derrière cette problématique, il y a le potentiel multiorgasmique masculin qui est très pru abordé et dont les hommes ont absolument besoin.<br>Et aussi apprendre à jouir sans éjaculer et que l’éjaculation saborde grandement notre énergie sexuelle.</p></div>
+
+    <div class="card" data-cat="autre"><p>Continue, tu régal t&#x27;a m&#x27;a beaucoup appris a régalé mes partenaires, que des très bon retour</p></div>
+
+    <div class="card" data-cat="autre"><p>La discussion avec ma partenaire était ka clef pour moi ! Ça faisait parfois redescendre l’excitation donc repousser le moment de l’ejaculation, et puis elle ne le prenait pas mal et ça lui faisait plaisir car ça signifiait pr elle qu’elle faisait bien (ce qui était vrai). Le tout est de ne pas s’arrêter à ça et de continuer a lui faire plaisir à elle après</p></div>
+
+    <div class="card" data-cat="mental"><p>Pour un homme, il y a une certaine pression à la « performance » qui peut parfois être difficile à gérer. Ça amène du stress et du coup une ejaculation plus précoce.</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="mental"><p>Je crois que ça arrive dans des moments où se mêle une grande excitation et une grosse pression. Les prelis, ça peut être une bonne façon de désamorcer ce truc, ça permet de reprendre le contrôle sur cette pression, de pas se sentir dans l’urgence</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Je sais que globalement ce qui est pour la plus grosse cause c&#x27;était la sur consommation de porno et un partenaire occasionnel dès que je suis en relation de couple avec partenaire plus régulier et moins de porno le problème disparaît casiment</p></div>
+
+    <div class="card" data-cat="autre"><p>Que nous trouvons avec ma partenaire du plaisir autre que par la pénétration et c&#x27;est très bien ❤️ évidemment j&#x27;aimerais que ça dure un peu plus longtemps pour nous deux, mais on en parle et on trouve du plaisir avec plein d&#x27;autres choses 😁</p></div>
+
+    <div class="card" data-cat="apres"><p>Trouver des solutions dans le cas d&#x27;éjaculation précoce pour recommencer assez vite, sans avoir ce sentiments de dégoût</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Ce qui fonctionne le mieux pour moi c&#x27;est avoir des rapports plus souvent, car ça met moins la pression sur le prochain. <br>Explorer beaucoup sans la pénétration aussi. <br><br>Et merci pour tout ce que tu fais Léa 🫶</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Continue ton travail ! <br><br>Je te suis depuis longtemps, et depuis le moment où tu a failli tout arrêter, ton contenu est incroyable ! <br>Bravo pour ton abnégation !</p></div>
+
+    <div class="card" data-cat="autre"><p>Je pense que c&#x27;est jamais une fin en soit, on a des doigts, une.boucje et potentiellement des jouets à notre disposition. L&#x27;éjaculation marque pas spécialement la fin d&#x27;un rapport</p></div>
+
+    <div class="card" data-cat="autre"><p>Que la sexualité ne s’arrête pas à l’éjaculation, et qu’on peut tout à fait trouver un équilibre sexuel à sa/son partenaire en ne focalisant pas sur la pénétration par exemple</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Je pense qu’il y a aussi un facteur d’habitudes qui rentre en ligne de compte, quand le ou la partenaire connaît tes zones érogènes et qu’elles les actives même involontairement ça n’aide pas à prolonger l’erection par exemple.<br>En 15 ans de couple on se connaît par cœur et on sait ce qui marche sur l’un et l’autre par exemple.</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="mental"><p>Dans mon cas j’ai des relations sexuelles espacées et quasiment jamais avec la même personne. Du coup à chaque fois j’ai l’impression de recommencer à zéro car bien qu’étant un grand communiquant sur le sujet ça reste à chaque une première avec la personne, nos corps apprennent à se connaître. Les pbs d’ejaculation entraînent aussi dans mon cas des pbs d’erection liés au stress.</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Je comprends pas la question désolé :(</p></div>
+
+    <div class="card" data-cat="autre"><p>Que quand on dit que notre partenaire nous excite tellement que ça fait venir plus vite, c’est vrai! Ce n’est pas une excuse des hommes pour justifier !</p></div>
+
+    <div class="card" data-cat="frustration"><p>Je me suis aperçu qu&#x27;on parlait peu des pollutions nocturne ou éjaculation non  contrôlée  dans la nuit. Ça joue peut être ?</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="apres"><p>Soyons décomplexés et arrêtons de nous mettre la pression pour satisfaire uniquement les autres</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="autre"><p>Prendre en compte ce que j’ai dit dans « autres » 😊</p></div>
+
+    <div class="card" data-cat="autre"><p>Que ce soit adapté à tous les niveaux. Pour moi c’est pas tout le temps mais assez aléatoire, quand j’ai pas fait l’amour/masturbe depuis longtemps par exemple</p></div>
+
+    <div class="card" data-cat="autre"><p>Que ça n’est pas grave!</p></div>
+
+    <div class="card" data-cat="partenaire"><p>C&#x27;est vraiment pas un problème si on prend le temps de satisfaire sa partenaire autrement, je dirais que c&#x27;est plus frustrant pour moi de pas pouvoir profiter plus longtemps du moment</p><span class="tag">La peur de décevoir</span></div>
+
+    <div class="card" data-cat="declencheur"><p>Étant hypersensible, les premières fois ou les rapports après de longues périodes d&#x27;abstinences sont difficiles à gérer. C&#x27;est tout de suite la tempête de sensations, d&#x27;excitation. <br>Mais ce &quot;problème&quot; comme je le voyais au début de ma vie sexuelle m&#x27;a permis de sortir de cette idée de la performance à tous prix. Et puis la période réfractaire veux simplement dire qu&#x27;on ne peut plus recevoir de plaisir, pas qu&#x27;on ne […]</p><span class="tag">Les déclencheurs</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Personnellement, le problème n&#x27;est pas l&#x27;absence d&#x27;autres options que la pénétration pour que les deux partenaires prennent du plaisir. C&#x27;est plutôt le fait que ça ferme cette option et qu&#x27;on ne puisse pas prendre autant de plaisir qu&#x27;on le voudrait avec la pénétration ou même d&#x27;autres pratiques. <br><br>Ça ne m&#x27;a jamais empêché de faire jouir ma partenaire par d&#x27;autres moyens mais ça me bloque dans mon plaisir à moi. […]</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>c’est pas un problème en soit, c’est le regard qu’on pose dessus</p></div>
+
+    <div class="card" data-cat="autre"><p>Merci beaucoup d&#x27;ouvrir un espace pour parler de ça c&#x27;est très chouette et je pense que ça répond à un besoin fort qui n&#x27;est jamais exprimé comme tel !</p></div>
+
+    <div class="card" data-cat="partenaire"><p>Chaque homme est différent, et on a pas mal de pression sur ça à gérer car on peut vite se faire remplacer !</p><span class="tag">La peur de décevoir</span></div>
+
+    <div class="card" data-cat="autre"><p>Simplement merci pour ton travail. Je découvre tout juste ce que tu proposes et je trouve ça très intéressant.</p></div>
+
+    <div class="card" data-cat="apres"><p>Se détendre et ne pas avoir honte</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="partenaire"><p>Arrete de se comparet au autre et aprendre a connaitre son corp</p><span class="tag">La peur de décevoir</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Que la communication avec sa/son partenaire est essentiel, comme toujours , car ejaculation ne signifie pas fin de l’acte sexuel :)</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>La raison de cette éjaculation rapide, c&#x27;est la branlette à mon jeune âge</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>C&#x27;est super d&#x27;avoir des gens pour expliquer concrètement comment marche le corps de chacun, car ca permet de mieux communiquer avec ses partenaires et ça permet aussi d&#x27;enlever certains complexes (peur d&#x27;être bizarre,...)</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Merci pour le taf, et même si c’est déjà super top, un peu + d’infos sur la sexualité des personnes trans à destination des personnes trans ou de leur partenaire sans que ce soit sensationnaliste évidemment.</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>À mon sens le plus gros stress lié à ca réside dans la peur de pas satisfaire son sa partenaire, les contenus éducatifs qui désacralisent la pénétration permettent vraiment de dédramatiser ce phénomène. Pour autant il y a aussi une grande frustration lié à son plaisir personnel la dessus.</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Merci pour ton contenu. Ca aide beaucoup de gars à s’instruire et à comprendre leur sexualité et celle des autres sans tabous</p></div>
+
+    <div class="card" data-cat="autre"><p>Ma partenaire est compréhensive, je me sens pas jugé et l&#x27;on adapte nos moments de plaisirs selon le rythme de chacun. Ce n&#x27;ai pas un problème ni une finalité pour nous deux.</p></div>
+
+    <div class="card" data-cat="autre"><p>Merci. Je consulte toujours ton contenu avec beaucoup d&#x27;enthousiasme et d&#x27;intérêt</p></div>
+
+    <div class="card" data-cat="autre"><p>Merci pour ton travail. En tant qu&#x27;homme c&#x27;est compliqué de trouver du contenu pertinant. J&#x27;ai peur de jouir trop rapidement donc je fait beaucoup de préliminaire avant de pénétrer ma compagne.</p></div>
+
+    <div class="card" data-cat="apres"><p>Je parle hors de mon couple puisque j’estime que c’est plutôt sain mtn pour moi à ce niveau là même si je suis super curieux d’avoir des techniques pour pouvoir mieux me gérer et contrôler mon corps, mais une chose qui me foutait la pression pour un coup d’un soir ou lors des premiers rapports avec qqun c’était la peur du jugement et d’être comparé avec les précédents partenaires de l’autre. En tant qu’hétéro (jsp […]</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="autre"><p>Même si en ce moment je n&#x27;ai pas les moyens de me/nous offrir le fruit de ton travail, je suis assidûment ce que tu fais et merci, c&#x27;est utile, nécessaire et si bien fait 🙏</p></div>
+
+    <div class="card" data-cat="apres"><p>J&#x27;aurais aimé avoir accès à ces contenus pour moin culpabiliser quand j&#x27;avais 20ans 😆</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="autre"><p>Merci pour ton travail <br>Personnellement l’éjaculation vient plus avec des partenaires moins régulier et plus via la pénétration (après avoir fait beaucoup de génitale, tendresse et de caresse)  <br>Mais trouve que ça prend moins de place depuis que je suis moins dans un sex performatif</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Ne pas se crisper sur son plaisir quand il est trop intense mais soit arrêter ce qui nous stimule pour retarder l&#x27;éjaculation soit se dire que c&#x27;est le but de prendre du plaisir même si c&#x27;est très intense et court et accepter de jouir vite, on peut recommencer après. Donc kiffer même si c&#x27;est court plutôt que vouloir retenir l&#x27;éjaculation et ne pas y arriver et être frustré. Et également que c&#x27;est pas parce qu&#x27;on […]</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Que ça serait formidable de démocratiser ce problème. Il me poursuit depuis le début de ma vie sexuelle</p></div>
+
+    <div class="card" data-cat="apres"><p>C&#x27;est super ce que tu proposes, ça fait littéralement prendre de grands bols d&#x27;air et ça donne envie de profiter sereinement de notre sexualité. La seule chose qui m&#x27;empêche de plus te soutenir ou de participer aux speed dating et tes programmes, c&#x27;est l&#x27;argent et le manque de confiance en moi.</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="autre"><p>Merci pour le boulot, il y a encore du chemin mais ne perdons pas le cap 😁</p></div>
+
+    <div class="card" data-cat="apres"><p>Trop se retenir c’est mal et se masturber avant c’est nul car ça enlève tout plaisir</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="mental"><p>Comme pour moi il s&#x27;agit d&#x27;un &quot;problème&quot; ponctuel, j&#x27;ai l&#x27;impression que ce n&#x27;est pas réglable car lié à un contexte sur le moment sur lequel on ne peut pas (on devrait pas?) avoir tout le contrôle.</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>En ce qui me concerne en tout cas, ça dépend TRÈS sensiblement de la partenaire avec qui ça se passe (si je suis à fond sur elle, si c’est juste un plan, etc…)</p></div>
+
+    <div class="card" data-cat="autre"><p>Merci pour tout ce que tu fais, et c’est avec plaisir si j’ai pu aider &lt;3</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Que dans mon cas c&#x27;était 100% psychologique et que c&#x27;est pas une fatalité.<br>Et quand ça arrive, il faut pas hésiter à en parler avec sa/son partenaire, dédramatiser et pourquoi pas retenter dans la foulé</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="partenaire"><p>On sait qu’il y a d’autre façon de donner du plqisir que la penetration, mais ça nous (surtout je crois) laisse sur la faim et toujours on se demande si on le fais bien, apres y’a quand meme un coté performance (entre j’imagine porno, ce que disent les autres, les chansons sur le sujet et j’imagine aussi qu’on se met dans une concueence envers les autres ou les exs) bref y’a le cote frustration,et les comparaisons […]</p><span class="tag">La peur de décevoir</span></div>
+
+    <div class="card" data-cat="autre"><p>C&#x27;est relou :)</p></div>
+
+    <div class="card" data-cat="autre"><p>Si jamais vous parlez de traitement médicaux, sachez que le Priligy a des effets secondaires lourds très fréquents (nausées/diahrees)</p></div>
+
+    <div class="card" data-cat="autre"><p>J’ai pu remarquer un pattern clair dans le retour des ejaculations plus rapide. <br>Après avoir adopter les méthodes qui ont été relativement efficace (sans porno je précise car ce sera important), c’est le retour à du visionnage de porno qui m’a fait « rechuter ». <br>Trop d’excitation et de stimuli, ça accélère le processus et puis mon corps se réhabitue à avoir ce type de rythme.</p></div>
+
+    <div class="card" data-cat="mental"><p>Il fait penser aussi à la pression qu’on peut ressentir. Pression de notre partenaire mais aussi la pression que l’on se met. On peut vraiment mal le vivre et parfois notre partenaire ne le comprends pas et veux quand même continuer. Alors qu’on n’y ai plus</p><span class="tag">Le mental</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>La communication entre partenaire est importante</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>L&#x27;éjaculation n&#x27;est pas la fin du rapport mais l&#x27;envie de continuer ne se fait pas seul</p></div>
+
+    <div class="card" data-cat="mental"><p>C’est surtout la pression/anxiété personnelle, et la gestion de son excitation</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Merci beaucoup pour ce que tu fais ! J&#x27;avoue que le prix le rebute un peu, mais sinon je trouve ça super !  Et je comprends le prix, juste j&#x27;ai pas les moyens de mettre ce montant...</p></div>
+
+    <div class="card" data-cat="autre"><p>Pour ma part ça a toujours été liée à la situation avec un partenaire en particulier. Dans la même période, j&#x27;ai pu avoir de grosses difficultés avec une partenaire et absolument aucun avec une autre sans aucun changement en dehors de l&#x27;état d&#x27;esprit... Je ne sais pas a quel point cet impact psychique est généraliste</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>De communiquer. Personnellement j’ai réussis à faire comprendre à ma partenaire que si j’étais rapide au début, c’est parce qu elle me plait vraiment. Apres je « recharge » vite aussi donc ça aide, pendant cette « recharge » je m’occupe d’elle et tout vas bien :)</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Ne pas négliger les 2 face de la pièce du problème, psychique et physique !</p></div>
+
+    <div class="card" data-cat="autre"><p>Le vrais job c&#x27;est de déconstruire l&#x27;éjaculation comme la finalité d&#x27;un rapport. Avec le porno mainstream on nous a appris que c&#x27;était l&#x27;homme qui mettait FIN au rapport. Et cette fin, on se mets en t&#x27;ête qu&#x27;on lutte contre durant tout le long du rapport.</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Ça ne veut pas forcément dire que le rapport est fini. Il est tout a fait possible de continuer à vouloir satisfaire ta/ton partenaire dans demander du plaisir en retour, voir même par cette continuation, relancer ton plaisir et un second rapport qui peut durer plus longtemps. Le tout est quand ta/ton partenaire comprends que : <br>1) ce n&#x27;est ni de sa faute ni de la tienne <br>2) ça ne veut pas du tout dire que c&#x27;est […]</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="mental"><p>Ça fait des années que j’ai ce problème qui est apparu après 2 ans de relation, je me questionne en continu sur mon corps (souffle, muscle détendu etc…) et en fait j’ai découvert récemment que je n’ai pas d’ejaculations précoces quand je ne m’attends pas à faire l’amour. J’en conclu que c’est dans la tête et pas dans le corps pour ma part. <br>J’aurais bien aimé comprendre ça plus tôt</p><span class="tag">Le mental</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>J’ai la chance d’avoir une compagne géniale qui ne m’a jamais mis la pression et qui a toujours été soutenante. C’est une situation qui me gêne plus moi que ma compagne. J’ai appris à lui apporter du plaisir autrement qu’avec la pénétration (et tant mieux vu le pourcentage de femme qui n’en prenne qui peu via la pénétration). <br>Mais cette sensation de n’avoir aucun contrôle et de mettre fin au plaisir aussi […]</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="mental"><p>Il serait appréciable d’échanger sur le sujet des pannes dû à l’appréhension ou au stress. Je fais partie de ces hommes qui rencontre ce problème même avec la compagne quand on est dans un nouveau club par exemple</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="frustration"><p>je me sens pas super bien de ne pas donner beaucoup de plaisir et d’éjaculer vite, car le plaisir n’est pas durable, et ma partenaire peut se frustrer. Du coup, ça nuit un peu aux rapports et c’est vraiment pas ouf. <br>D’autre part, les questions de se rendre attirant et arriver à trouver quelqu’un juste pour passer un moment respectueux m’animent.</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>Souvent si je suis trop excité après une fellation, je commence avec un sextoy puis je viens en elle après. Ça me permet de respirer un peu avant la pénétration, et ça fait durer la pénétration pour elle aussi. C’est super agréable.</p></div>
+
+    <div class="card" data-cat="autre"><p>Je pense pas que ça soit involontaire dans mon cas, c’est juste que l’excitation est trop forte à ce moment là</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Le porn audio, JOI. Edging, exo respiration fonctionnent très bien ! (Je recommande Léléolélé aussi)<br>Merci Léa pour tout ce que tu fais. <br>Où trouves-tu toute cette énergie?</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="mental"><p>Au début de notre relation les rapport durait 1h voir 1h30 avec préliminaire et depuis 1 mois on a réduit nos rapports et cela dur 20mn 30mn et je ne la fais pas jouer a chaque fois et cela me dérange bcp jai l&#x27;impression de juste etre la pour ejaculer je reste assez confiant pour que cela revienne</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="mental"><p>Je ne penses pas avoir de problème d&#x27;éjaculation précoces mais je penses que le porno et la pression de ce qu&#x27;un homme doit faire au lit pour être sois disant un vrai homme déformé tout et que même après ejaculation on peu continuer et que ce n&#x27;est pas le temps qui passe mais le plaisir partager qui compte. Tenir 3h au lit c&#x27;est ridicule si personne n&#x27;a aimé. Merci Léa !</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Fait nous plaisir 🌸🌸✨️✨️</p></div>
+
+    <div class="card" data-cat="mental"><p>Je pense que c&#x27;est par rapport au hormones et qu&#x27;on est tellement excité que hop ca lache tt la pression<br>C&#x27;est mon cas 😂</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Je ne sais pas</p></div>
+
+    <div class="card" data-cat="autre"><p>Dans mon couple, je fais venir ma partenaire le plus souvent en premier, mais quand vient mon tour, parfois j’aimerai que ça dure plus longtemps mais si ce n’est ps le cas c’est pas grave</p></div>
+
+    <div class="card" data-cat="autre"><p>C’est horrible</p></div>
+
+    <div class="card" data-cat="autre"><p>C&#x27;est un problème qui peut avoir plusieurs sources</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Ne pas se formaliser sur une ejaculation précoce si cela n’arrive que de temps en temps, on peut prendre du plaisir sans stimulation de la verge, et donner du plaisir sans sa verge également ahah <br>Et communiquer avec ses partenaires la dessus permet de dédramatiser</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Que je ne savais pas trop quoi répondre à certaines questions car ce &quot;problème&quot; n&#x27;a jamais été très fréquent ou très problématique et que depuis que je suis sous antidépresseurs ça me le fait plus (c&#x27;est plutôt l&#x27;inverse d&#x27;ailleurs)</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>La solution à 90% c’est ce que tu dis tjs c’est la communication.<br>Plus on est bien avec sa ou son partenaire mieux est les moments intimes.</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Mon ejaculation prématurée m’a permis d’être un meilleur partenaire d’après celles que j’ai eu. Au moins j’étais beaucoup plus à l’écoute de leur plaisir</p></div>
+
+    <div class="card" data-cat="autre"><p>Peut être avoir des questions où on peut sélectionner plusieurs réponse , pour le cirque ce sujet c&#x27;est rarement qu&#x27;un seul truc qui me dérange et ou qui rentre en compte dans l&#x27;équation</p></div>
+
+    <div class="card" data-cat="autre"><p>On doit arrêter de vouloir être performant, le sexe est un plaisir solitaire et partagé. Éjaculer plus tôt que ce qu&#x27;on aurait voulu ne dis rien denla personne que l’on est. Et surtout ca n’empêche pas de continuer a faire l’amour. Moi par exemple j’ai besoin d’un temps de repos après l’éjac, mais au bout de quelques minutes je peux continuer à donner du plaisir à mon amoureuse. Parfois non mais on en a parlé et […]</p></div>
+
+    <div class="card" data-cat="autre"><p>Ce n’est pas un problème majeur dans ma vie sexuelle. Carrément pas. Ni moi ni ma compagne ne souffrons de l’ejaculation involontaire. Nous avons bien d’autres chats à fouetter (pauvres bêtes) avant que ça ne devienne un sujet. Donc mes réponses sont à prendre avec des pincettes.<br><br>Mon problème est plutôt qu’on est un couple pas très conventionnel (2 autistes avec TDAH), et que, par exemple et entre autres, que Mme […]</p></div>
+
+    <div class="card" data-cat="autre"><p>Ça libèrerait tellement ♥️</p></div>
+
+    <div class="card" data-cat="frustration"><p>Pourquoi perte de controle ?</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="frustration"><p>C’est frustrant</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>Ralentir la mast*rbation et savoir se faire plaisir ça change tout !</p></div>
+
+    <div class="card" data-cat="autre"><p>C esr pas tres grave quand il y a trop d excitations s&#x27;assoit peux arriver il n y anqu a recommencé round 2</p></div>
+
+    <div class="card" data-cat="mental"><p>Je suis sûr que c&#x27;est psychologique et il faudrait savoir les principaux levier pour calmer son excitation :)</p><span class="tag">Le mental</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Merci d’en parler et de montrer que c’est pas inéluctable et qu’on peut avoir une sexualité épanouie même tant que ce n’est pas « réglé »</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>La plupart du temps où ce &quot;problème&quot; (qui n&#x27;en ai pas vraiment un) m&#x27;est arrivé, c&#x27;est lorsque je désirais TROP ma partenaire (trop hâte, trop excité, 1ère fois avec cette fille...).<br>Mais en remettant le couvert si je puis dire, ça va déjà mieux messieur/dames... 😉</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>J&#x27;ai essayé beaucoup de trucs (anneau, préservatif plus épais etc), mais c&#x27;est vraiment de trouver une position qui me convenait mieux (et qui satisfaisait ma femme aussi) qui m&#x27;a aidé (pour le détail, moi debout et elle allongée sur le bord du lit). Par contre on change pas souvent de position du coup, et la levrette par-ci par-là on sait tous les deux qu&#x27;elle ne durera pas très long :&#x27;)<br>Merci pour ton travail :))</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="mental"><p>Merci de l&#x27;action d&#x27;utilité publique, le plus important c&#x27;est de réussir à ne plus se sentir stressé, anxieux à l&#x27;idée de performer</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Que ça marche pour le plus de monde</p></div>
+
+    <div class="card" data-cat="autre"><p>Beau travail ! Bravo, de vulgariser tout ces sujets qui sont encore malheureusement tabous</p></div>
+
+    <div class="card" data-cat="autre"><p>Plus on est détendu, en confiance et communiquant et moins une ejaculation imprévue est perturbante</p></div>
+
+    <div class="card" data-cat="frustration"><p>J ai eu ce problème plus jeune ou je pouvais des fois ejaculer trop vite <br>En vielllisant cela c est réglé</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="mental"><p>Que c&#x27;est pas grave en soit mais d&#x27;être d&#x27;en la performance c&#x27;est plus dur de s&#x27;en défaire même si on a le recul</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>La gestion de l’excitation est un défaut: en fait ce côté ejaculation rapide est arrivé quand j’ai commencé à voir d’autres partenaires (plans culs) en scred.</p></div>
+
+    <div class="card" data-cat="mental"><p>Juste que c’est un vrai cercle vicieux</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Comprendre pourquoi defois ça part tout seul et pourquoi des fois ça dure longtemps voir ça part pas</p></div>
+
+    <div class="card" data-cat="autre"><p>Et si on parlait de l&#x27;anorgasmie chez les hommes, de la différence orgasme/éjaculation ou encore des douleurs et autre gênes dans la vie intime des hommes ?? Des bises</p></div>
+
+    <div class="card" data-cat="frustration"><p>Pour moi c&#x27;est lié à la fréquence des rapports. Si les derniers datent comme c&#x27;est arrivé de plus de 2 mois j&#x27;ai du mal à me retenir et j&#x27;en suis frustré pour ma partenaire et moi</p><span class="tag">La frustration</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>La discussion autour de l’ejaculation précoce ou du plaisir masculin est encore très tabou et nécessite encore beaucoup de deconstruction et d’échange que ce soit dans la société ou dans les couples afin que tout le monde puisse communiquer et se sentir écouter. Aussi , continuer à  éduquer et renseigner les hommes sur la diversité des corps , envies , rapports comme tu le fais permet deja une base saine et plus […]</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Chez moi le problème était psychologique, j’ai dû régler des problèmes en moi et aussi travailler ma respiration et le rythme.  Je pense qu’on est tous différent :)</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>C&#x27;est pesant</p></div>
+
+    <div class="card" data-cat="apres"><p>Cela me rend souvent triste</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="mental"><p>J&#x27;ai l&#x27;impression que c&#x27;est principalement dans la tête les limitations. En parlant avec ma partenaire c&#x27;est pas une fin en soi. Au final le plaisir avant l&#x27;éjaculation est tout aussi jouissif voir même plus dans la durée</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Ca m&#x27;a beaucoup gêné dans ma vie intime, mais depuis quon en a vraiment parlé avec ma femme, ca ne me pose plus autant problèmes</p></div>
+
+    <div class="card" data-cat="autre"><p>Merci pour ce que tu fais je te suis depuis longtemps c’est incroyable 🫶🏻 !</p></div>
+
+    <div class="card" data-cat="frustration"><p>Ça n&#x27;est un problème que si l&#x27;un des partenaires n&#x27;y trouve pas son compte.<br>Moi c&#x27;est plutôt dans le fait de ne pas pouvoir avoir des rapports plus longs ou gérer mieux certaines positions pour profiter.<br>L&#x27;orgasme c&#x27;est cool mais toute la route qui y mène est franchement sympa, c&#x27;est dommage de pas pouvoir en profiter le temps qu&#x27;on veut</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>J&#x27;ai personnellement préféré la solution d&#x27;utiliser le préservatif pour faire durer un peu + le rapport parce que sensation/sensibilité un peu amoindrie mais durée plus longue. Sauf que j&#x27;aimerai bien pouvoir ne pas avoir recours a ça (surtout que c&#x27;est pas donné)</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Mon plan cul a pris ton programme de lâcher prise et a jouis toute seule puis avec moi</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Tout d’abord merci, j’ai bien avancé depuis notre dernier entretien sexo. Et que l’éjaculation même involontaire ou prématurée ne signifie pas que le rapport est fini. Il m’a fallu du temps à vraiment l’intégrer. Je le savais mais ça n’était pas devenu une évidence. Je ne sais si je suis très clair 😅</p></div>
+
+    <div class="card" data-cat="autre"><p>Continue de faire se que tu fais c’est génial !!!!<br>Oublie pas que les hommes regarde ton contenu et apprécie ton contenu !!!</p></div>
+
+    <div class="card" data-cat="autre"><p>Bah je serais ravi de l&#x27;essayer</p></div>
+
+    <div class="card" data-cat="autre"><p>Le sujet et pertinent et même tabou (on en parle pas entre gars) <br>Il y a plusieurs cas à dissocier pour bien cibler le côté involontaire (ex: dans un rapport, le touche anal peut provoquer une ejaculation direct sans pour autant arrêter l’erection)<br>La masturbation aussi peut être surprenante !<br><br>Au plaisir d’en discuter en tout cas si besoin de plus d’infos</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Trouver quand ejaculer n’est pas simple lors de rapports avec pénétration. comment « savoir » si on ne va pas ejaculer avant de jouir ? Réussir a suffisamment communiquer pour que la durée du rapport avec pénétration convienne à mes partenaires avant que j’ejacule, tenir un bon rythme constant, sans éjaculer, la liste pourrait continuer :)</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="frustration"><p>Mes partenaires ont toujours eu un rôle dans ce problème avec la non prise en compte de mon plaisir/ignorer mon pénis/rendre le moment non important et donc nier une partie sensible de moi. Si un.e nouvelleau partenaire arrive dans ma vie j&#x27;aimerais pouvoir gérer cette partie et garder le contrôle (en lâchant prise)</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="apres"><p>Ne pas passer à côté d’un truc, c’est que juste après, on se sent NUL. Et probablement car on a été biberonné au fait que « pour être un vrai mec, il faut durer » etc. Injonction sociale ++</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="autre"><p>Peut-être le problème est dans le fait que je puisse en partie (légèrement) le voir comme un problème, alors que c’est tout à fait normal</p></div>
+
+    <div class="card" data-cat="autre"><p>Je ne vois pas, car çà arrive rarement <br>C&#x27;est souvent le soir quand je suis ko de ma semaine.<br>Mais l&#x27;on a beaucoup de relation pendant la semaine donc çà ne m&#x27;a jamais posé problème.</p></div>
+
+    <div class="card" data-cat="mental"><p>Le stress entraîne une cercle vicieux, on se met la pression et l ejac  involontaire arrive</p><span class="tag">Le mental</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Ce qui m&#x27;a le plus aidé c&#x27;est le fait de contrôler le rythme<br>Le problème c&#x27;est que du coup on est moins dans le lâcher prise</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Aux mecs : si vous savez que vous êtes atteint par ça, faites passer le plaisir de votre partenaire avant</p></div>
+
+    <div class="card" data-cat="frustration"><p>L’importance de la masturbation pour apprendre à contrôler et la faire durer <br>Le fait de faire d’autre chose que la pénétration avant permet d’être plus progressif et moins ejaculrr d’un coup en cas de pénétration <br>Prendre des pauses (câlin bisous alterner les stimulations)</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="apres"><p>Le fait d’ejaculer trop tôt n’est pas vraiment un soucis en soit mais certaines fois, l’ejaculation amène une redescente qui peux provoquer du dégoût ou de l’hypersensibilité qui fini par mettre fin au rapport alors qu’ont aurais bien voulu continuer.<br>C’est principalement pour que ça que je préfère que l’ejaculation arrive à la fin du rapport quand tout le monde est satisfait</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="autre"><p>Perso je n’ai été que précoce à chaque fois que je n’avais pas vraiment envie de ma partenaire, comme si mon corps m’envoyais un message</p></div>
+
+    <div class="card" data-cat="autre"><p>1ère fois que je deviens actif en suivant cette page. Très curieux d&#x27;évoluer, changer et constater des résultats cool derrière :)</p></div>
+
+    <div class="card" data-cat="mental"><p>Que c&#x27;est une vrais pression personnel dans la recherche de rapports partagés</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Le conditionnement physique est tellement profond, que ça semble impossible de changer.</p></div>
+
+    <div class="card" data-cat="frustration"><p>Le fait d&#x27;éjaculer trop vite m&#x27;a permis de chercher d&#x27;autres techniques pour faire plaisir à ma partenaire. C&#x27;est un mal pour un bien</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>It happens 🤷‍♂️</p></div>
+
+    <div class="card" data-cat="autre"><p>J&#x27;adore ta façon d&#x27;aborder les thématiques qui peuvent poser problème et qui sont tabous dans un couple</p></div>
+
+    <div class="card" data-cat="frustration"><p>Que c&#x27;est très très chiant de jouir avant sa partenaire presque à chaque fois</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>Bonne chance, beaucoup de gens compte avoir une meilleur vie sexuelle.</p></div>
+
+    <div class="card" data-cat="autre"><p>Depuis 4 ans que je suis séparé (après 14 ans de vie de couple) j’ai du mal à avoir des erections et encore plus à ejaculer, j’ai découvert l’orgasme sans ejaculer. Celui dans le l’unique plaisir de partager celui de la partenaire. Mes pb d’ejac c’était surtout qu’avec m’a partenaire il n’y avait jamais de deuxième set. Ejac = fin de rapport. Dommage… La maturité et l’expérience permettent de mieux gérer sa sexualité</p></div>
+
+    <div class="card" data-cat="autre"><p>Je sais pas trop. Je pense qu’il faut surtout essayer de trouver ce qu’il match sur nous</p></div>
+
+    <div class="card" data-cat="autre"><p>(Ya pas que les hommes qui ejaculent avec une bite, je suis une femme trans et les problèmes et solutions sont différents parfois, hihi)</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Il faut s&#x27;aimer bordel! Il faut surtout mettre l&#x27;accent sur le fait de se détacher des idées de performance .il n&#x27;y a que le bien être interne du moment et de la connexion et les ressentie de chacun qui compte dans ces moments <br>Communication et écoute c&#x27;est ce que les gens on besoin d&#x27;adopter <br><br><br>Merci beaucoup pour tout ce que tu fait et ce que tu ma apporter part le biais de ces dernières années à te follow,  bon […]</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="mental"><p>Souvent lorsque ça arrive, l’énergie sexuelle redescend chez nous deux, et j’ai l’impression que mes partenaires (assigné.e femme) ne ce sentent pas légitime de continuer. Et même pour moi ça peut parfois être compliqué de garder cette tension pour que maon partenaire puisse aussi atteindre un épanouissement satisfaisant. Alors pour le conseil serait l’empowerment du corps de la femme; arrivé à faire intégrer le […]</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Pas vraiment questionner dams l enquete donc precision: gros problème d ejaculated precoce dans ma 20taine, disparu après la prise de paroxetine (anti depresseur) pour un autre problème. (Nice side effect)<br>Toujours une petite crainte que ça reviendrait si j arrête un jour le medicament</p></div>
+
+    <div class="card" data-cat="autre"><p>Que personnellement je ne trouve pas que ce soit si pénalisant qu&#x27;il n&#x27;y parait. <br>Comme précisé au début cela arrive mais pas tout le temps, loin de la.<br>Et quand ça arrive, ce n&#x27;est pas si grave que cela.<br>Au début de notre relation avec ma femme cela me gênait, mais elle m&#x27;a fait comprendre qu&#x27;être &quot;performant&quot; au lit à tout pris et tout le temps n&#x27;était pas nécessaire pour un épanouissement à deux.</p></div>
+
+    <div class="card" data-cat="autre"><p>J&#x27;imagine que c&#x27;est l&#x27;histoire de tout les hommes. La duré du rapport a été associé a la force virilité etc depuis des centaines d&#x27;années.</p></div>
+
+    <div class="card" data-cat="autre"><p>Rien de spécial</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Super initiative qui j&#x27;espère sera accessible au plus grand nombre comme ton compte insta !!!<br>Il faut du temps pour accepter que ça peut être là par moment que c&#x27;est très souvent psychologique et associé à une situation où le système nerveux se sent en &quot;danger&quot; et je sais pas si un programme d&#x27;un mois peut fonctionner mais j&#x27;irai voir ça assurément :)</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>apprendre a respirer et gérer son périnée je le dis à toutes les personnes qui ont un pénis et une prostate :))</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>La plupart des programmes qu’on trouve sur internet sont des trucs de charlatan mascu ce serai bien d’en avoir un vraiment bien fait</p></div>
+
+    <div class="card" data-cat="mental"><p>J&#x27;ai perdu une testicule ( torsion ) a 15 ans , ce qui m&#x27;a surment matrixer le cerveau car zéro accompagnement après l&#x27;opération</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>C est pas facile de se comprendre soit même c est encore plus dur de l expliquer à son partenaire</p></div>
+
+    <div class="card" data-cat="autre"><p>Se soigner dans cette société est un luxe, malheureusement.</p></div>
+
+    <div class="card" data-cat="autre"><p>T&#x27;es ebooks sur comment faire une bonne sextape et de bons nudes je regrette de ne pas les avoir pris quand ils étaient dispo !</p></div>
+
+    <div class="card" data-cat="autre"><p>J’aimerais apprendre à mieux gérer mon excitation, gérer mon corps et mes ejaculations involontaire</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Il y a des alternatives et des techniques pour compenser. Il n&#x27;y a pas que la pénétration dans la la sexualité et c&#x27;est OK si c&#x27;est court tant qu&#x27;il y a de la communication. Cependant, proposer un énième programme payant, pour résoudre une des plus grandes frustrations/complexes des personnes concernées mérite une réflexion sur la dimension éthique de la démarche. Ce n&#x27;est pas la fin du monde mais je pense que des […]</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="partenaire"><p>J&#x27;ai jamais eu de problèmes dans les relations passées par rapport à ça parce que la pénétration avait pas une place centrale dans ma sexualité et que j&#x27;avais d&#x27;autres moyens de faire plaisir à mes partenaires , mais j&#x27;ai peur de tomber sur des partenaires pour qui c&#x27;est plus important et pour qui ça serait rédhibitoire</p><span class="tag">La peur de décevoir</span></div>
+
+    <div class="card" data-cat="autre"><p>Merci de casser les barrières qui ne devraient pas exister.<br>Continue ce que tu fais ! 👌</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>C’est un sujet qui a besoin d’être approfondi. Et je pense qu’il y a bien plus de garçons touchés. Et c’est un problème complexe. Au début ça vient de là non connaissance du corps ensuite ça reste dans la tête. Après ça peut aussi dépendre de la personne qui est en face, à quel point la personne est bienveillante. Mais bon l’image du mec reste toujours il faut bander bien dure si c’est pas le cas c’est que tu es pas […]</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Pour ma part c’est souvent lié à la distance entre les rapports et à une excitation intense</p></div>
+
+    <div class="card" data-cat="autre"><p>C’est pas GRAVISIME !</p></div>
+
+    <div class="card" data-cat="frustration"><p>De rappeler les chiffres de la durée d’un rapport moyen ça remet tjr en perspective ^^ <br>De prendre en compte tt les possibilitées (?) je suis à demi circoncis je ne connais donc que ça mais je trouve mon gland trop peu réactif ou trop réactif des fois c’est frustrant. Avec mon épouse ou mes ex quasi impossible dejaculer sans pénétration mais lors d’une pénétration sauf avec une c’était entre 3 et 10min de […]</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="mental"><p>En gros, ca me gene en couple parce que j’ai l&#x27;impression de ne pas pouvoir profiter du moment.  Il y a un décalage entre mes attentes et ce que mon corps &quot;me laisse faire &quot;</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Trop de solution miracle, programme, specialiste.... qui ne marche pas et des conseils de personne qui ne le vivent pas ou qui ont fait un chemin. Pas de vrai temoignage, beaucoup de flan....</p></div>
+
+    <div class="card" data-cat="autre"><p>Ça serait pour tout les hommes qui doute d’eux de ne pas douter, ejaculer vite est quelque chose qui arrive assez fréquemment , et si jamais ça arrive, il ya les doigts la langue etc pour faire continuer le plaisir :)</p></div>
+
+    <div class="card" data-cat="autre"><p>De faire attention avec l’ego des hommes à ce niveau là qui peut être très sensible 😅 et qui est la cause du non traitement de ce sujet <br>Trop bonne initiative !!</p></div>
+
+    <div class="card" data-cat="autre"><p>Merci et bonne chance, en esperant que les mascus toxiques ne s’en prennent pas trop a vous pour essayer de mettre en place ce type de contenu qui, dans leur imaginaire nevrosé, le verraient comme une atteinte a leur sacro-sainte masculinité virile de la grosse teub de male oméga. Et sinon c’est dur de mettre un prix sur un tel produit sans connaitre la quantité d’infos dedans</p></div>
+
+    <div class="card" data-cat="autre"><p>Mon prblm c’est pas l’ejac trop rapide c’est l’inverse, pck j’pense avoir été déréglé par le porno (et j’en regarde vrm plus beaucoup)</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Personnellement je le relie aussi à différentes phases de vie où je suis plus ou moins bien dans mon lien avec moi et également à mes partenaires, notre lien, capacité à communiquer, si je me sens à l’aise ou non</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="mental"><p>Au final j ai l impression de jouir teop vite, juste parce que ma femme m&#x27;excite trop 🤷‍♂️</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="mental"><p>Parlé du mental</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>C’est super ce que tu fais pour le plaisir d’en recevoir et d’en donner</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Et bah surtout de ne pas avoir honte que ce n&#x27;est pas grave et surtout d&#x27;en parler à son.sa partenaire</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="partenaire"><p>Maon partenaire me dit à chaque fois qu&#x27;iel en a eu assez, mais j&#x27;ai l&#x27;impression qu&#x27;iel me dit ça pour me rassurer. C&#x27;est très angoissant. Et sinon autre chose à dire? Euh.. merci beaucoup ?</p><span class="tag">La peur de décevoir</span></div>
+
+    <div class="card" data-cat="autre"><p>Le revers du travail sur l’ejaculation précoce c’est parfois l’ejaculation… tardive.</p></div>
+
+    <div class="card" data-cat="autre"><p>Que c’est un sujet trop peu abordé. Et que ne serait-ce que d’avoir des hommes qui l’admettent serait la moitié du chemin</p></div>
+
+    <div class="card" data-cat="autre"><p>Keep going c’est tres bien ce que vous faites ! <br>By un homme qui se sent concerné</p></div>
+
+    <div class="card" data-cat="partenaire"><p>J&#x27;espère que ça pourrait m aider pour ne plus décevoir ma compagne</p><span class="tag">La peur de décevoir</span></div>
+
+    <div class="card" data-cat="frustration"><p>C&#x27;est con mais jouir plutôt vite m&#x27;a forcé la main pour comprendre tout le reste du sexe pénétration.. Ça reste frustrant quand on veut faire des sessions avec pénétration plus rough et que ça a pas le temps de monter dans l&#x27;intensité qu&#x27;on veut. Mais dans le day to day on s&#x27;éclate et ce n&#x27;est jamais jamais un sujet alors que je paniquais 3000 avant.</p><span class="tag">La frustration</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Ça peut toujours arriver ; mais il me semble important de sortir de l’idée que les rapports doivent s’arrêter avec l’ejaculation. Et aussi ceci : faire attention à prendre le temps et faire attention à sa respiration, ce sont des choses qui ont une influence positive sur l’impression de satisfaction dans les rapports ( en tout cas chez moi).</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Que tu fais du bon travail</p></div>
+
+    <div class="card" data-cat="autre"><p>Qu&#x27;il faut pas trop se focus là dessus non plus. Ce n&#x27; est pas nécessairement aussi grave que nous mecs pouvont penser. Mais aussi que oui ça se change. Mais bref je pense que tu sais tout ça. Merci pour les travaux et ton contenu en général j&#x27;aime beaucoup. Même si j&#x27;ai pas encore passé l&#x27;étape d&#x27;acheter</p></div>
+
+    <div class="card" data-cat="autre"><p>C’est un sujet intéressant</p></div>
+
+    <div class="card" data-cat="mental"><p>Je tiens à préciser qu&#x27;à une période de ma vie c&#x27;était devenu systématique et extrêmement rapide, mais que c était dû à une situation psychologique et affective particulière. Ça s est résolu en changeant de partenaire. Ça peut m&#x27;arriver encore mais plus rarement et moins vite. Et c est toujours lié à du stress. C&#x27;est pour ça que je ne suis pas sur qu&#x27;une formation sur le sujet soit vraiment fait pour mon cas. Je […]</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>J&#x27;ai découvert très tardivement que la juissance féminine se fait très peu par pénétration</p></div>
+
+    <div class="card" data-cat="autre"><p>C&#x27;est cool d&#x27;être  tres excité il faut embrasser cette excitations pour ne pas la  rendre uniquement problématique</p></div>
+
+    <div class="card" data-cat="autre"><p>Je n&#x27;ai plus jamais eu d&#x27;éjaculation précoce après avoir rencontré ma partenaire tantrique, c&#x27;est venu très naturellement</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Je pense que la clé pour sortir de l’ejaculation involontaire est l’état d’esprit. <br>En tout cas je sais que dès que je pense au fait de ne pas bander ou de jouir vite, ça se produit et vice versa</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Je serais curieux de savoir si vous avez déjà quelque chose en cours pour le problème inverse ? Ne pas réussir à finir en tant que mec. Merci pour les travaux en tout cas</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Merci de faire en sorte de pouvoir en parler, échanger sur ces sujets parfois tabous, on se sent moins seul</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="mental"><p>39 ans, mais j&#x27;ai l&#x27;impression d&#x27;être passé à côté de la découverte sexuelle</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="frustration"><p>Que le sujet que j&#x27;avais compris de départ c&#x27;était &quot;terminer trop vite&quot; et pas la perte de contrôle 😅.<br>Sinon, je te souhaite le meilleur et de cartonner à fond !</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="declencheur"><p>Les questions n&#x27;ont pas parfaitement mis en avant ma situation. Je viens souvent trop vite sur le premier rapport mais comme je peux enchaîner et suis plus endurant sur ce qui suit ma partenaire est ok avec ça(il y a même un côté flatteur au fait que je vienne rapidement).<br><br>C&#x27;est ce qui fait que j&#x27;ai peu cherché.<br><br>Également le problème me semble récent je pense qu&#x27;il y a un lien avece fait que j&#x27;ai plus ou moins […]</p><span class="tag">Les déclencheurs</span></div>
+
+    <div class="card" data-cat="autre"><p>Je ne connais pas les tarifs que tu pratiques, ni ceux d&#x27;une sexologue en général. Donc je ne peux pas être objectif sur le tarif que j&#x27;ai donné, je ne me rend pas compte du travail fourni !</p></div>
+
+    <div class="card" data-cat="declencheur"><p>Dans mon cas ça arrive de temps en temps lors du premier rapport (round 1) dans le sens où si on le refait après ça ne m’arrive plus… C’est vraiment que la première fois. Et des fois c’est limite l’inverse j’arrive pas à ejaculer 😭 donc soit l’un soit l’autre (enfin c’est pas tout le temps mais ça m’arrive). Donc j’arrive à prendre du recul sur le fait que l’éjaculation n’est pas une finalité et encore moins que […]</p><span class="tag">Les déclencheurs</span></div>
+
+    <div class="card" data-cat="autre"><p>Arrêter de voir ça comme un problème ou une gêne, je prends mon cas, ça dure toujours uper longtemps avec moi, bien ou pas je m’en fou <br>Mais des fois tu es pris d’une envie rapide tu sais que ça marchera pas, donc ça me dérange de ne pas pouvoir le faire comme je veux quand je veux ! Autant ça dure 45 minutes et t’es à bout mais autant 4 minutes avec l’excitation et les à côté comme le fait de te faire surprendre ou […]</p></div>
+
+    <div class="card" data-cat="autre"><p>Parler du jeu d&#x27;hormones avant/après l&#x27;éjaculation, les causes, l&#x27;origine.</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Bienveillance et communication avec son/sa partenaire</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>On pense trop que -pénétrer/ejaculer- = orgasme et satisfaction. Alors que pas du tout, on a/j&#x27;ai une grande frustration de ne jamais avoir connu une seule fille ((10 partenaires a 32 abs)qui avait ne serait-ce que la volonté de donner du plaisir. Pas besoin puisque nous les homme la penetration nous suffit a ejaculer . . . Sans parler de la gêne et la honte du conditionnement masculin a s&#x27;exprimer, ou ne serait-ce […]</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Il faut comprendre que ça ne définit pas un bon moment de partage et de plaisir entre deux individus, je pense. Mais que ça peut être frustrant pour l&#x27;un.e ou l&#x27;autre et si il y a des façons de &quot;résoudre&quot; ce que quelqu&#x27;un.e pourrait voir comme un problème ça pourrait être une très bonne chose de tester ou trouver des solutions !<br>Dans mon cas, le fait d&#x27;avoir plusieurs éjaculations (je crois qu&#x27;on appelle ça […]</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Je pense qu&#x27;il est important de rappeler aux personnes à pénis que c&#x27;est vraiment pas le plus important, et que ça ne veut pas dire être mauvais au lit ou non performant ou un mauvais amant</p></div>
+
+    <div class="card" data-cat="autre"><p>Très bonne initiative sur un sujet sensible</p></div>
+
+    <div class="card" data-cat="autre"><p>Ça ne m&#x27;arrive qu&#x27;en pénétration, en me masturbant ou pdt une fellation ça dure un peu plus longtemps. <br>Après tout les zguegues sont différents, peut être que la forme y fait.</p></div>
+
+    <div class="card" data-cat="mental"><p>Psychologique</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>J&#x27;ai répondu au sondage malgré le fait que j&#x27;ai pas encore eu de relation sexuelle dans ma vie. Les éjaculations ne sont dû qu&#x27;à des masturbations en solo. Je me suis dit que mon avis pourrait permettre aussi de construire le projet.</p></div>
+
+    <div class="card" data-cat="autre"><p>Vous recruter ?😅😂</p></div>
+
+    <div class="card" data-cat="autre"><p>Trop bien tout ce que tu fais !</p></div>
+
+    <div class="card" data-cat="frustration"><p>Pour le programme ça serait surtout d&#x27;avoir des exercices pratiques pour contrôler mon éjaculations. + différent tarif (étudiant,etc) pour le programme.</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="frustration"><p>Il faudrait prendre en compte le problème inverse : l&#x27;éjaculation retardée ou anejaculation. Ça m&#x27;est encore bien plus arrive de ne pas pouvoir &quot;finir&quot; et d&#x27;être extrêmement frustré</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>C&#x27;est chiant quand on veut faire plaisir à la partenaire</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>C’est aléatoire pour moi, tout dépend de la stimulation faite. Pour moi ça peut les opposé, je peux aussi ne pas ejaculer <br>Donc j’ai appris à faire et ça n’a jamais retiré le plaisir du moment. <br>L’important est aussi ensuite la communication pour aider son partenaire à comprendre</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>J´aimerais comprendre pourquoi avec certaine femme c´est gaule dur qui tient longtemps et avec d´autre c´est mi môle qui a du mal à remonter même si très envie de la partenaire. Dans les deux cas c´était avec des relations suivis. <br>Avec les hommes c´était pareil.</p></div>
+
+    <div class="card" data-cat="mental"><p>Avoir un partenaire ouvert et qui sait que le plaisir pris n&#x27;est pas relié a l&#x27;éjaculation ou la non éjaculation permet de relativiser et de revenir encore plus fort la fois d&#x27;après sans y penser</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Si c’est l’orgie, plus de pénurie de zizi !</p></div>
+
+    <div class="card" data-cat="autre"><p>J’ai déjà identifié des solutions en faisant des préliminaires (caresses et felation de madame) lors du rapport cela retarde l’ejaculation. J’aimerais trouvé des solutions sans pour autant devoir m’arrêter surtout quand je sens que madame s’excite.</p></div>
+
+    <div class="card" data-cat="mental"><p>Il faut pas sé faire cest pas vou le problème, ca peut etre lié a beaucoup chose comme le stress ou la fatigue</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Bah j&#x27;espère que vous allee continuer, et merci de penqer aux gens à pénis</p></div>
+
+    <div class="card" data-cat="autre"><p>Y’a pas que la pénétration dans la vie</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Pour moi la clé est d’oser en parler et communiquer avec son / sa partenaire pour adapter le rapport</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Le sport c’est la clé</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>De la passion qui s’exprime trop rapidement</p></div>
+
+    <div class="card" data-cat="autre"><p>J’ai envie de travailler sur ce problème qui peut devenir gênant à l’avenir <br>Étonnez moi 🤗</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Help. <br>Plus sérieusement, la gêne où le honte d&#x27;en parler même à sa partenaire</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>C’est pas si grave en soit mais pas bcp de gens le comprennent</p></div>
+
+    <div class="card" data-cat="autre"><p>Merci de traiter de tous les problèmes masculins comme féminins, pour que nous, les hommes, soyons plus à l’écoute et de meilleurs partenaires.</p></div>
+
+    <div class="card" data-cat="apres"><p>Il manquait un élément important a mes yeux dans ce qui me dérange le plus, il y a aussi le plaisir que je peux ressentir dans ses moments là , comme si il n’était pas complet, pas totalement abouti . Et dans la même ligné, le plaisir ayant été de courte durée, la redescente aussi bien souvent ce retour a la réalité correspond au moment où ma partenaire  n’est plus a mes côtés pour se nettoyer, cela augmente […]</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="autre"><p>Excellent boulot</p></div>
+
+    <div class="card" data-cat="frustration"><p>La frustration est présente aussi chez moi, comme si l&#x27;orgasme et le plaisir était 2 choses distinctes</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>Merci pour ton travail. Si ça reste abordable je prendrai ce programme mais j’ai pas forcément de hauts revenus</p></div>
+
+    <div class="card" data-cat="autre"><p>Ce n&#x27;est pas grave, si les partenaires sont de bonne intention ça n&#x27;arrivera pas souvent ou plus! Il y a pleins d&#x27;autres pratiques à faire après une éjaculation</p></div>
+
+    <div class="card" data-cat="partenaire"><p>Rassurer les personnes à penis en leurs rappelant que cela arrive de temps en temps</p><span class="tag">La peur de décevoir</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>La communication et l’alchimie sexuelle dans le couple entre l’homme et la femme et la variante d’envie entre la femme et l’homme</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>C&#x27;est quoi les stats, est ce qu&#x27;on est bcp dans ce cas ? Est ce vrmt dû conditionnement ou est ce biologique (comme le règne animal cherche à ejac au plus tôt)?</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Ça sert à rien de culoabiliser, c&#x27;est important d’en parler à son/sa partenaire</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Dans un monde rempli de mensonge, de faux semblants et d&#x27;artifice c&#x27;est hyper difficile de démêler le vrai du faux, de savoir ce qui est normal et ce qui ne l&#x27;est pas et du coup de savoir si besoin de traiter quelque chose ou si c&#x27;est quelque chose de purement lambda</p></div>
+
+    <div class="card" data-cat="autre"><p>Merci d&#x27;adresser des sujets qui ne sont pas toujours adressés ailleurs.</p></div>
+
+    <div class="card" data-cat="autre"><p>Apprendre a jouir plusieurs fois comme la partenaire parfois</p></div>
+
+    <div class="card" data-cat="mental"><p>Pour ma part , L’excitation intellectuelle(souvent liée à la frustration )  est plus forte,  et a tendance à développer l’ejaculation précoce , alors que lorsque c’est moins réfléchi, plus spontané cette question se pose moins . Plus j’y pense, plus j’essaye de contrôler et moins cela marche , car ma partenaire sent que je ne suis pas à 100% à ce qu l’on fait . <br>Avec d’autres partenaires je n’avais pas ce problème . […]</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Pas de conseil juste un immense merci pour le travail que tu fais et pour l&#x27;intérêt et la curiosité que cela procure à ceux comme moi qui te suivent</p></div>
+
+    <div class="card" data-cat="autre"><p>Envie d&#x27;en savoir plus car c&#x27;est vraiment une question de gestion et de connaissances de soi</p></div>
+
+    <div class="card" data-cat="autre"><p>Espérons que ça marche</p></div>
+
+    <div class="card" data-cat="partenaire"><p>Personnellement je ne pense pas que je puisse y changer grand chose. J&#x27;ai déjà pas mal réfléchi à ce sujet et essayé de comprendre ce qu&#x27;il se passe, et ma conclusion est la suivante : c&#x27;est tout simplement parce que je ressens tout en décuplé.<br>Les deux techniques qui marchent un peu sont : soit de me masturber avant, soir d&#x27;éjaculer pendant les préliminaires. Et encore cela ne fait que freiner le plaisir, puis […]</p><span class="tag">La peur de décevoir</span></div>
+
+    <div class="card" data-cat="autre"><p>Merci pour tout ce que tu fais, je ne suis pas régulièrement mais c’est toujours un plaisir de voir ton contenu! Continue comme ça😊</p></div>
+
+    <div class="card" data-cat="mental"><p>J&#x27;ai hâte d&#x27;en savoir plus sur le sujet ! <br>Pour moi, l&#x27;excitation et l&#x27;augmentation de la sensibilité du gland sont liées. Par exemple, si je suis très excité le gland est très sensible et j&#x27;ai parfois beaucoup de mal à résister. Ça entraîne l&#x27;éjaculation précoce et le fait de prendre très peu de plaisir. Pour moi, c&#x27;est accentué avec le fait d&#x27;être stressé (si j&#x27;ai peur que des personnes m&#x27;entendent ou rentre sans […]</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Parler des antidépresseurs+ ne pas parler que de sexe hétéro</p></div>
+
+    <div class="card" data-cat="autre"><p>Que c&#x27;est un mélange entre un manque de connexion à son corps, et d&#x27;angoisse sociale (ce que ça dit de moi), quand il y a pb c&#x27;est qu&#x27;il y a solution, c&#x27;est loin d&#x27;être intraitable !</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Accepter cette éventualité me permet souvent de ne plus y penser et de retrouver un certain contrôle de mon corps</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Que ça n&#x27;est pas un problème si la confiance et la communication dans le couple est au top. Souvent (pour ma part) c&#x27;est parce que je trouve ma femme trop ouf que le plaisir monte très vite. Dans tous les cas, une éjaculation ne signifie pas la fin d&#x27;un rapport à mon sens 😁</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Pour ma part, je suis tdah et sous traitement depuis peu, ça va de MIEUX en mieux quand le traitement (ritaline) fait effet j’ai de moins en moins la sur excitation de le faire donc je penses moins à finir et donc la récompense de la libération hormonale derrière, je ne sais pas si ça a un liens mais je le souligne^^ <br><br>Merci à vous 🫶🏼</p></div>
+
+    <div class="card" data-cat="autre"><p>Qu&#x27;il faut s&#x27;en rendre compte qd on est trop sur le porno defois si t&#x27;es trop dedans et tu le fais plusieurs fois par jour qd ta une go après difficile d&#x27;avoir envie avec fin tu as envie mais ducoup tes bcq moin performant que tu l&#x27;aurais voulu</p></div>
+
+    <div class="card" data-cat="autre"><p>Pas évident d&#x27;être éjaculateur précoce, des fois ça peut tenir et ne connais pas la raison. Nous avons appris depuis 25 ans a avec ma femme à prendre du plaisir presque à chaque rapport.</p></div>
+
+    <div class="card" data-cat="autre"><p>Que c&#x27;est bien ce que tu fais. Continue n&#x27;abandonne jamais tu es fait pour cela. Sinon l&#x27;éjaculation précoce dépend de beaucoup de facteurs</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Ne pas avoir peur d’en parler.</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="mental"><p>Parfois on peut avoir une experiencie disociatif’ et on gere la performance comme un champion mais dans un état presente le moment plus precieux c’est quand on franche les portes de la vulve et le plaisir deviens incontournable et par consequant l’orgasme est inmediat</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Merci pour ton travail. toujours un plaisir des t&#x27;écouter sur un podcast sur ces sujets. bonne continuation</p></div>
+
+    <div class="card" data-cat="autre"><p>Comment faire comprendre à sa partenaire que, te faire éjaculer rapidement, ça n&#x27;amène du plaisir à personne</p></div>
+
+    <div class="card" data-cat="frustration"><p>Ne pas se frustrer parce-qu’on éjacule vite et surtout, la pénétration n’est pas une fin en soi !</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>Merci pour ses années hotline qui m&#x27;ont permis de me déconstruire et de découvrir un peu vôtre quotidien</p></div>
+
+    <div class="card" data-cat="autre"><p>Intrigué, envie d&#x27;en savoir plus, curieux quoi</p></div>
+
+    <div class="card" data-cat="mental"><p>Parler du ressenti de sois vis-à-vis des autres. Sujet essentiel. Les femmes comme les hommes se mettent trop de pression. Que ce soit intérieur ou social. Apprendre à mieux comprendre comment ont fonctionne c&#x27;est vraiment et tellement important. Se sentir à l&#x27;aise avec l&#x27;autre, c&#x27;est je pense un point primordial pour mieux réagir et assimilés ce qui se passe à l&#x27;intérieur de nous mais aussi avec les autres. <br><br>Ps: […]</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>On galère avec l&#x27;installation de la pistoche, un coup de main ?</p></div>
+
+    <div class="card" data-cat="frustration"><p>Au delà de la durée avant ejaculation je pense que l&#x27;important c&#x27;est le contrôle et la reprise en main de son corps</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="mental"><p>Bien souvent une éjaculation non contrôlé pour ma part vien d’une grande excitations pendant l&#x27;acte évidemment mais surtout de trop y penser ou d’etre sous stresse d’element autour comme quelqu’un qui peut entendre. Ou meme du stresse du regard de la partenaire.  Et pourtàt des rapport sans pression ce passe tres bien. Pression que je me met tout seul d’ailleur</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Je crois en toi 😂</p></div>
+
+    <div class="card" data-cat="mental"><p>Avec ma partenaire, c&#x27;est pas un problème <br>Mais on est libertin, et quand on joue avec un autre couple, ça me stresse et ça peut me gâcher le moment</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Ce qui gêne est plutôt la baisse de libido que cela entraîne</p></div>
+
+    <div class="card" data-cat="autre"><p>C’est pas grave ça arrive à tous le monde , et parlé avec sa ou son partenaire 😉</p></div>
+
+    <div class="card" data-cat="frustration"><p>bah c chiant de finir vite et de pas savoir contrôlé alors que j’essaye</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>Que tu es géniale et que tu as de précieux conseil. Merci pour ton savoir et ton partage</p></div>
+
+    <div class="card" data-cat="autre"><p>Merci de vulgariser et d&#x27;éduquer à la vie sexuelle, Je suis ton compte et plusieurs autres du type depuis la fin de mon adolescence et vous m&#x27;avez tous éduquer et fait comprendre beaucoup de choses nécessaires au développement d&#x27;une sexualité saine et plus épanouie. Vous êtes d&#x27;utilité publique. Merci 🫶</p></div>
+
+    <div class="card" data-cat="frustration"><p>Comme autre moyen de ne pas finir trop vite, j’aime bien celui de faire d’autres choses que la pénétration !</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>D’insister sur les moyens plus érogènes (?), de prendre du plaisir dans tout ce qui accompagne « l’acte » (ce qui est souvent associé à la pénétration).<br>D’apprendre le plaisir par tout ce qui entoure le sexe et le corps</p></div>
+
+    <div class="card" data-cat="apres"><p>Que cette situation d&#x27;éjaculation est vraiment un complexe venant freiner et impacter ma vie sexuelle et nourrir un dénigrement et mesestime</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="frustration"><p>Qu’il existe les sextoys pour jouer avec sa partenaire si on ejacule trop vite à notre goût (:</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>Vive le sexe</p></div>
+
+    <div class="card" data-cat="autre"><p>Je pense qu’il faut prendre le problème comme il vient car des jours tu vas durer plus longtemps et justement ta partenaire vas vouloir que cela soit plus court et inversement. Ne pas se prendre la tête sur ce sujet enfin pour certain. <br>Courage pour tout ce que tu fais et vraiment je pense tu peux aider beaucoup de personne continue 💪🏼💪🏼💪🏼 force à toi</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Il est extrêmement difficile d&#x27;en parler avec des partenaires occasionnel</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Si ça arrive c&#x27;est que tu désire vraiment la personne.</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Quand je suis en couple et que la communication autour du sexe se débloque, j&#x27;ai beaucoup moins de problèmes d&#x27;ejaculation précoce. <br>Et merci pour tout ton travail, ce sont de supers outils pour déconstruire certaines choses et reconstruire derrière. <br>C&#x27;est précieux tout ce que tu fais !</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>parler ça fait du bien, éjaculer c’est pas une finalité :)</p></div>
+
+    <div class="card" data-cat="frustration"><p>En fait dans mon cas soit je jouis involontaire parce que je suis très excité (au sens physique du terme), mais du coup je suis suffisamment excité pour repartir très vite après, soit je ne suis pas suffisamment excité pour ne pas contrôler mon éjaculation et je n&#x27;ai pas de problème. Donc ça ne m&#x27;a jamais posé problème</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>qu’on oublie pas de rappeler aux hommes qui suivrait ça que leur orgasme n’est pas une finalité du plaisir et qu’ils peuvent et devraient quand même faire jouir leur partenaire après aussi avec d’autre moyens, car c’est souvent oublié</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>J&#x27;adore l&#x27;idée, je n&#x27;ai pas encore sauté le pas de consulter, d&#x27;y consacrer vraiment du temps et (on va pas se mentir) déconstruire cette espèce de pudeur mascu qui m&#x27;empêche d&#x27;en parler bref.<br>Merci pour ça, ce que tu fais ça nous aide à péter des portes qu&#x27;on nous a beaucoup fermées.<br><br>Je pense que je me pencherais vraiment vers ce programme, ça peut être une très bonne porte d&#x27;entrée pour essayer de décrypter ce […]</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Avoir des relations sexuelle plus régulièrement .</p></div>
+
+    <div class="card" data-cat="mental"><p>Je pense que je suis vraiment stressé et les multiples expériences d’ejaculation trop tôt me frustre et m’empêche de vraiment profiter. Ce n’a pas toujours été le cas mais avec la vie en couple et le temps on fait moins l’amour ce qui tend aussi à une ejaculation plus rapide lors des rapports.</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>J&#x27;espère que ça va marcher</p></div>
+
+    <div class="card" data-cat="autre"><p>De ne pas faire une fixette la dessus, c’est rarement ce qui permet de procurer le plus de plaisir à une femme. <br>Merci pour ce que tu fais 😊</p></div>
+
+    <div class="card" data-cat="autre"><p>Ce n’est pas si grave que ça a mon avis tant que c’est pas systématique</p></div>
+
+    <div class="card" data-cat="autre"><p>Keep up the good work :)<br>Maybe des trucs sur le plaisir anal des mecs<br>Comment voir les choses depuis la visions des meufs pour un mec. Maybe parler du fait d&#x27;avoir de faire mal a l&#x27;autre ou d&#x27;être pris pour un gros pervert si on passe en &quot;beast mode&quot;?</p></div>
+
+    <div class="card" data-cat="autre"><p>On en a besoin !</p></div>
+
+    <div class="card" data-cat="mental"><p>L&#x27;anxiété de performance nous prive de bonnes expériences</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="apres"><p>Ne plus ressentir de culpabilité, de stress avant, pendant et après le rapport. Faire disparaître cette pression ce serait ÉNORME.</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="autre"><p>Contacter Charles.co qui vont des choses semblables</p></div>
+
+    <div class="card" data-cat="autre"><p>Ce n’est actuellement pas un problème; cela m’ai arrivé quelque fois, de manière très sporadique,  je trouve le questionnaire très « clivant » ; comme si on le vivait encore, comme si c’était un problème actuel.</p></div>
+
+    <div class="card" data-cat="autre"><p>Également quelques recherches sur la non ejaculation, qui est un peu le revers de la pièce</p></div>
+
+    <div class="card" data-cat="mental"><p>Je reconnais que mes enjeux à ce sujet sont liés à mon anxiété de performance.</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>J&#x27;ai rien a dire des spécial si ce n&#x27;est aie t&#x27;es géniale.. <br><br>Et tu a parler d&#x27;énormement de sujet mais que dirais-tu de parler de quelques choses que vraiment peu de gens connaissent (et juge). La Knismolagnie (ou le Tickling) ?</p></div>
+
+    <div class="card" data-cat="autre"><p>Perso mes antidépresseurs retardent voir rendent impossible l&#x27;éjaculation,  mais sans je ne tiés pas 5 minutes de penetration</p></div>
+
+    <div class="card" data-cat="autre"><p>Pour moi (et je crois que c&#x27;est vécu ainsi par mes partenaires) lorsqu&#x27;une éjaculation m&#x27;oblige a faire une pause en général c&#x27;est lié à un plaisir intense partagé, quand ça n&#x27;est pas le cas la fête peut continuer autrement.</p></div>
+
+    <div class="card" data-cat="mental"><p>Il faudrait un programme sur la maîtrise de l’ejaculation, l’anxiété de performance (qui est très forte chez les hommes, beaucoup d’attentes pèsent sur nos épaules) la gestion de la longueur d’un rapport, de son intensité, la possibilité multi-orgasmique plus qu’un programme de rééducation de l’éjaculation précoce, c’est vraiment deux chose la différentes</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>pouvoir m’expliquer comment marche mon cœur</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Pour moi ça c est installer avec mon ex femme , ça a durer 3-4 ans …. <br>Le phénomène s est arrêté quand je me suis séparé et j ai repris une sexualité normale <br>Le problème c est surtout le manque d info et l accès à un sexologue pour en parler peut être</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Je trouve pas que j&#x27;éjacule vite, mais parfois j&#x27;aimerai savourer plus longuement le moment où c&#x27;est intense sans qu&#x27;il y ait jouissance</p></div>
+
+    <div class="card" data-cat="autre"><p>Il y a un problème avec audio car nous sommes sourds donc comment faire ?</p></div>
+
+    <div class="card" data-cat="autre"><p>Lorsque ça arrive, ce n&#x27;est pas un problème ni pour moi ni mon amoureuse. Elle est plutôt flattée car c&#x27;est grâce à elle. Ma mission suivante est de la faire jouir avec mes doigts, ma langues, des jouets. Ou juste la matter se caresser car on adore ça. Merci ok pour tout ton contenu</p></div>
+
+    <div class="card" data-cat="autre"><p>Merci pour le boulot que tu fais, tu touches bcp de sujets liés au s3x, à la sexualité, c’est lisible et accessible… MERCI BEAUCOUP HIHI</p></div>
+
+    <div class="card" data-cat="autre"><p>Merci pour tout ce que tu partage et fait pour ce monde si compliqué des fois</p></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Qu’il faut dédramatiser. Ce sont des choses qui arrivent, et que l’on a le droit. Par contre, faire comprendre aux mecs que cela ne signifie pas fin du rapport et qu’il y a plein d’autres moyens de faire jouir sa.son partenaire et souvent ça relance la machine ;)</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>Que ça soit pas trop cher , il y en a tellement sur le marché , que un de plus ou un de moins , il faut qu’il se différencie quelque part . On ne choisira pas celui là plutôt qu’un autre si il est cher et on continuera à ne rien essayer au final</p></div>
+
+    <div class="card" data-cat="autre"><p>Rien qui me vienne à l&#x27;esprit.</p></div>
+
+    <div class="card" data-cat="mental"><p>C&#x27;est pas la mort quand ça arrive, on déstresse</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>C’est compliqué de généraliser parce que ça peut vraiment changer en fonction du contexte, de l’humeur, du moment, de la connection pendant l’acte.</p></div>
+
+    <div class="card" data-cat="autre"><p>L&#x27;éjaculation involontaire n&#x27;est pas un problème pour moi par ce que ça n&#x27;arrive qu&#x27;une ou deux fois par an, et je la pense liée à une excitation particulièrement intense. Mais si je me trompe, je voudrais le savoir.</p></div>
+
+    <div class="card" data-cat="apres"><p>Je suis devenu ejaculateur précoce suite à une prise d&#x27;antidepresseur. Ce qui joue sur moi c&#x27;est surtout le point de vue de la société sur le sujet. Ma compagne est plus que bienveillante sur le sujet, elle essayé de me rassurer et de m&#x27;aider et me dit à chaque fois que ce n&#x27;est pas grâve et on à trouvé d&#x27;autres moyens de satisfaction dans le sexe. Cependant je vois toujours ça comme un faiblesse, j&#x27;entends de temps […]</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="autre"><p>La seule chose qui permet de bien retarder l’ejaculation , c’est l’alcool  . Mais c’est pénible de se dire que si je ne bois pas , je finirai plus tôt .   Super ton travail pour aider les femmes à normaliser et prendre du plaisir sans taboo !! Bravo</p></div>
+
+    <div class="card" data-cat="frustration"><p>Je peux ejaculer plusieurs fois d’affilé mais si ma partenaire veux aller trop rapidement vers de la pénétration ou s’occuper de mon sexe ça monte trop vite et je n’arrive plus à tenir mon erection après la première ejaculation, alors que si l’intensité monte lentement j’arrive à garder une erection malgré une ejaculation trop rapide</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="partenaire"><p>Pour ma part je ne suis pas précoce mais certaine position trop excitante et ma femme qui me demande de continuer toujours plus vite et fort je n’arrive pas à suivre la cadence 🫣🫣 bon grand prince je ne laisse pas madame sur sa faim</p><span class="tag">La peur de décevoir</span></div>
+
+    <div class="card" data-cat="autre"><p>Ça peut arriver mais si c’est régulier c’est qu’il faut que la personne se demande pourquoi.</p></div>
+
+    <div class="card" data-cat="autre"><p>Que ton taff est excellent et devrait être plébiscité bien davantage.</p></div>
+
+    <div class="card" data-cat="declencheur"><p>Perso: c’est revenu suite à une rupture  amoureuse, perte de confiance en soi et la redécouverte de nouveaux corps / personnes. <br>On y travaille mais ça prend du temps. <br>Difficile de ne pas garder en mémoire le schéma de performance et d’endurance. <br>On a beau décentraliser la pénétration dans le rapport de l’intime et le partage du plaisir, l’endurance est toujours primordiale et si non maitrisé déceptive… des mots […]</p><span class="tag">Les déclencheurs</span></div>
+
+    <div class="card" data-cat="autre"><p>Perso c’est quand je vois la meuf excité qui fait que j’ai du mal à me retenir par la suite</p></div>
+
+    <div class="card" data-cat="autre"><p>J’aime beaucoup ce que tu fais ☺️. J’adore le sex dans toute son intégralite et grâce à cette ouverture d’esprit quje tu apportes j’ai découvert pleins de nouvelles pratiques que jamais je pensais faire un jour. MERCI. <br>Bisous</p></div>
+
+    <div class="card" data-cat="autre"><p>Ça ne m’était jamais arrivé avant ma partenaire actuelle. Je me demande donc si il y a une corrélation avec les points précisés plus tôt, ou avec l’âge, ou avec l’hygiène de vie, ou avec l’augmentation des angoisses…</p></div>
+
+    <div class="card" data-cat="autre"><p>Que ça peut se résoudre vraiment</p></div>
+
+    <div class="card" data-cat="frustration"><p>Que c&#x27;est assez frustrant pour ma partenaire et moi surtout que je n&#x27;avais pas forcément se problème avant et que je pouvais même faire plusieurs round ce qui pouvait potentiellement paliers le problème,je ne laisse jamais ma partenaire sur ça faim je m&#x27;arrange toujours pour qu&#x27;elle atteigne l&#x27;orgasme mais j&#x27;aimerais beaucoup pouvoir mieux contrôler mon éjaculation.</p><span class="tag">La frustration</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>L&#x27;éjaculation précoce, ça n&#x27;est pas que psychogène. Il y a aussi des causes anatomiques comme le phimosis.<br>La circoncision m&#x27;a aidé mais n&#x27;a pas tout résolu.</p><span class="tag">Ce qui aide</span></div>
+
+    <div class="card" data-cat="autre"><p>On est beaucoup à être &quot;détruis&quot; à cause de la masturbation intensive et quotidienne pendant des années dès le début de notre sexualité</p></div>
+
+    <div class="card" data-cat="frustration"><p>Que dans mon cas, où ça n’arrive que trèsrarement, ça fait partie de la relation, où ma partenaire est tellement excitante que je n’arrive à aucun contrôle. Je précise que c’est vraiment involontaire et même surprenant. Dans ces cas là je dis la vérité qui est somme toute gratifiante et évidemment le rapport se prolonge au-delà de la seule ejaculation, sans pénétration avec penis evidemment. Enfin bref, dans […]</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="apres"><p>Essayer de donner des actions concrètes à réaliser. Avec des étapes différentes, des méthodes de plus en plus médical …<br>Moi je suis presque résigné j’ai l’impression que rien ne marche. Faire témoigner des gens qui ont réussi a changer ça même dans les cas extrêmes ! Merci 🙏🏼</p><span class="tag">Le moment d’après</span></div>
+
+    <div class="card" data-cat="autre"><p>Briser les tabous</p></div>
+
+    <div class="card" data-cat="mental"><p>Je pense qu&#x27;il y a toute une réflexion à avoir sur le regard, pour moi la pornographie nous met dans une position d&#x27;observation constante et j&#x27;ai l&#x27;impression qu&#x27;il y a quelque chose de cet ordre qui peut se reproduire dans les moments concrets.</p><span class="tag">Le mental</span></div>
+
+    <div class="card" data-cat="autre"><p>Trop d’excitation, trop de sensation d’un coup et ça vient.. quand la partenaire est super excitée ça favorise l’excitation chez moi et j’ai du mal à me retenir pendant la pénétration</p></div>
+
+    <div class="card" data-cat="autre"><p>En dehors du fait d&#x27;aider les hommes à jouir moins vite, on peut aussi apprendre à faire l&#x27;amour même en ayant éjaculé. Donc utiliser des pratiques non penetratives et revenir à la pénétration après par ex</p></div>
+
+    <div class="card" data-cat="frustration"><p>Le truc frustrant c’est de se dire que c’est tellement bon que je ne veux pas ejaculer de suite, ma partenaire prend son pied et quand j’ejacule on passe sur d’autres pratiques axées sur madame et j’adore ça !!!! Mais j’aimerais pouvoir repartir ou justement retarder ces ejaculations.</p><span class="tag">La frustration</span></div>
+
+    <div class="card" data-cat="autre"><p>Il y a un niveau optimal d’alcool qui retarde l’ejaculztion mais il faut faire attention à ne pas trop boire pour toujours être capable de bander.<br>Et dans tout les cas ça dépend vachement du partenaire avec qui on est. Certaine aime quand la pénétration est très longue d’autre aime ça 5min et veulent repasser à autre chose donc il faut connaître son/sa partenaire</p></div>
+
+    <div class="card" data-cat="mental"><p>Vis à vis de la question qu est ce qui te gêne le plus quand ça arrive il faudrait laisser plusieurs réponses possibles, pcq tu as peur que ça dégrade ton couple, l’ambiance est bizarre, tu es frustrée de ne pas contrôler ton corps, tu as peur que ça recommence, c’est vraiment une sorte de cercle vicieux, enfin à l’époque quand j’ai eu ce problème là pendant une période je le vivais comme ça, et c’est justement en […]</p><span class="tag">Le mental</span></div>
+
+    <div class="card aide-card" data-cat="aide"><p>Le meilleur truc c’est de gérer sa respiration mais des fois je n’ai même pas envie d’ejaculer, je passe un beau moment et puis la d’un coup, je lache tout 😅</p><span class="tag">Ce qui aide</span></div>
+
+  </div>
+  <p class="mur-foot">Tout est copié tel quel depuis vos réponses au sondage. Rien n'est réécrit, rien n'est signé, et personne (même pas moi) ne peut remonter jusqu'à vous.</p>
+</section>
+
+<section class="ajoute" id="ajoute">
+  <div class="wrap">
+    <h2>Ajoute la tienne</h2>
+    <p class="lead">Face à la perte de contrôle de ton corps, qu'est-ce qui te dérange le plus ? T'es pas obligé de me le dire à moi. Tu réponds au sondage (2 minutes, montre en main), et tes mots rejoignent le mur, anonymes.</p>
+    <p class="compteur">On a déjà <b>1 210 réponses</b>. La tienne a sa place ici aussi.</p>
+    <div class="cta-row">
+      <a class="cta" href="https://tally.so/r/yPzPBW" target="_blank" rel="noopener">Ajouter ma réponse</a>
+    </div>
+    <p class="anonyme">Ce qui s'affiche sur le mur reste anonyme, toujours. Le mail à la fin du sondage, c'est seulement si tu veux être prévenu du lancement (et t'es pas obligé).</p>
+  </div>
+</section>
+
+<section class="suite">
+  <p>Je vous prépare la suite, construite avec tout ce que vous m'avez écrit là. J'ai trop hâte de vous montrer ça.</p>
+  <p class="sign">À très vite, Tata Léa 💛</p>
+</section>
+
+<footer>
+  <b>Merci Beaucul</b> · Léa Toussaint, sexothérapeute certifiée et coach en sexualité<br>
+  Vos réponses restent anonymes, ici comme dans le sondage.
+</footer>
+
+<script>
+  const btns = document.querySelectorAll('#filters button');
+  const cards = document.querySelectorAll('#wall .card');
+  btns.forEach(b => b.addEventListener('click', () => {
+    btns.forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    const f = b.dataset.f;
+    cards.forEach(c => c.classList.toggle('hide', f !== 'tout' && c.dataset.cat !== f));
+  }));
+</script>
+
+</body>
+</html>
