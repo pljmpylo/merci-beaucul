@@ -23,7 +23,7 @@
 
   /* NAV */
   nav{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:var(--nav-h);
-      padding:0 calc(30px + env(safe-area-inset-left,0px)) 0 calc(30px + env(safe-area-inset-right,0px));
+      padding:0 calc(30px + env(safe-area-inset-right,0px)) 0 calc(30px + env(safe-area-inset-left,0px));
       background:var(--blanc);position:sticky;top:0;z-index:90;}
   .logo{font-weight:800;color:var(--rose);font-size:1.3rem;white-space:nowrap;flex:0 0 auto;letter-spacing:-1px;text-transform:uppercase;text-decoration:none;}
   .count-pill{font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--rose);
@@ -107,7 +107,7 @@
     :root{--nav-h:54px;}
     body{font-size:1.05rem;}
 
-    nav{padding:0 calc(16px + env(safe-area-inset-left,0px)) 0 calc(16px + env(safe-area-inset-right,0px));}
+    nav{padding:0 calc(16px + env(safe-area-inset-right,0px)) 0 calc(16px + env(safe-area-inset-left,0px));}
     .logo{font-size:1.02rem;letter-spacing:-.5px;}
     .count-pill{font-size:.62rem;padding:.4rem .75rem;letter-spacing:.06em;}
 
@@ -125,7 +125,11 @@
     /* une seule rangee qui defile, au lieu de 5 rangees qui mangent l'ecran */
     .filters{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;
              -ms-overflow-style:none;scroll-snap-type:x proximity;
-             padding:10px calc(16px + env(safe-area-inset-left,0px)) 10px calc(16px + env(safe-area-inset-right,0px));}
+             padding:10px calc(16px + env(safe-area-inset-right,0px)) 10px calc(16px + env(safe-area-inset-left,0px));
+             scroll-padding-left:calc(16px + env(safe-area-inset-left,0px));
+             scroll-padding-right:calc(16px + env(safe-area-inset-right,0px));}
+    /* garantit la respiration a droite, que le navigateur honore ou non le padding-right */
+    .filters::after{content:"";flex:0 0 1px;}
     .filters::-webkit-scrollbar{display:none;}
     .filters button{scroll-snap-align:start;}
 
