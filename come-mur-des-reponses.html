@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Vos mots, tels quels | Merci Beaucul</title>
 <meta name="description" content="1 210 personnes ont répondu au sondage. Voilà leurs mots, bruts et anonymes. Ajoute les tiens si tu veux.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,15 +14,18 @@
     --jaune:#f7ff59; --jaune-fonce:#ffde59;
     --rose-fonce:hsla(337,55%,22%,1);
     --trait:#f0d8df;
+    --nav-h:62px;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
   body{background:var(--blanc);color:var(--noir);font-family:'Raleway',sans-serif;font-weight:300;font-size:1.1rem;line-height:1.4;}
   ::selection{background:var(--jaune);color:var(--rouge-fonce);}
 
   /* NAV */
-  nav{display:flex;justify-content:space-between;align-items:center;padding:16px 30px;background:var(--blanc);position:sticky;top:0;z-index:90;}
-  .logo{font-weight:800;color:var(--rose);font-size:1.3rem;letter-spacing:-1px;text-transform:uppercase;text-decoration:none;}
+  nav{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:var(--nav-h);
+      padding:0 calc(30px + env(safe-area-inset-left,0px)) 0 calc(30px + env(safe-area-inset-right,0px));
+      background:var(--blanc);position:sticky;top:0;z-index:90;}
+  .logo{font-weight:800;color:var(--rose);font-size:1.3rem;white-space:nowrap;flex:0 0 auto;letter-spacing:-1px;text-transform:uppercase;text-decoration:none;}
   .count-pill{font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--rose);
               border:1.5px solid #e5b8c2;border-radius:10rem;padding:.45rem 1.1rem;white-space:nowrap;}
 
@@ -46,11 +49,13 @@
   .statnote{margin-top:14px;font-size:.95rem;font-weight:400;line-height:1.5;}
 
   /* FILTRES */
-  .filters{position:sticky;top:64px;z-index:80;background:rgba(255,255,255,.94);backdrop-filter:blur(6px);
+  .filters{position:sticky;top:var(--nav-h);z-index:80;background:rgba(255,255,255,.94);
+           -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
            padding:14px 24px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;border-bottom:1px solid var(--trait);}
   .filters button{font-family:'Raleway',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
                   border:1.5px solid #e5b8c2;background:var(--blanc);color:var(--rouge-fonce);border-radius:10rem;
                   padding:.5rem 1.15rem;cursor:pointer;transition:all .25s ease;}
+  .filters button{flex:0 0 auto;min-height:40px;}
   .filters button:hover{border-color:var(--rose);}
   .filters button.on{background:var(--rose);border-color:var(--rose);color:#fff;}
 
@@ -62,7 +67,8 @@
   .card{break-inside:avoid;margin:0 0 22px;background:var(--beige);border:1px solid var(--trait);border-radius:18px;
         padding:28px 26px 22px;transition:transform .25s ease, box-shadow .25s ease;}
   .card:hover{transform:translateY(-3px);box-shadow:0 16px 38px rgba(138,27,26,.08);}
-  .card p{font-family:'Lora',serif;font-weight:500;font-size:1.08rem;line-height:1.5;color:#2b2b2b;}
+  .card p{font-family:'Lora',serif;font-weight:500;font-size:1.08rem;line-height:1.5;color:#2b2b2b;
+          overflow-wrap:anywhere;}
   .card p:before{content:"«\00a0";color:var(--rose);font-weight:600;}
   .card p:after{content:"\00a0»";color:var(--rose);font-weight:600;}
   .card .tag{display:inline-block;margin-top:16px;font-family:'Raleway',sans-serif;font-size:.68rem;font-weight:700;
@@ -95,13 +101,64 @@
 
   footer{border-top:1px solid var(--trait);padding:30px 24px 40px;text-align:center;font-size:.8rem;font-weight:400;color:#a08a91;line-height:1.7;}
   footer b{font-weight:700;color:var(--rouge-fonce);}
+
+  /* ---------- MOBILE ---------- */
+  @media(max-width:700px){
+    :root{--nav-h:54px;}
+    body{font-size:1.05rem;}
+
+    nav{padding:0 calc(16px + env(safe-area-inset-left,0px)) 0 calc(16px + env(safe-area-inset-right,0px));}
+    .logo{font-size:1.02rem;letter-spacing:-.5px;}
+    .count-pill{font-size:.62rem;padding:.4rem .75rem;letter-spacing:.06em;}
+
+    .hero{padding:44px 20px 30px;}
+    .hero h1{letter-spacing:-1px;}
+    .hero .sub{font-size:1.08rem;margin-top:18px;}
+    .hero .arrow{margin-top:24px;}
+
+    .stats{padding:46px 20px;}
+    .stats h2{margin-bottom:28px;}
+    .statgrid{gap:16px;}
+    .statcard{padding:24px 20px;}
+    .statnum{font-size:2.6rem;letter-spacing:-1.5px;}
+
+    /* une seule rangee qui defile, au lieu de 5 rangees qui mangent l'ecran */
+    .filters{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;
+             -ms-overflow-style:none;scroll-snap-type:x proximity;
+             padding:10px calc(16px + env(safe-area-inset-left,0px)) 10px calc(16px + env(safe-area-inset-right,0px));}
+    .filters::-webkit-scrollbar{display:none;}
+    .filters button{scroll-snap-align:start;}
+
+    .mur{padding:32px 16px 20px;}
+    .wall{column-gap:16px;}
+    .card{padding:22px 20px 18px;margin-bottom:16px;}
+    .card:hover{transform:none;box-shadow:none;}
+
+    .ajoute{padding:56px 20px;margin-top:30px;}
+    .ajoute h2{letter-spacing:-1px;}
+    .ajoute .lead{font-size:1.06rem;margin-top:16px;}
+    .cta{display:block;padding:.95rem 1.2rem;}
+
+    .suite{padding:56px 20px 46px;}
+    .suite p{font-size:1.08rem;}
+    footer{padding:26px 20px calc(34px + env(safe-area-inset-bottom,0px));}
+  }
+
+  @media(max-width:400px){
+    .pill-extra{display:none;}
+  }
+
+  @media(hover:none){
+    .card:hover{transform:none;box-shadow:none;}
+    .cta:hover:after{inset:auto 0 100% 0;}
+  }
 </style>
 </head>
 <body>
 
 <nav>
   <a class="logo" href="#">Merci Beaucul</a>
-  <span class="count-pill">1 210 réponses · anonymes</span>
+  <span class="count-pill">1 210 réponses<span class="pill-extra"> · anonymes</span></span>
 </nav>
 
 <header class="hero">
