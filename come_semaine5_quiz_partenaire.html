@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz final (pour le•la partenaire) — Programme C.O.M.E.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    --blue: #2F6FE4;
+    --blue-soft: rgba(47,111,228,0.18);
+    --blue-line: rgba(47,111,228,0.4);
+    --blue-faint: rgba(47,111,228,0.06);
+    --yellow: #F7FF59;
+    --yellow-soft: rgba(247,255,89,0.35);
+    --ink: #1c1c1c;
+    --muted: #5b6273;
+    font-family: 'Raleway', Arial, sans-serif;
+    background: #fff;
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { cursor: pointer; font-family: inherit; }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+  .wrap { max-width: 640px; margin: 0 auto; padding: 56px 24px 70px; }
+  @media (max-width: 520px) { .wrap { padding: 40px 18px 56px; } }
+
+  /* ============ EYEBROW ============ */
+  .eyebrow {
+    display: inline-block;
+    color: var(--blue);
+    border: 1px solid var(--blue-soft);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  /* ============ COVER ============ */
+  .cover h1 {
+    font-size: clamp(30px, 6vw, 44px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin-bottom: 14px;
+    text-wrap: balance;
+  }
+  .cover h1 em {
+    font-style: normal;
+    color: var(--blue);
+    background: linear-gradient(transparent 62%, var(--yellow) 62%);
+    padding: 0 4px;
+  }
+  .cover .subtitle { font-size: 17px; font-weight: 600; color: var(--muted); margin-bottom: 20px; }
+  .cover .context { font-size: 16px; font-weight: 600; color: var(--ink); max-width: 520px; margin-bottom: 12px; text-wrap: pretty; }
+  .cover .intro { font-size: 16px; color: var(--muted); max-width: 520px; margin-bottom: 12px; text-wrap: pretty; }
+  .pill-word {
+    display: inline-block;
+    border: 1.5px solid var(--blue);
+    border-radius: 30px;
+    padding: 0 .6em;
+    color: var(--blue);
+    font-weight: 700;
+    white-space: nowrap;
+    line-height: 1.45;
+  }
+  .partner-box {
+    background: var(--blue-faint);
+    border: 1px solid var(--blue-soft);
+    border-left: 3px solid var(--blue);
+    border-radius: 0 14px 14px 0;
+    padding: 16px 18px 6px;
+    margin-top: 20px;
+    max-width: 560px;
+  }
+  .partner-label {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--blue);
+    border: 1.5px solid var(--blue);
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .partner-box .intro { color: var(--ink); font-size: 15.5px; }
+  .fill-hint {
+    font-size: 13px;
+    color: var(--muted);
+    background: var(--blue-faint);
+    border: 1px solid var(--blue-soft);
+    border-radius: 12px;
+    padding: 11px 15px;
+    margin-top: 18px;
+    max-width: 520px;
+  }
+
+  /* ============ CARTE QUESTION ============ */
+  .sheet {
+    background: #fff;
+    border: 1.5px solid var(--blue);
+    border-radius: 22px;
+    padding: 28px 26px 30px;
+    margin-bottom: 28px;
+    box-shadow: 0 0 0 6px var(--blue-faint), 0 10px 28px rgba(47,111,228,0.12);
+  }
+  @media (max-width: 520px) { .sheet { padding: 22px 16px 24px; } }
+
+  .sheet-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--blue-soft);
+  }
+  .page-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--blue);
+    border: 1px solid var(--blue-soft);
+    border-radius: 999px;
+    padding: 4px 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .section-name {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  /* Progression */
+  .progress { margin-bottom: 22px; }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 8px;
+  }
+  .progress-bar { height: 6px; background: var(--blue-soft); border-radius: 999px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0; background: var(--blue); border-radius: 999px; transition: width .4s ease; }
+
+  .q-text {
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 12px;
+    text-wrap: pretty;
+  }
+  .q-text strong { color: var(--blue); background: linear-gradient(transparent 62%, var(--yellow) 62%); padding: 0 2px; }
+  .q-num { color: var(--blue); }
+  .callout {
+    background: var(--blue-faint);
+    border: 1px solid var(--blue-soft);
+    border-radius: 14px;
+    padding: 12px 15px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 14px;
+    text-wrap: pretty;
+  }
+  .q-textarea {
+    width: 100%;
+    min-height: 140px;
+    background: #fff;
+    border: 1px solid var(--blue-soft);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    resize: vertical;
+  }
+  .q-textarea::placeholder { color: #8d95a6; font-style: italic; }
+  .q-textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-faint); }
+
+  /* ============ NAVIGATION ============ */
+  .step-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 26px;
+    padding-top: 20px;
+    border-top: 1px solid var(--blue-soft);
+  }
+  .step-nav.start { justify-content: flex-start; border-top: none; margin-top: 24px; padding-top: 0; }
+  .nav-btn, .print-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--yellow);
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.75rem 1.6rem;
+    border: 1.5px solid var(--blue);
+    border-radius: 10rem;
+    transition: color 450ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-btn::before, .print-btn::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    top: 102%;
+    background: var(--blue);
+    transition: top 450ms ease;
+    z-index: 0;
+  }
+  .nav-btn span, .print-btn span { position: relative; z-index: 1; }
+  .nav-btn:hover, .print-btn:hover { color: var(--yellow); }
+  .nav-btn:hover::before, .print-btn:hover::before { top: 0; }
+  .nav-prev { background: #fff; }
+  .nav-prev:disabled { opacity: .35; cursor: not-allowed; }
+  .nav-prev:disabled:hover { color: var(--blue); }
+  .nav-prev:disabled:hover::before { top: 102%; }
+  .start-btn { font-size: 0.95rem; padding: 0.85rem 2.2rem; }
+  @media (max-width: 400px) {
+    .step-nav { gap: 8px; }
+    .nav-btn { flex: 1 1 0; padding: 0.7rem 0.6rem; font-size: 0.75rem; letter-spacing: 0.05em; text-align: center; }
+    .step-nav.start .nav-btn { flex: 0 1 auto; padding: 0.85rem 1.6rem; }
+  }
+
+  .step { display: none; }
+  .step.active { display: block; animation: qtFadeUp 0.45s ease both; }
+  @keyframes qtFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-btn, .nav-btn::before, .print-btn, .print-btn::before, .progress-fill { transition: none; }
+    .step.active { animation: none; }
+  }
+
+  /* ============ RÉCAP ============ */
+  .recap-title { font-size: 21px; font-weight: 800; line-height: 1.25; letter-spacing: -0.01em; }
+  .recap-intro { font-size: 14.5px; color: var(--muted); margin: 4px 0 6px; text-wrap: pretty; }
+  .recap-section {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--ink);
+    margin: 26px 0 14px;
+    padding-top: 18px;
+    border-top: 1px solid var(--blue-soft);
+  }
+  .recap-item {
+    background: var(--blue-faint);
+    border: 1px solid var(--blue-soft);
+    border-radius: 14px;
+    padding: 13px 16px;
+    margin-bottom: 10px;
+  }
+  .recap-q { font-size: 13px; font-weight: 700; color: var(--blue); line-height: 1.45; margin-bottom: 6px; }
+  .recap-q strong { font-weight: 800; }
+  .recap-a { font-size: 14.5px; line-height: 1.55; color: var(--ink); white-space: pre-wrap; }
+  .recap-a.empty { color: #8d95a6; font-style: italic; font-size: 13px; }
+  .recap-tip {
+    background: var(--yellow-soft);
+    border: 1px solid var(--blue-soft);
+    border-radius: 14px;
+    padding: 13px 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink);
+    margin-top: 24px;
+    text-wrap: pretty;
+  }
+
+  .footer { text-align: center; padding: 8px 0 0; }
+  .print-btn { margin-bottom: 14px; white-space: normal; text-align: center; line-height: 1.3; }
+  .save-note { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; text-wrap: pretty; }
+  .save-note strong { color: var(--blue); font-weight: 700; }
+  .reset-btn { background: none; border: none; font-size: 13.5px; color: var(--muted); padding: 8px 4px; }
+  .reset-btn:hover { color: var(--blue); }
+
+  /* ============ EMBARQUÉ (iframe Kajabi) ============ */
+  html.qt-embedded, html.qt-embedded body { overflow: hidden !important; }
+
+  /* ============ IMPRESSION ============ */
+  @media print {
+    body { font-size: 13px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .wrap { padding: 0; max-width: none; }
+    .cover, .step:not(#recap-sheet), .step-nav, .footer { display: none !important; }
+    #recap-sheet { display: block !important; animation: none !important; box-shadow: none; border: none; padding: 0; }
+    .recap-item { break-inside: avoid; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ COVER ============ -->
+  <div class="cover step active" id="cover">
+    <span class="eyebrow">Semaine 5 — Communiquer</span>
+    <h1>Quiz final <em>(pour le&bull;la partenaire)</em></h1>
+    <p class="context">Ce quiz est pour ta ou ton partenaire, pour voir comment iel se situe sur tous les sujets qu'on a abordés lors du programme. Ça permettra de poser des mots sur tout ce que tu as appris, ce que tu ressens et ce dont tu as besoin.</p>
+    <div class="partner-box">
+      <span class="partner-label">Pour le&bull;la partenaire :</span>
+      <p class="intro">Pendant 5 semaines, il a appris à comprendre, redéfinir, s'approprier, explorer et communiquer sur sa sexualité et ses éjaculations involontaires.</p>
+      <p class="intro">Ici, c'est à ton tour : réponds avec tes mots sur ce que tu sais de vous deux, et sur ce que vous vivez <span class="pill-word">à deux</span>. Il n'y a pas de bonne ou de mauvaise réponse, et aucune note.</p>
+      <p class="intro">À la fin, tu auras un récap. Comparez-le avec ce qu'il a appris sur lui pendant le programme : c'est là que la conversation commence.</p>
+    </div>
+    <p class="fill-hint">✎ 25 questions, environ 20 minutes. Si tu ne sais pas, écris-le : c'est aussi une réponse, et un sujet à aborder ensemble.</p>
+    <div class="step-nav start"><button type="button" class="nav-btn start-btn" id="btnStart"><span>Commencer →</span></button></div>
+  </div>
+
+  <!-- ============ QUESTIONS (générées) ============ -->
+  <div id="questions"></div>
+
+  <!-- ============ RÉCAP ============ -->
+  <div class="sheet step" id="recap-sheet">
+    <div class="sheet-header">
+      <span class="page-num">Récap</span>
+      <span class="section-name">Quiz terminé</span>
+    </div>
+    <h2 class="recap-title">Voici ton récap</h2>
+    <p class="recap-intro">Maintenant, le plus utile : comparez. Là où vous êtes alignés, c'est de la confirmation. Là où vous différez, c'est une conversation à ouvrir, à froid, en dehors d'un moment de sexe.</p>
+    <div id="recap-content"></div>
+    <div class="recap-tip">💡 Choisissez ensemble 1 ou 2 points à tester dans les prochaines semaines, et notez-vous un petit rappel pour en reparler. Ça peut paraître bête, mais c'est ce qui fait la différence.</div>
+    <div class="step-nav"><button type="button" class="nav-btn nav-prev" id="btnRecapBack"><span>← Modifier</span></button><span></span></div>
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <div class="footer" id="footer" style="display:none">
+    <button type="button" class="print-btn" id="btnPrint"><span>🖨 Imprimer / garder en PDF</span></button>
+    <p class="save-note">Tes réponses sont enregistrées automatiquement dans ce navigateur, mais si tu fermes la page, elles disparaissent. Rien n'est envoyé ailleurs.<br>→ Pour garder une trace, clique sur <strong>Garder en PDF</strong>.</p>
+    <button type="button" class="reset-btn" id="btnReset">Effacer mes réponses</button>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  // ── Questions ───────────────────────────────────────
+  var QUESTIONS = [
+    // ── Semaine 1 — Comprendre ──
+    { section: "Semaine 1 · Comprendre",
+      q: "Quand ça va « trop vite » pour lui, qu'est-ce que tu penses qu'il se passe dans sa tête à ce moment-là ?",
+      hint: "Honte, peur de te décevoir, frustration, envie de s'excuser, envie de fuir la discussion…" },
+    { section: "Semaine 1 · Comprendre",
+      q: "Est-ce que tu sais dans quelles situations <strong>son stress monte le plus</strong>, avant ou pendant un rapport ?",
+      hint: "Fatigue, longue période sans rapport, peur que « ça recommence », pression du temps, moment où la pénétration commence…" },
+    { section: "Semaine 1 · Comprendre",
+      q: "Quand il éjacule plus tôt que ce que vous auriez voulu, comment réagis-tu ? Et comment penses-tu qu'il le vit ?",
+      hint: "Tes mots, ton silence, un soupir, un rire, un changement d'ambiance… Sois honnête : c'est justement pour en parler." },
+    { section: "Semaine 1 · Comprendre",
+      q: "Quels signes dans son corps te montrent qu'il est <strong>tendu</strong> ou « dans sa tête » plutôt que dans le plaisir ?",
+      hint: "Respiration bloquée ou rapide, mâchoire serrée, fesses ou périnée contractés, il accélère, il ne parle plus, il fuit ton regard…" },
+    { section: "Semaine 1 · Comprendre",
+      q: "Qu'est-ce qui, venant de toi, l'aide à se sentir en sécurité et à ne pas se sentir jugé ?",
+      hint: "Une phrase, un geste, un regard, lui rappeler qu'un rapport n'est pas « raté » parce qu'il a éjaculé…" },
+
+    // ── Semaine 2 — Redéfinir ──
+    { section: "Semaine 2 · Redéfinir",
+      q: "Pour toi, c'est quoi un rapport réussi ? Et à ton avis, pour lui ?",
+      hint: "Durée, orgasme(s), connexion, tendresse, rires, se sentir désiré•e… Est-ce que la durée de la pénétration compte autant pour toi que pour lui ?" },
+    { section: "Semaine 2 · Redéfinir",
+      q: "Est-ce que tu sais reconnaître ses <strong>niveaux d'excitation</strong> ? À quoi tu vois qu'il est à 3, à 6 ou à 8 sur 10 ?",
+      hint: "Son souffle, ses sons, les mouvements de son bassin, son regard, sa peau, sa façon de te toucher…" },
+    { section: "Semaine 2 · Redéfinir",
+      q: "Quand il approche du <strong>point de non-retour</strong>, est-ce que tu le sens ? Comment il te le signale (ou comment il pourrait te le signaler) ?",
+      hint: "Un mot, un geste, une pression de la main, un changement de respiration…" },
+    { section: "Semaine 2 · Redéfinir",
+      q: "Selon toi, de quoi a-t-il besoin en ce moment dans votre sexualité ? Et toi, de quoi as-tu besoin ?",
+      hint: "Proximité, repos, prendre le temps, explorer, moins de pression, se sentir désiré•e, plus de tendresse, plus de jeu…" },
+    { section: "Semaine 2 · Redéfinir",
+      q: "En dehors de la pénétration, quelles pratiques vous font du bien à tous les deux ?",
+      hint: "Caresses, sexe oral, masturbation mutuelle, massages, sextoys, frottements, jeux… Note celles que vous aimez et celles que tu aimerais plus souvent." },
+
+    // ── Semaine 3 — S'approprier ──
+    { section: "Semaine 3 · S'approprier",
+      q: "Est-ce que tu connais les <strong>outils</strong> qu'il utilise pour gérer son excitation ? Lesquels ?",
+      hint: "Respiration lente et profonde, relâcher le périnée, bouger le bassin, ralentir, changer de geste, faire une pause…" },
+    { section: "Semaine 3 · S'approprier",
+      q: "Quand il ralentit, s'arrête ou change de geste, comment tu le vis ? Qu'est-ce qui rendrait ces pauses agréables pour toi aussi ?",
+      hint: "S'embrasser, le caresser ailleurs, prendre le relais sur ton plaisir à toi, se regarder, respirer ensemble…" },
+    { section: "Semaine 3 · S'approprier",
+      q: "Quels gestes ou rythmes font monter son excitation <strong>très vite</strong> ? Et lesquels lui permettent de <strong>rester longtemps</strong> dans le plaisir ?",
+      hint: "Rapide et serré vs lent et enveloppant, gland vs base du pénis, va-et-vient vs pression, certaines positions…" },
+    { section: "Semaine 3 · S'approprier",
+      q: "Y a-t-il des positions dans lesquelles il est plus détendu et a plus de contrôle ?",
+      hint: "Toi au-dessus et lui allongé, sur le côté, en cuillère, assis face à face… celles où il peut respirer et relâcher son bassin." },
+    { section: "Semaine 3 · S'approprier",
+      q: "Comment tu peux l'aider à rester dans son corps plutôt que dans sa tête ?",
+      hint: "Respirer avec lui, ralentir le rythme, poser la main sur son ventre ou sa poitrine, le regarder, lui parler…" },
+
+    // ── Semaine 4 — Explorer ──
+    { section: "Semaine 4 · Explorer",
+      q: "Est-ce que vous avez déjà essayé l'<strong>edging</strong> à deux ? Comment tu imagines gérer le rythme pour lui (monter, redescendre, remonter) ?",
+      hint: "L'audio Edging peut s'écouter à deux : tu peux tenir le rythme pendant qu'il observe ce qui se passe dans son corps." },
+    { section: "Semaine 4 · Explorer",
+      q: "Quelles zones érogènes, en dehors du pénis, aime-t-il qu'on stimule ?",
+      hint: "Cou, oreilles, tétons, ventre, intérieur des cuisses, testicules, périnée, fesses, anus (si c'est ok pour lui)…" },
+    { section: "Semaine 4 · Explorer",
+      q: "Est-ce que tu sais s'il y a des zones ou des pratiques « <strong>à demander avant</strong> » pour lui ?",
+      hint: "Anus, testicules, certains mots, certaines positions, certains jeux… Note-les." },
+    { section: "Semaine 4 · Explorer",
+      q: "Qu'est-ce qui le rend curieux en ce moment, ou qu'aimeriez-vous tester ensemble (sans obligation) ?",
+      hint: "Un fantasme, un jeu, un lieu, un sextoy, la lenteur, le plaisir anal, un scénario… Une idée qui vous fait sourire ou vous gêne un peu, c'est souvent une piste." },
+    { section: "Semaine 4 · Explorer",
+      q: "Comment peux-tu, toi aussi, prendre ton plaisir sans que tout repose sur la durée de la pénétration ?",
+      hint: "Tes gestes préférés, tes sextoys, jouir avant ou après la pénétration, lui montrer ce qui te fait du bien…" },
+
+    // ── Semaine 5 — Communiquer ──
+    { section: "Semaine 5 · Communiquer",
+      q: "Avez-vous un mot ou un geste pour dire « <strong>pause</strong> » ou « <strong>ralentis</strong> » sans que ça casse l'ambiance ? Lequel ?",
+      hint: "Et sinon, lequel aimerais-tu proposer ?" },
+    { section: "Semaine 5 · Communiquer",
+      q: "Quand il te dit qu'il est proche, qu'est-ce que tu fais ? Et à ton avis, qu'est-ce qu'il aimerait que tu fasses ?",
+      hint: "T'arrêter, ralentir, respirer profondément avec lui pour qu'il se cale sur toi, l'embrasser, continuer…" },
+    { section: "Semaine 5 · Communiquer",
+      q: "Quelles phrases le <strong>rassurent</strong> quand ça arrive plus vite que prévu ? Note-en au moins 2.",
+      hint: "Ex : « on n'a pas fini pour autant », « j'adore ce qu'on vient de vivre », « viens, on continue autrement »…" },
+    { section: "Semaine 5 · Communiquer",
+      q: "Qu'est-ce qui l'aide le plus à parler de sexualité avec toi ?",
+      hint: "En parler à froid plutôt qu'au lit, le carnet à deux, des questions précises, lui proposer 2 options, l'humour, du temps…" },
+    { section: "Semaine 5 · Communiquer",
+      q: "Si tu devais résumer en 3 phrases comment il aime qu'on prenne soin de son plaisir (et de votre plaisir à deux), qu'écrirais-tu ?",
+      hint: "" }
+  ];
+
+  var KEY = 'mbc_come_quiz_partenaire_v1';
+  var TOTAL = QUESTIONS.length;
+  var answers = new Array(TOTAL).fill('');
+  var current = -1; // -1 = couverture, TOTAL = récap
+
+  try {
+    var saved = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+    if (saved && Array.isArray(saved.a)) {
+      saved.a.forEach(function (v, i) { if (i < TOTAL && typeof v === 'string') answers[i] = v; });
+    }
+  } catch (e) {}
+
+  function save() {
+    try { sessionStorage.setItem(KEY, JSON.stringify({ a: answers, s: current })); } catch (e) {}
+  }
+
+  // ── Construction des questions ──────────────────────
+  var container = document.getElementById('questions');
+  var steps = [];
+  QUESTIONS.forEach(function (item, i) {
+    var pct = Math.round(((i + 1) / TOTAL) * 100);
+    var el = document.createElement('div');
+    el.className = 'sheet step';
+    el.innerHTML =
+      '<div class="progress">' +
+        '<div class="progress-label"><span>Question ' + (i + 1) + ' / ' + TOTAL + '</span><span>' + pct + '%</span></div>' +
+        '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
+      '</div>' +
+      '<div class="sheet-header"><span class="page-num">' + item.section.split(' · ')[0] + '</span>' +
+        '<span class="section-name">' + item.section.split(' · ')[1] + '</span></div>' +
+      '<div class="q-text"><span class="q-num">Q' + (i + 1) + ' — </span>' + item.q + '</div>' +
+      (item.hint ? '<div class="callout">' + item.hint + '</div>' : '') +
+      '<textarea class="q-textarea" placeholder="✎ Ta réponse…" aria-label="Ta réponse à la question ' + (i + 1) + '"></textarea>' +
+      '<div class="step-nav">' +
+        '<button type="button" class="nav-btn nav-prev"><span>← Précédent</span></button>' +
+        '<button type="button" class="nav-btn nav-next"><span>' + (i === TOTAL - 1 ? 'Voir mon récap →' : 'Suivant →') + '</span></button>' +
+      '</div>';
+    var ta = el.querySelector('textarea');
+    ta.value = answers[i];
+    ta.addEventListener('input', function () { answers[i] = ta.value; save(); });
+    el.querySelector('.nav-prev').addEventListener('click', function () { goTo(i - 1); });
+    el.querySelector('.nav-next').addEventListener('click', function () { goTo(i + 1); });
+    container.appendChild(el);
+    steps.push(el);
+  });
+
+  var cover = document.getElementById('cover');
+  var recapSheet = document.getElementById('recap-sheet');
+  var footer = document.getElementById('footer');
+
+  var embedded = false;
+  try { embedded = window.self !== window.top; } catch (e) { embedded = true; }
+  var userNav = false;
+
+  function escapeHtml(s) {
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function renderRecap() {
+    var html = '';
+    var last = null;
+    QUESTIONS.forEach(function (item, i) {
+      if (item.section !== last) {
+        html += '<h3 class="recap-section">' + escapeHtml(item.section.replace(' · ', ' — ')) + '</h3>';
+        last = item.section;
+      }
+      var a = (answers[i] || '').trim();
+      html += '<div class="recap-item"><div class="recap-q">Q' + (i + 1) + ' — ' + item.q + '</div>' +
+        (a ? '<div class="recap-a">' + escapeHtml(a) + '</div>' : '<div class="recap-a empty">— pas de réponse —</div>') +
+        '</div>';
+    });
+    document.getElementById('recap-content').innerHTML = html;
+  }
+
+  function goTo(i) {
+    current = Math.max(-1, Math.min(TOTAL, i));
+    cover.classList.toggle('active', current === -1);
+    steps.forEach(function (s, j) { s.classList.toggle('active', j === current); });
+    if (current === TOTAL) renderRecap();
+    recapSheet.classList.toggle('active', current === TOTAL);
+    footer.style.display = current === TOTAL ? '' : 'none';
+    save();
+    if (userNav) {
+      window.scrollTo(0, 0);
+      if (embedded) { try { document.querySelector('.wrap').scrollIntoView({ block: 'start' }); } catch (e) {} }
+      if (current >= 0 && current < TOTAL) {
+        var ta = steps[current].querySelector('textarea');
+        try { ta.focus({ preventScroll: true }); } catch (e) {}
+      }
+    }
+  }
+
+  document.getElementById('btnStart').addEventListener('click', function () { goTo(0); });
+  document.getElementById('btnRecapBack').addEventListener('click', function () { goTo(TOTAL - 1); });
+
+  // Impression / PDF (avec repli si l'iframe bloque l'impression)
+  document.getElementById('btnPrint').addEventListener('click', function () {
+    try {
+      if (window.top !== window.self) throw new Error('embedded');
+      window.print();
+    } catch (e) {
+      try {
+        var blob = new Blob(['<!DOCTYPE html>' + document.documentElement.outerHTML], { type: 'text/html' });
+        var url = URL.createObjectURL(blob);
+        var w = window.open(url, '_blank');
+        if (w) w.addEventListener('load', function () { w.print(); });
+      } catch (e2) {}
+    }
+  });
+
+  // Effacement (double clic de confirmation, sans popup)
+  var reset = document.getElementById('btnReset');
+  var armed = false, armTimer = null;
+  reset.addEventListener('click', function () {
+    if (!armed) {
+      armed = true;
+      reset.textContent = 'Sûr•e ? Clique à nouveau pour tout effacer';
+      armTimer = setTimeout(function () { armed = false; reset.textContent = 'Effacer mes réponses'; }, 3500);
+      return;
+    }
+    clearTimeout(armTimer);
+    armed = false;
+    answers = new Array(TOTAL).fill('');
+    steps.forEach(function (s) { s.querySelector('textarea').value = ''; });
+    try { sessionStorage.removeItem(KEY); } catch (e) {}
+    reset.textContent = 'Effacer mes réponses';
+    goTo(-1);
+  });
+
+  // Reprise là où on s'était arrêté
+  var start = -1;
+  try {
+    var st = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+    if (st && typeof st.s === 'number') start = st.s;
+  } catch (e) {}
+  goTo(start);
+  userNav = true;
+
+  // ── Intégration Kajabi (iframe) : hauteur auto, pas de scroll interne ──
+  if (embedded) {
+    document.documentElement.classList.add('qt-embedded');
+    var lastH = 0;
+    var sendHeight = function () {
+      var h = Math.ceil(document.body.getBoundingClientRect().height);
+      if (h && h !== lastH) {
+        lastH = h;
+        try { window.parent.postMessage({ type: 'come-quiz-height', height: h }, '*'); } catch (e) {}
+      }
+    };
+    sendHeight();
+    window.addEventListener('load', sendHeight);
+    window.addEventListener('resize', sendHeight);
+    if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body);
+    setInterval(sendHeight, 800);
+  }
+})();
+</script>
+</body>
+</html>
