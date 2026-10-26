@@ -432,7 +432,7 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .nav-btn, .nav-btn::before, .print-btn, .print-btn::before { transition: none; }
-    .step.active, .come-badge { animation: none; }
+    .step.active { animation: none; }
   }
   .dots-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 4px 0 24px; }
   .dot {
@@ -494,45 +494,6 @@
     margin-top: 1px;
   }
 
-  /* ============ TEASER C.O.M.E ============ */
-  .come-teaser {
-    background: var(--blue);
-    border-radius: 20px;
-    padding: 28px 24px;
-    margin-top: 28px;
-  }
-  .come-bignews {
-    font-size: clamp(22px, 4.5vw, 28px);
-    font-weight: 800;
-    color: var(--yellow);
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    line-height: 1.05;
-    margin-bottom: 10px;
-  }
-  .come-badge {
-    display: inline-block;
-    background: var(--yellow);
-    color: var(--blue);
-    font-size: 10.5px;
-    font-weight: 800;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    padding: 5px 14px;
-    border-radius: 100px;
-    margin-bottom: 18px;
-    animation: come-blink 1.4s ease-in-out infinite;
-  }
-  @keyframes come-blink { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
-  .come-title { font-size: 18px; font-weight: 600; color: #fff; line-height: 1.35; margin-bottom: 14px; text-wrap: balance; }
-  .come-title strong { font-weight: 800; }
-  .come-hook { font-size: 14px; color: rgba(255,255,255,.9); line-height: 1.6; margin-bottom: 8px; text-wrap: pretty; }
-  .come-hook strong { color: #fff; }
-  .come-list { list-style: none; margin: 0 0 14px; padding: 0; }
-  .come-list li { font-size: 14px; line-height: 1.5; color: rgba(255,255,255,.88); padding-left: 22px; position: relative; margin-bottom: 8px; }
-  .come-list li::before { content: '→'; position: absolute; left: 0; color: var(--yellow); font-weight: 800; }
-  @media (max-width: 400px) { .come-teaser { padding: 22px 16px; } }
-
   /* ============ EMBARQUÉ (iframe Kajabi) ============ */
   html.qt-embedded, html.qt-embedded body { overflow: hidden !important; }
   html.qt-embedded .save-badge { display: none; }
@@ -549,11 +510,11 @@
     body.wizard .step { display: block !important; animation: none !important; }
     .footer { display: none !important; }
     .sheet-header, .sub-heading, .field-label { break-after: avoid; page-break-after: avoid; }
-    .venn-wrap, .venn-caption, .question-box, .callout, .timeline, .come-teaser { page-break-inside: avoid; break-inside: avoid; }
+    .venn-wrap, .venn-caption, .question-box, .callout, .timeline { page-break-inside: avoid; break-inside: avoid; }
     /* Quand le titre est immédiatement suivi du Venn, on force un saut franc avant le titre
        pour garantir titre + diagramme ensemble en haut de la page suivante. */
     .sheet-lead-venn { break-before: page; page-break-before: always; }
-    .chip, .come-teaser, .come-badge, .tblock, .callout, .question-box, .option-letter, .t-num, .check-list li::before, .recap-group li::before, .recap-tip {
+    .chip, .tblock, .callout, .question-box, .option-letter, .t-num, .check-list li::before, .recap-group li::before, .recap-tip {
       -webkit-print-color-adjust: exact; print-color-adjust: exact;
     }
     .editable:empty::before { color: transparent; }
@@ -565,7 +526,7 @@
 
   <!-- ============ COVER ============ -->
   <div class="cover">
-    <span class="eyebrow">Carnet à deux</span>
+    <span class="eyebrow">Semaine 4 — Explorer</span>
     <h1>Viens on parle d’<em>éjac involontaire</em></h1>
     <p class="subtitle">Petit carnet à remplir à deux</p>
     <p class="context">Pour les couples qui traversent une période où ça va trop vite au lit, et qui ont envie d'en parler à deux, sans pression ni jugement.</p>
@@ -861,18 +822,6 @@
     <p class="recap-empty" id="recap-empty">Ce récap se remplit au fil de vos choix dans le carnet, revenez-y à la fin.</p>
     <div id="recap-content"></div>
     <div class="recap-tip">💡 Pensez à mettre un petit rappel dans vos agendas pour penser à faire votre bilan. Ça peut paraître bête, mais c'est important de prendre le temps.</div>
-
-    <div class="come-teaser">
-      <div class="come-bignews">C.O.M.E arrive</div>
-      <span class="come-badge">Sortie le 26 octobre</span>
-      <div class="come-title">Le programme pour <strong>faire durer le plaisir</strong> — le tien et le sien</div>
-      <p class="come-hook"><strong>C.O.M.E, c'est pour vous si :</strong></p>
-      <ul class="come-list">
-        <li>...vous avez déjà tout testé — se retenir, se masturber avant, la capote, peut-être l'alcool — et ça revient toujours.</li>
-        <li>...ça arrive régulièrement, que c'est difficile d'en parler, et que le vrai stress c'est la peur de ne pas satisfaire l'autre.</li>
-      </ul>
-      <p class="come-hook"><strong>Un programme d'un mois, en audio, à votre rythme — co-construit avec +1 270 personnes, pour coller à ce que vous vivez vraiment. Avec, en bonus, un module entier de techniques pour faire jouir sans pénétration.</strong></p>
-    </div>
   </div>
 
   <!-- ============ FOOTER ============ -->
