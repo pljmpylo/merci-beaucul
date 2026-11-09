@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quel type de branleur•euse es-tu ? — Merci Beaucul</title>
+<meta name="description" content="7 questions, 2 minutes, zéro jugement : découvre ton profil de branleur•euse et les ptits conseils de Tata Léa.">
+<meta property="og:title" content="Quel type de branleur•euse es-tu ?">
+<meta property="og:description" content="7 questions, 2 minutes, zéro jugement. Fais le quiz et compare ton profil 👀">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pljmpylo.github.io/merci-beaucul/mc_plaisir_bite_quiz_branleur.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<!-- MERCI BEAUCUL — Quiz « Quel type de branleur•euse es-tu ? » / Masterclass Plaisir de la 🍆 (24/11/2026) -->
+<!-- DA DPO, même base que le quiz Tantra -->
+<style>
+  html, body { margin: 0; background: #fffafd; }
+</style>
+</head>
+<body>
+<style>
+  .cbq-wrap *,
+  .cbq-wrap *::before,
+  .cbq-wrap *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  .cbq-wrap { cursor: auto; }
+  .cbq-wrap a, .cbq-wrap button { cursor: pointer; }
+  .cbq-wrap {
+    --cbq-bg: #fffafd;        /* Beige */
+    --cbq-bordeaux: #8a1b1a;  /* Rouge foncé */
+    --cbq-red: crimson;       /* Rose */
+    --cbq-ink: #101010;       /* Noir */
+    --cbq-yellow: #f7ff59;    /* Jaune */
+    font-family: 'Raleway', sans-serif;
+    color: var(--cbq-ink);
+    background: var(--cbq-bg);
+  }
+  .cbq-header { padding: 80px 0 60px; }
+  .cbq-header-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    flex-direction: column;
+  }
+  .cbq-header h1 {
+    font-size: clamp(40px, 5vw, 60px);
+    font-weight: 800;
+    color: var(--cbq-ink);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+  }
+  .cbq-header h1 em { font-style: normal; font-weight: 800; color: var(--cbq-red); }
+  .cbq-header p {
+    font-size: 18px;
+    color: rgba(26,10,15,0.6);
+    line-height: 1.6;
+    margin: 0 0 36px;
+    max-width: 560px;
+  }
+  .cbq-header p strong { color: var(--cbq-red); font-weight: 700; }
+  .cbq-disclaimer {
+    font-size: 12px !important;
+    line-height: 1.5;
+    color: rgba(26,10,15,0.4) !important;
+    margin-bottom: 20px !important;
+  }
+  .cbq-start-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    overflow: hidden;
+    background: var(--cbq-bg);
+    color: var(--cbq-ink);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 0.9rem 3rem;
+    border: 1px solid var(--cbq-bordeaux);
+    border-radius: 10rem;
+    transition: color 450ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cbq-start-btn::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    top: 102%;
+    background: var(--cbq-bordeaux);
+    transition: top 450ms ease;
+    z-index: 0;
+  }
+  .cbq-start-btn span { position: relative; z-index: 1; }
+  .cbq-start-btn:hover { color: var(--cbq-bg); }
+  .cbq-start-btn:hover::before { top: 0; }
+
+  .cbq-inner { max-width: 680px; margin: 0 auto; padding: 60px 40px 80px; }
+  .cbq-progress-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: rgba(26,10,15,0.35);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    text-align: right;
+  }
+  .cbq-progress-bar-wrap {
+    height: 3px;
+    background: rgba(26,10,15,0.1);
+    border-radius: 100px;
+    margin-bottom: 48px;
+    overflow: hidden;
+  }
+  .cbq-progress-bar-fill {
+    height: 100%;
+    background: var(--cbq-red);
+    border-radius: 100px;
+    transition: width 0.4s ease;
+  }
+  @keyframes cbqFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .cbq-q-block { animation: cbqFadeUp 0.4s ease both; }
+  .cbq-q-kicker {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--cbq-red);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .cbq-q-text {
+    font-size: clamp(18px, 3.5vw, 23px);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 28px;
+  }
+  .cbq-options { display: flex; flex-direction: column; gap: 12px; }
+  .cbq-opt-btn {
+    background: #fff;
+    border: 1.5px solid rgba(26,10,15,0.12);
+    border-radius: 18px;
+    padding: 16px 20px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 15px;
+    color: var(--cbq-ink);
+    text-align: left;
+    transition: all 0.2s;
+    line-height: 1.45;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cbq-opt-btn:hover {
+    border-color: var(--cbq-red);
+    transform: translateX(4px);
+    box-shadow: 0 2px 12px rgba(220,20,60,0.1);
+  }
+  .cbq-opt-btn.cbq-selected {
+    background: rgba(220,20,60,0.06);
+    border-color: var(--cbq-red);
+    color: var(--cbq-red);
+  }
+  .cbq-opt-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: rgba(26,10,15,0.06);
+    color: rgba(26,10,15,0.5);
+    font-weight: 800;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .cbq-opt-btn.cbq-selected .cbq-opt-letter { background: var(--cbq-red); color: #fff; }
+  .cbq-opt-text { flex: 1; min-width: 0; }
+
+  .cbq-results-block { animation: cbqFadeUp 0.5s ease both; }
+  @keyframes cbq-dot-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .cbq-card {
+    background: #fff;
+    border: 1.5px solid var(--cbq-red);
+    border-radius: 32px;
+    padding: 36px 32px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+  }
+  .cbq-card-head { display: flex; align-items: center; gap: 18px; margin-bottom: 20px; }
+  .cbq-card-emoji {
+    width: 92px; height: 92px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    background: rgba(220,20,60,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 46px;
+    box-shadow: 0 8px 22px -12px rgba(0,0,0,0.4);
+  }
+  .cbq-card-head-text { flex: 1; min-width: 0; }
+  .cbq-card-score {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px; font-weight: 800;
+    color: #fff;
+    background: var(--cbq-red);
+    text-transform: uppercase; letter-spacing: 1.5px;
+    padding: 6px 13px;
+    border-radius: 100px;
+    margin-bottom: 12px;
+  }
+  .cbq-card-score-dot {
+    width: 7px; height: 7px;
+    background: #fff;
+    border-radius: 50%;
+    animation: cbq-dot-blink 1.2s ease-in-out infinite;
+  }
+  .cbq-card-name { font-size: clamp(22px, 4vw, 28px); font-weight: 800; color: var(--cbq-ink); line-height: 1.15; }
+  .cbq-card-desc { font-size: 15.5px; color: rgba(26,10,15,0.78); line-height: 1.7; margin-bottom: 4px; }
+  .cbq-card-desc strong { color: var(--cbq-bordeaux); font-weight: 700; }
+  .cbq-tip-box {
+    background: rgba(220,20,60,0.04);
+    border: 1.5px solid rgba(220,20,60,0.18);
+    border-radius: 16px;
+    padding: 22px 24px;
+    margin: 22px 0 4px;
+  }
+  .cbq-tip-label {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--cbq-red); font-weight: 800; margin-bottom: 12px;
+    display: block;
+  }
+  .cbq-tip-box p { font-size: 14.5px; line-height: 1.65; color: rgba(26,10,15,0.8); }
+
+  .cbq-mc-teaser {
+    background: #8a1b1a;
+    border-radius: 32px;
+    padding: 36px 32px;
+    margin: 48px 0 32px;
+  }
+  .cbq-mc-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .cbq-mc-kicker {
+    font-size: 12px; font-weight: 700;
+    color: rgba(255,255,255,0.55);
+    text-transform: uppercase; letter-spacing: 3px;
+  }
+  .cbq-mc-access {
+    flex-shrink: 0;
+    display: inline-block;
+    background: var(--cbq-yellow);
+    color: var(--cbq-bordeaux);
+    font-size: 10.5px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 6px 13px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+  .cbq-mc-bignews {
+    font-size: clamp(26px, 5vw, 38px);
+    font-weight: 800;
+    color: var(--cbq-yellow);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 18px;
+  }
+  .cbq-mc-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 100px;
+    padding: 9px 16px 9px 10px;
+    margin-bottom: 18px;
+    max-width: 100%;
+  }
+  .cbq-mc-live-pill {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--cbq-red);
+    color: #fff;
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 5px 11px;
+    border-radius: 100px;
+  }
+  .cbq-mc-live-dot {
+    width: 6px; height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    animation: cbq-dot-blink 1.2s ease-in-out infinite;
+  }
+  .cbq-mc-live-text { font-size: 13.5px; font-weight: 600; color: #fffafd; line-height: 1.3; }
+  .cbq-mc-live-text strong { font-weight: 800; }
+  .cbq-mc-hook { font-size: 15px; color: rgba(255,255,255,0.8); line-height: 1.65; margin-bottom: 24px; }
+  .cbq-mc-hook strong { color: #fffafd; font-weight: 700; }
+  .cbq-mc-list { list-style: none; margin: 0 0 24px; padding: 0; }
+  .cbq-mc-list li {
+    font-size: 14.5px; line-height: 1.5;
+    color: rgba(255,255,255,0.78);
+    padding-left: 24px;
+    position: relative;
+    margin-bottom: 10px;
+  }
+  .cbq-mc-list li::before { content: '→'; position: absolute; left: 0; color: var(--cbq-red); font-weight: 700; }
+  .cbq-mc-list li strong { color: #fffafd; }
+  .cbq-mc-cta-btn {
+    display: inline-block;
+    background: var(--cbq-red);
+    color: #fffafd;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    padding: 16px 36px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+  }
+  .cbq-mc-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(220,20,60,0.4); }
+  .cbq-mc-meta { font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; margin-top: 18px; }
+
+  .cbq-share {
+    text-align: center;
+    border: 1.5px dashed rgba(220,20,60,0.3);
+    border-radius: 24px;
+    padding: 24px 22px;
+  }
+  .cbq-share p { font-size: 15px; font-weight: 600; line-height: 1.5; margin-bottom: 14px; }
+  .cbq-share-btn, .cbq-retry-btn {
+    background: transparent; border: 1.5px solid rgba(26,10,15,0.2);
+    color: rgba(26,10,15,0.6); font-family: 'Raleway', sans-serif;
+    font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+    padding: 14px 32px; border-radius: 100px;
+    transition: all 0.2s; font-weight: 700;
+  }
+  .cbq-share-btn { border-color: var(--cbq-red); color: var(--cbq-red); }
+  .cbq-share-link {
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    margin: 14px auto 0;
+    padding: 10px 14px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 13px;
+    color: var(--cbq-ink);
+    background: #fff;
+    border: 1.5px solid rgba(220,20,60,0.3);
+    border-radius: 12px;
+    text-align: center;
+  }
+  .cbq-share-btn:hover, .cbq-retry-btn:hover { border-color: var(--cbq-bordeaux); color: var(--cbq-bordeaux); }
+  .cbq-retry-wrap { text-align: center; margin-top: 32px; }
+  .cbq-hidden { display: none !important; }
+
+  @media (hover: none) {
+    .cbq-opt-btn:hover { transform: none; border-color: rgba(26,10,15,0.12); box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+    .cbq-opt-btn:active { border-color: var(--cbq-red); background: rgba(220,20,60,0.04); }
+  }
+  @media (max-width: 760px) {
+    .cbq-header { padding: 40px 0 32px; }
+    .cbq-header-inner { padding: 0 24px; }
+    .cbq-header h1 { font-size: clamp(34px, 9vw, 60px); }
+    .cbq-header p { font-size: 16px; }
+    .cbq-inner { padding: 40px 24px 60px; }
+    .cbq-q-text, .cbq-card-name { font-size: 20px; }
+    .cbq-mc-teaser { padding: 28px 22px; }
+    .cbq-mc-cta-btn { width: 100%; text-align: center; }
+  }
+  @media (max-width: 480px) {
+    .cbq-header { padding: 32px 0 28px; }
+    .cbq-header-inner { padding: 0 18px; }
+    .cbq-inner { padding: 32px 18px 48px; }
+    .cbq-start-btn { width: 100%; align-self: stretch; padding: 0.9rem 1.5rem; }
+    .cbq-card { padding: 24px 20px; margin-bottom: 16px; }
+    .cbq-card-emoji { width: 72px; height: 72px; font-size: 36px; }
+    .cbq-card-desc { font-size: 14.5px; line-height: 1.6; }
+    .cbq-mc-teaser { padding: 26px 20px; margin: 28px 0 24px; }
+    .cbq-mc-bignews { font-size: 25px; }
+    .cbq-mc-live { width: 100%; padding: 9px 14px 9px 9px; }
+    .cbq-mc-live-text { font-size: 12.5px; }
+    .cbq-mc-cta-btn { white-space: normal; letter-spacing: 1.5px; padding: 16px 24px; line-height: 1.3; }
+  }
+  @media (max-width: 380px) {
+    .cbq-header h1 { font-size: 30px; }
+    .cbq-q-text, .cbq-card-name { font-size: 18.5px; }
+    .cbq-opt-btn { padding: 14px 15px; font-size: 14.5px; gap: 10px; }
+    .cbq-opt-letter { width: 24px; height: 24px; font-size: 11px; }
+    .cbq-mc-bignews { font-size: 23px; }
+  }
+</style>
+<div class="cbq-wrap">
+  <!-- INTRO -->
+  <div id="cbq-intro">
+    <div class="cbq-header">
+      <div class="cbq-header-inner">
+        <h1>Quel type de <em>branleur•euse</em> es-tu&nbsp;?</h1>
+        <p><strong>7 questions, 2 minutes, zéro jugement.</strong> Y'a la team Speedy Gonzales et la team épi-cul-rienne (c'est éclaté, laisse-moi tranquille, j'avais plus d'idées), mais y'a aussi le mood du nain Timide dans Blanche-Neige. Que tu t'occupes de ton zgueg ou de celui de quelqu'un d'autre, fais ce quiz hyper scientifique et sérieux pour savoir quel est ton profil de branleur•euse et avoir, évidams, des ptits conseils qui mettent bien.</p>
+        <p class="cbq-disclaimer">Quiz réservé aux personnes de 18 ans et plus. C'est un outil de découverte de soi, pas un diagnostic 💛</p>
+        <button class="cbq-start-btn" id="cbq-start-btn"><span>On y va ? →</span></button>
+      </div>
+    </div>
+  </div>
+  <!-- QUIZ -->
+  <div id="cbq-quiz" class="cbq-hidden cbq-inner">
+    <div class="cbq-progress-label" id="cbq-progress-label">Question 1 / 7</div>
+    <div class="cbq-progress-bar-wrap">
+      <div class="cbq-progress-bar-fill" id="cbq-progress-bar" style="width:14%"></div>
+    </div>
+    <div class="cbq-q-block" id="cbq-q-container"></div>
+  </div>
+  <!-- RESULTS -->
+  <div id="cbq-results" class="cbq-hidden cbq-inner">
+    <div class="cbq-results-block">
+      <div id="cbq-results-container"></div>
+      <div class="cbq-share">
+        <p>Envoie le quiz à ton·ta partenaire et comparez vos profils 👀</p>
+        <button class="cbq-share-btn" id="cbq-share-btn" type="button">Partager le quiz</button>
+        <input class="cbq-share-link cbq-hidden" id="cbq-share-link" type="text" readonly aria-label="Lien du quiz">
+      </div>
+      <div class="cbq-retry-wrap">
+        <button class="cbq-retry-btn" id="cbq-retry-btn">↺ Refaire le quiz</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function() {
+
+  // —— CONFIG ——
+  var MC_URL = "https://app.mercibeaucul.fr/offers/h8MWZ29v/checkout";
+  // URL publique de cette page (GitHub Pages)
+  var QUIZ_URL = "https://pljmpylo.github.io/merci-beaucul/mc_plaisir_bite_quiz_branleur.html";
+
+  // Q0 = segmentation (non notée). Q1 à Q6 : chaque réponse = un profil (speedy / epi / timide).
+  // Le profil qui a le plus de réponses gagne. Égalité → la réponse à la Q6 tranche.
+  var QUESTIONS = [
+    { seg: true, q: "Ce quiz, tu le fais en pensant à…", a: [
+      { t: "Ma teub bien-aimée", v: "solo" },
+      { t: "Celle de mon·ma partenaire (ou de mes partenaires, on juge pas ici)", v: "partenaire" },
+      { t: "Les deux, mon capitaine", v: "les-deux" }
+    ]},
+    { q: "Les premières secondes, que paso old el paso ?", a: [
+      { t: "Je prends en main, je serre, et c'est parti : haut bas haut bas haut bas haut bas haut bas haut bas", v: "speedy" },
+      { t: "J'éveille toute la zone tranquillou, je m'occupe de ce qu'il y a à côté (pubis, testicules, cuisses), je prends un petit lube sympa, voire des ptits sextoys, et lesgo", v: "epi" },
+      { t: "Je tâtonne un peu, j'essaie d'observer les réactions du corps et j'ai 2-3 ptits moves habituels, voilà", v: "timide" }
+    ]},
+    { q: "Au niveau du rythme, t'es plutôt…", a: [
+      { t: "Un métronome : le même tic-tac-tic-tac-tic du début à la fin", v: "speedy" },
+      { t: "Une playlist en mode aléatoire qui passe de la pop au metal", v: "epi" },
+      { t: "Celui que je crois être le bon ?? (j'avoue, je sais ap, help)", v: "timide" }
+    ]},
+    { q: "Gland, frein, verge, testicules, périnée, anus : on est comment ?", a: [
+      { t: "Gland et verge : même geste, même combat. E-ffi-ca-ci-té ma ptite dame", v: "speedy" },
+      { t: "Je vais tous leur rendre visite, princess treatment pour chaque partie du corps parce qu'elles le méritent", v: "epi" },
+      { t: "Le frein ? Le périnée ? Pour moi c'est pas les zones intéressantes pour une branlette", v: "timide" }
+    ]},
+    { q: "Côté paroles, les paroles, les paroléééé…", a: [
+      { t: "Ça roule tout seul, pas besoin de parler", v: "speedy" },
+      { t: "Je pose des questions, je commente, même mes propres bruits m'excitent", v: "epi" },
+      { t: "J'aimerais dire « plus doucement », « vas-y continue » ou « tu préfères comme ça ? », mais ça sort pas forcément", v: "timide" }
+    ]},
+    { q: "Débandade en cours de route. Toi :", a: [
+      { t: "Je continue pareil (voire je m'acharne), ça va (voire ça doit) revenir", v: "speedy" },
+      { t: "Je change de geste ou de zone, je teste autre chose. Osef, y'a pas besoin d'érection pour kiffer", v: "epi" },
+      { t: "Je me demande direct si c'est moi le problème ?? Si c'est mal fait, s'il y a pas de plaisir ou de désir ?", v: "timide" }
+    ]},
+    { q: "Une branlette réussie pour toi, c'est…", decider: true, a: [
+      { t: "Une branlette qui finit avec une éjac / un orgasme", v: "speedy" },
+      { t: "Une où j'ai découvert un truc nouveau, où y'avait connexion et lâcher-prise", v: "epi" },
+      { t: "Une où j'ai osé dire (ou demander) ce qui fait du bien", v: "timide" }
+    ]}
+  ];
+
+  var RESULTS = {
+    speedy: {
+      emoji: "🚂",
+      name: "Team Speedy Gonzales",
+      desc: "Toi, t'as un geste. LE geste. De haut en bas, régulier, efficace, et franchement ça marche (sinon tu l'aurais pas gardé depuis dix piges). T'es fiable, constant·e, on peut compter sur toi.<br><br>Mais y'a un mais : à force de faire le même mouvement au même rythme pendant 15 minutes, le corps s'habitue et les sensations peuvent avoir tendance à plafonner. C'est pas que tu fais mal, c'est juste que la bite a plein d'autres zones qui attendent leur tour et qui demandent pas le même type d'attention.",
+      tip: "La prochaine fois, sors le lub et remplace 30 secondes de va-et-vient par des petits cercles autour du gland (en mode tu ouvres un bouchon de Perrier), et vois ce qu'il se passe.",
+      pont: "Dans la partie <strong>« À la main »</strong> de la masterclass, je te montre les gestes zone par zone (la poivrière, encercler, tapoter, serrer la base…) pour sortir de la ligne droite."
+    },
+    epi: {
+      emoji: "🧭",
+      name: "Team épi-cul-rienne",
+      desc: "Toi, tu prends pas la branlette pour acquise. Tu testes des trucs, tu changes de geste, tu regardes ce qui se passe. T'as compris ce que plein de gens mettent des années à capter : le plaisir, ça s'explore.<br><br>Le revers : à force de tout tester, tu peux parfois changer de rythme trop vite et pas laisser le temps au plaisir plus doux d'exister, ou te mettre la pression de toujours surprendre. T'as la curiosité, il te manque juste la carte.",
+      tip: "La prochaine fois, garde un seul geste et change seulement de rythme OU de pression. Parfois, un seul petit changement, c'est déjà une exploration de sensations trop chouette.",
+      pont: "Pendant le <strong>Quickie anatomie</strong> de la masterclass, je te donne la map érogène complète : gland, frein, prépuce, urètre, testicules, périnée… et toutes les ptites nuances très agréables à tester."
+    },
+    timide: {
+      emoji: "🙈",
+      name: "Team le nain Timide dans Blanche-Neige",
+      desc: "Y'a un truc qui est sûr, c'est que t'es à l'écoute. Tu guettes les réactions, tu fais attention, tu veux bien faire. Et c'est très très précieux.<br><br>Maaaaaais tu peux avoir tendance à douter ou à garder beaucoup pour toi. Les « plus doucement », les « continue », les « ah non pas comme ça » restent coincés quelque part entre ta gorge et ta tête. Résultat : tu devines au lieu de savoir (et l'autre aussi).<br><br>Promis juré, guider ou demander, ça casse pas l'ambiance, c'est même l'inverse. Personne sait ce qu'il se passe dans le corps de l'autre si on le dit pas (et c'est la même en solo : t'as le droit d'écouter ton corps plutôt que ce que t'as vu ailleurs).",
+      tip: "Une seule question à tester la prochaine fois : « tu préfères plus vite ou plus lent ? ». Simple, et ça ouvre la porte à plein d'autres trucs.",
+      pont: "La partie <strong>« Donner & recevoir »</strong> de la masterclass est faite pour toi : demander, guider, repositionner une main sans gêne, des deux côtés."
+    }
+  };
+
+  var currentQ = 0;
+  var counts = { speedy: 0, epi: 0, timide: 0 };
+  var segment = null;
+  var deciderVal = null;
+  var answering = false;
+
+  var elIntro   = document.getElementById('cbq-intro');
+  var elQuiz    = document.getElementById('cbq-quiz');
+  var elResults = document.getElementById('cbq-results');
+  var elQ       = document.getElementById('cbq-q-container');
+
+  document.getElementById('cbq-start-btn').addEventListener('click', startQuiz);
+  document.getElementById('cbq-retry-btn').addEventListener('click', restartQuiz);
+  document.getElementById('cbq-share-btn').addEventListener('click', shareQuiz);
+  elQ.addEventListener('click', onOptionClick);
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function startQuiz() {
+    elIntro.classList.add('cbq-hidden');
+    elQuiz.classList.remove('cbq-hidden');
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function renderQuestion() {
+    var total = QUESTIONS.length;
+    var item = QUESTIONS[currentQ];
+    answering = false;
+    document.getElementById('cbq-progress-label').textContent = 'Question ' + (currentQ + 1) + ' / ' + total;
+    document.getElementById('cbq-progress-bar').style.width = (((currentQ + 1) / total) * 100) + '%';
+    var letters = ['A', 'B', 'C', 'D'];
+    var opts = item.seg ? item.a : shuffle(item.a);
+    var html = '';
+    if (item.seg) html += '<p class="cbq-q-kicker">Pour commencer</p>';
+    html += '<p class="cbq-q-text">' + item.q + '</p>';
+    html += '<div class="cbq-options">';
+    opts.forEach(function(opt, i) {
+      html += '<button class="cbq-opt-btn" data-val="' + opt.v + '">'
+            + '<span class="cbq-opt-letter">' + letters[i] + '</span>'
+            + '<span class="cbq-opt-text">' + opt.t + '</span>'
+            + '</button>';
+    });
+    html += '</div>';
+    elQ.classList.remove('cbq-q-block'); void elQ.offsetWidth; elQ.classList.add('cbq-q-block');
+    elQ.innerHTML = html;
+  }
+
+  function onOptionClick(e) {
+    var btn = e.target.closest('.cbq-opt-btn');
+    if (!btn || answering) return;
+    answering = true;
+    elQ.querySelectorAll('.cbq-opt-btn').forEach(function(b) { b.disabled = true; });
+    btn.classList.add('cbq-selected');
+    var item = QUESTIONS[currentQ];
+    var val = btn.getAttribute('data-val');
+    if (item.seg) { segment = val; }
+    else {
+      counts[val]++;
+      if (item.decider) deciderVal = val;
+    }
+    setTimeout(function() {
+      currentQ++;
+      if (currentQ < QUESTIONS.length) renderQuestion();
+      else showResults();
+    }, 350);
+  }
+
+  function getProfile() {
+    var max = Math.max(counts.speedy, counts.epi, counts.timide);
+    var tied = Object.keys(counts).filter(function(k) { return counts[k] === max; });
+    if (tied.length === 1) return tied[0];
+    return tied.indexOf(deciderVal) !== -1 ? deciderVal : tied[0];
+  }
+
+  function buildMCTeaser(r) {
+    return '<div class="cbq-mc-teaser">'
+      + '<div class="cbq-mc-top"><div class="cbq-mc-kicker">La masterclass</div><span class="cbq-mc-access">Accès à vie</span></div>'
+      + '<div class="cbq-mc-bignews">Le plaisir de la 🍆</div>'
+      + '<div class="cbq-mc-live">'
+      + '<span class="cbq-mc-live-pill"><span class="cbq-mc-live-dot"></span>Live</span>'
+      + '<span class="cbq-mc-live-text">Mardi 24 novembre · 20h · avec <strong>Léa</strong> + Q&A en direct</span>'
+      + '</div>'
+      + '<p class="cbq-mc-hook">' + r.pont + '</p>'
+      + '<ul class="cbq-mc-list">'
+      + '<li><strong>Quickie anatomie</strong> : les zones intéressantes (et sensibles) de notre amie la teub</li>'
+      + '<li><strong>Donner & recevoir</strong> : parce qu\'aucun rôle n\'est passif, et que c\'est pas si inné</li>'
+      + '<li><strong>La main, la bouche</strong> : les petites techniques qui font plaiz</li>'
+      + '<li><strong>La pénétration</strong> : parce que oui, on peut encore améliorer l\'expérience</li>'
+      + '</ul>'
+      + '<a href="' + MC_URL + '" class="cbq-mc-cta-btn" target="_blank" rel="noopener">Je réserve ma place · 20€ →</a>'
+      + '<p class="cbq-mc-meta">Replay à vie · 100% anonyme · paiement discret 🔒</p>'
+      + '</div>';
+  }
+
+  function showResults() {
+    elQuiz.classList.add('cbq-hidden');
+    elResults.classList.remove('cbq-hidden');
+    var key = getProfile();
+    var r = RESULTS[key];
+    var html = '<div class="cbq-card">'
+      + '<div class="cbq-card-head">'
+      + '<div class="cbq-card-emoji" aria-hidden="true">' + r.emoji + '</div>'
+      + '<div class="cbq-card-head-text">'
+      + '<div class="cbq-card-score"><span class="cbq-card-score-dot"></span>Ton profil</div>'
+      + '<div class="cbq-card-name">' + r.name + '</div>'
+      + '</div></div>'
+      + '<p class="cbq-card-desc">' + r.desc + '</p>'
+      + '<div class="cbq-tip-box"><span class="cbq-tip-label">Ton ptit conseil</span><p>' + r.tip + '</p></div>'
+      + '</div>';
+    html += buildMCTeaser(r);
+    document.getElementById('cbq-results-container').innerHTML = html;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Suivi (GTM déjà présent sur le site)
+    try {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'quiz_branleur_result', quiz_profile: key, quiz_segment: segment });
+    } catch (err) {}
+  }
+
+  function shareQuiz() {
+    var url = QUIZ_URL;
+    var data = { title: 'Quel type de branleur•euse es-tu ?', text: 'Fais le quiz et on compare nos profils 👀', url: url };
+    var btn = document.getElementById('cbq-share-btn');
+
+    function done(label) {
+      btn.textContent = label;
+      setTimeout(function() { btn.textContent = 'Partager le quiz'; }, 2500);
+    }
+    function showLink() {
+      // Dernier recours : on affiche le lien pour le copier à la main
+      var box = document.getElementById('cbq-share-link');
+      box.value = url;
+      box.classList.remove('cbq-hidden');
+      box.focus(); box.select();
+      done('Copie le lien ci-dessous');
+    }
+    function legacyCopy() {
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = url;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed'; ta.style.top = '-1000px';
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        if (ok) done('Lien copié ✓'); else showLink();
+      } catch (err) { showLink(); }
+    }
+    function copyLink() {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(function() { done('Lien copié ✓'); }, legacyCopy);
+      } else {
+        legacyCopy();
+      }
+    }
+
+    // Mobile : feuille de partage native. Ordinateur (ou si le partage est refusé) : copie du lien.
+    var isTouch = window.matchMedia && window.matchMedia('(hover: none)').matches;
+    if (navigator.share && isTouch) {
+      navigator.share(data).catch(function(err) {
+        if (!err || err.name !== 'AbortError') copyLink();
+      });
+    } else {
+      copyLink();
+    }
+  }
+
+  function restartQuiz() {
+    currentQ = 0;
+    counts = { speedy: 0, epi: 0, timide: 0 };
+    segment = null;
+    deciderVal = null;
+    elResults.classList.add('cbq-hidden');
+    elIntro.classList.remove('cbq-hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+})();
+</script>
+
+</body>
+</html>
